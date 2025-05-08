@@ -42,6 +42,7 @@
       padding: 20px;
       margin-bottom: 16px;
       transition: transform 0.3s;
+      position: relative;
     }
     .job-card:hover {
       transform: translateY(-5px);
@@ -57,6 +58,7 @@
       color: #7f8c8d;
     }
 
+    /* Filter Bar Styling */
     .filter-bar {
       display: flex;
       flex-wrap: wrap;
@@ -66,6 +68,13 @@
     }
 
     .filter-bar select {
+      max-width: 250px;
+      border-radius: 8px;
+      height: 40px;
+    }
+
+    .filter-bar button {
+      height: 40px;
       max-width: 250px;
       border-radius: 8px;
     }
@@ -81,6 +90,20 @@
       background-color: #2980b9;
       color: #fff;
       transition: background-color 0.3s;
+    }
+
+    /* Share Button Styling */
+    .btn-share {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #16a085;
+      color: white;
+      border-radius: 8px;
+      padding: 8px 12px;
+    }
+    .btn-share:hover {
+      background-color: #1abc9c;
     }
 
     /* Link Style */
@@ -143,7 +166,7 @@
         <option value="Cybersecurity">Cybersecurity</option>
       </select>
 
-      <button class="btn btn-apply" id="applyButton">Apply</button>
+      <button class="btn btn-apply" id="applyButton">Apply Filter</button>
     </div>
 
     <!-- Job Listings -->
@@ -203,10 +226,11 @@
         return;
       }
 
-      jobs.forEach(job => {
+      jobs.forEach((job, index) => {
         const card = document.createElement("div");
         card.className = "job-card";
         card.innerHTML = `
+          <button class="btn-share" onclick="shareJob(${index})">Share</button>
           <h6>${job.title}</h6>
           <p><strong>Company:</strong> ${job.company}</p>
           <p><strong>Type:</strong> ${job.type}</p>
@@ -216,6 +240,13 @@
         `;
         jobsList.appendChild(card);
       });
+    }
+
+    function shareJob(jobIndex) {
+      const url = window.location.href + `#job-${jobIndex}`;
+      navigator.clipboard.writeText(url)
+        .then(() => alert("Job URL copied to clipboard!"))
+        .catch(err => alert("Failed to copy URL: " + err));
     }
 
     // Initial load
