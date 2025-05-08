@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SA Job Opportunities</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff;
+      overflow-y: auto;
+    }
+
+    .container {
+      padding-top: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .job-card {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .job-card h6 {
+      font-weight: 600;
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .link-style {
+      font-size: 13px;
+      color: #0d6efd;
+      text-decoration: underline;
+    }
+
+    .link-style:hover {
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">SA Job Opportunities</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/about.html">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact.html">Contact Us</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Filters -->
+    <div class="filter-bar">
+      <select id="typeFilter" class="form-select form-select-sm w-auto">
+        <option value="">All Types</option>
+        <option value="Internship level">Internship</option>
+        <option value="Full time level">Full time</option>
+        <option value="Part time level/ Contract">Part time/ Contract</option>
+      </select>
+
+      <select id="categoryFilter" class="form-select form-select-sm w-auto">
+        <option value="">All Categories</option>
+        <option value="Administration">Administration</option>
+        <option value="Advertising">Advertising</option>
+        <option value="Art & Design">Art & Design</option>
+        <option value="Construction">Construction</option>
+        <option value="Customer Service">Customer Service</option>
+        <option value="Cybersecurity">Cybersecurity</option>
+        <!-- Add more categories as needed -->
+      </select>
+
+      <button class="btn btn-sm btn-dark" id="applyButton">Apply</button>
+    </div>
+
+    <!-- Job Listings -->
+    <div id="jobsList"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDTfLfb9gnn4zBGju8XoqAe-i7g9ahJyJk",
+      authDomain: "sa-job-opportunities.firebaseapp.com",
+      projectId: "sa-job-opportunities",
+      storageBucket: "sa-job-opportunities.appspot.com",
+      messagingSenderId: "370537417491",
+      appId: "1:370537417491:web:520e9dc1efb1d8cf38a8e6",
+      measurementId: "G-ZTK2KXSLXD"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    document.getElementById("applyButton").addEventListener("click", async () => {
+      const type = document.getElementById("typeFilter").value;
+      const category = document.getElementById("categoryFilter").value;
+
+      const querySnapshot = await getDocs(collection(db, "jobs"));
+      const allJobs = querySnapshot.docs.map(doc => doc.data());
+
+      const filteredJobs = allJobs.filter(job => {
+        const matchType = type ? job.type === type : true;
+        const matchCategory = category ? job.category === category : true;
+
+        const jobDeadline = new Date(job.deadline);
+        const today = new Date();
+        if (jobDeadline < today) {
+          return false;
+        }
+
+        return matchType && matchCategory;
+      });
+
+      const sortedJobs = filteredJobs.sort((a, b) => {
+        return new Date(b.deadline) - new Date(a.deadline);
+      });
+
+      displayJobs(sortedJobs);
+    });
+
+    function displayJobs(jobs) {
+      const jobsList = document.getElementById("jobsList");
+      jobsList.innerHTML = "";
+
+      if (jobs.length === 0) {
+        jobsList.innerHTML = '<p class="text-center">No jobs currently for selected filter.</p>';
+        return;
+      }
+
+      jobs.forEach(job => {
+        const card = document.createElement("div");
+        card.className = "job-card";
+        card.innerHTML = `
+          <h6>${job.title}</h6>
+          <p><strong>Company:</strong> ${job.company}</p>
+          <p><strong>Type:</strong> ${job.type}</p>
+          <p><strong>Category:</strong> ${job.category}</p>
+          <p><strong>Deadline:</strong> ${job.deadline}</p>
+          <a href="${job.link}" target="_blank" class="link-style">Find Out More</a>
+        `;
+        jobsList.appendChild(card);
+      });
+    }
+
+    // Initial load
+    document.getElementById("applyButton").click();
+  </script>
+</body>
+</html>
