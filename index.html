@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SA Job Opportunities</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
 
   <style>
     html, body {
@@ -13,125 +13,73 @@
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f4f7f9;
-      overflow-y: auto;
+      background-color: #fff;
     }
 
-    /* Container */
     .container {
       padding-top: 20px;
       max-width: 900px;
       margin: auto;
     }
 
-    /* Navbar */
-    .navbar {
-      background-color: #2c3e50;
-    }
-    .navbar-brand, .nav-link {
-      color: #ecf0f1 !important;
-    }
-    .navbar-brand:hover, .nav-link:hover {
-      color: #3498db !important;
-    }
-
-    /* Job Card Styling */
     .job-card {
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      margin-bottom: 16px;
-      transition: transform 0.3s;
       position: relative;
-    }
-    .job-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      background-color: #f9f9f9;
     }
 
     .job-card h6 {
       font-weight: 600;
-      color: #2c3e50;
-    }
-    .job-card p {
-      font-size: 14px;
-      color: #7f8c8d;
     }
 
-    /* Filter Bar Styling */
     .filter-bar {
       display: flex;
-      flex-wrap: wrap;
       justify-content: center;
-      gap: 15px;
+      align-items: stretch;
+      gap: 10px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
     }
 
-    .filter-bar select {
-      max-width: 250px;
-      border-radius: 8px;
-      height: 40px;
-    }
-
+    .filter-bar select,
     .filter-bar button {
       height: 40px;
-      max-width: 250px;
-      border-radius: 8px;
     }
 
-    /* Button Styling */
-    .btn-apply {
-      background-color: #3498db;
-      color: #fff;
-      border-radius: 8px;
-      padding: 10px 20px;
-    }
-    .btn-apply:hover {
-      background-color: #2980b9;
-      color: #fff;
-      transition: background-color 0.3s;
-    }
-
-    /* Share Icon Styling */
-    .share-icon {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 20px;
-      color: #16a085;
-      cursor: pointer;
-      transition: color 0.3s;
-    }
-    .share-icon:hover {
-      color: #1abc9c;
-    }
-
-    /* Link Style */
     .link-style {
       font-size: 13px;
       color: #3498db;
       text-decoration: underline;
     }
+
     .link-style:hover {
       text-decoration: none;
     }
 
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .filter-bar {
-        flex-direction: column;
-        align-items: center;
-      }
+    .share-icon {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 20px;
+      color: #3498db;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .share-icon:hover {
+      color: #2980b9;
     }
   </style>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">SA Job Opportunities</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
@@ -167,7 +115,7 @@
         <option value="Cybersecurity">Cybersecurity</option>
       </select>
 
-      <button class="btn btn-apply" id="applyButton">Apply Filter</button>
+      <button class="btn btn-sm btn-dark" id="applyButton">Apply Filter</button>
     </div>
 
     <!-- Job Listings -->
@@ -191,12 +139,15 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    document.getElementById("applyButton").addEventListener("click", async () => {
+    let allJobs = [];
+
+    document.getElementById("applyButton").addEventListener("click", () => {
+      filterAndDisplayJobs();
+    });
+
+    function filterAndDisplayJobs() {
       const type = document.getElementById("typeFilter").value;
       const category = document.getElementById("categoryFilter").value;
-
-      const querySnapshot = await getDocs(collection(db, "jobs"));
-      const allJobs = querySnapshot.docs.map(doc => doc.data());
 
       const filteredJobs = allJobs.filter(job => {
         const matchType = type ? job.type === type : true;
@@ -204,9 +155,7 @@
 
         const jobDeadline = new Date(job.deadline);
         const today = new Date();
-        if (jobDeadline < today) {
-          return false;
-        }
+        if (jobDeadline < today) return false;
 
         return matchType && matchCategory;
       });
@@ -216,7 +165,7 @@
       });
 
       displayJobs(sortedJobs);
-    });
+    }
 
     function displayJobs(jobs) {
       const jobsList = document.getElementById("jobsList");
@@ -230,28 +179,46 @@
       jobs.forEach((job, index) => {
         const card = document.createElement("div");
         card.className = "job-card";
+        card.id = `job-${index}`;
         card.innerHTML = `
-          <i class="bi bi-share-fill share-icon" onclick="shareJob(${index})"></i>
           <h6>${job.title}</h6>
           <p><strong>Company:</strong> ${job.company}</p>
           <p><strong>Type:</strong> ${job.type}</p>
           <p><strong>Category:</strong> ${job.category}</p>
           <p><strong>Deadline:</strong> ${job.deadline}</p>
           <a href="${job.link}" target="_blank" class="link-style">Find Out More</a>
+          <i class="bi bi-share-fill share-icon" onclick="shareJob(${index})" title="Share this job"></i>
         `;
         jobsList.appendChild(card);
       });
+
+      scrollToSharedJob();
     }
 
-    function shareJob(jobIndex) {
-      const url = window.location.href + `#job-${jobIndex}`;
-      navigator.clipboard.writeText(url)
-        .then(() => alert("Job URL copied to clipboard!"))
-        .catch(err => alert("Failed to copy URL: " + err));
+    window.shareJob = function(index) {
+      const url = `${window.location.origin}${window.location.pathname}#job-${index}`;
+      navigator.clipboard.writeText(url).then(() => {
+        alert("Job link copied to clipboard!");
+      });
     }
 
-    // Initial load
-    document.getElementById("applyButton").click();
+    function scrollToSharedJob() {
+      const hash = window.location.hash;
+      if (hash && hash.startsWith("#job-")) {
+        const target = document.querySelector(hash);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    }
+
+    async function loadJobs() {
+      const querySnapshot = await getDocs(collection(db, "jobs"));
+      allJobs = querySnapshot.docs.map(doc => doc.data());
+      filterAndDisplayJobs();
+    }
+
+    loadJobs();
   </script>
 </body>
 </html>
