@@ -6,7 +6,6 @@
   <title>SA Job Opportunities</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
-
   <style>
     html, body {
       height: 100%;
@@ -30,6 +29,7 @@
       margin-bottom: 20px;
       font-size: 14px;
       background-color: #f9f9f9;
+      min-height: 220px;
     }
 
     .job-card h6 {
@@ -48,6 +48,7 @@
     .filter-bar select,
     .filter-bar button {
       height: 40px;
+      font-size: 14px;
     }
 
     .link-style {
@@ -76,6 +77,7 @@
   </style>
 </head>
 <body>
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">SA Job Opportunities</a>
@@ -115,7 +117,7 @@
         <option value="Cybersecurity">Cybersecurity</option>
       </select>
 
-      <button class="btn btn-sm btn-dark" id="applyButton">Apply Filter</button>
+      <button class="btn btn-sm btn-dark w-auto" id="applyButton">Apply Filter</button>
     </div>
 
     <!-- Job Listings -->
@@ -138,7 +140,6 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-
     let allJobs = [];
 
     document.getElementById("applyButton").addEventListener("click", () => {
@@ -152,11 +153,9 @@
       const filteredJobs = allJobs.filter(job => {
         const matchType = type ? job.type === type : true;
         const matchCategory = category ? job.category === category : true;
-
         const jobDeadline = new Date(job.deadline);
         const today = new Date();
         if (jobDeadline < today) return false;
-
         return matchType && matchCategory;
       });
 
