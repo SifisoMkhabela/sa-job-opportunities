@@ -13,6 +13,14 @@
       padding: 0;
       font-family: 'Segoe UI', sans-serif;
       background-color: #f4f7f9;
+      overflow-y: auto;
+    }
+
+    /* Container */
+    .container {
+      padding-top: 20px;
+      max-width: 900px;
+      margin: auto;
     }
 
     /* Navbar */
@@ -31,13 +39,15 @@
       background-color: #fff;
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s;
       padding: 20px;
+      margin-bottom: 16px;
+      transition: transform 0.3s;
     }
     .job-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
+
     .job-card h6 {
       font-weight: 600;
       color: #2c3e50;
@@ -45,6 +55,32 @@
     .job-card p {
       font-size: 14px;
       color: #7f8c8d;
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .filter-bar select {
+      max-width: 250px;
+      border-radius: 8px;
+    }
+
+    /* Button Styling */
+    .btn-apply {
+      background-color: #3498db;
+      color: #fff;
+      border-radius: 8px;
+      padding: 10px 20px;
+    }
+    .btn-apply:hover {
+      background-color: #2980b9;
+      color: #fff;
+      transition: background-color 0.3s;
     }
 
     /* Link Style */
@@ -57,32 +93,6 @@
       text-decoration: none;
     }
 
-    /* Button Style */
-    .btn-apply {
-      background-color: #3498db;
-      color: #fff;
-      border-radius: 8px;
-      padding: 10px 20px;
-    }
-    .btn-apply:hover {
-      background-color: #2980b9;
-      transition: background-color 0.3s;
-    }
-
-    /* Filter Section */
-    .filter-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-bottom: 30px;
-    }
-
-    .filter-bar select {
-      max-width: 300px;
-      border-radius: 8px;
-    }
-
     /* Responsive Design */
     @media (max-width: 768px) {
       .filter-bar {
@@ -93,7 +103,6 @@
   </style>
 </head>
 <body>
-
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
@@ -114,10 +123,9 @@
     </div>
   </nav>
 
-  <div class="container mt-4">
-
+  <div class="container">
     <!-- Filters -->
-    <div class="filter-bar mb-4">
+    <div class="filter-bar">
       <select id="typeFilter" class="form-select form-select-sm w-auto">
         <option value="">All Types</option>
         <option value="Internship level">Internship</option>
@@ -139,9 +147,7 @@
     </div>
 
     <!-- Job Listings -->
-    <div id="jobsList" class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-      <!-- Job cards will appear here -->
-    </div>
+    <div id="jobsList"></div>
   </div>
 
   <script type="module">
@@ -199,18 +205,14 @@
 
       jobs.forEach(job => {
         const card = document.createElement("div");
-        card.className = "col mb-4";
+        card.className = "job-card";
         card.innerHTML = `
-          <div class="card job-card">
-            <div class="card-body">
-              <h6 class="card-title">${job.title}</h6>
-              <p class="card-text"><strong>Company:</strong> ${job.company}</p>
-              <p class="card-text"><strong>Type:</strong> ${job.type}</p>
-              <p class="card-text"><strong>Category:</strong> ${job.category}</p>
-              <p class="card-text"><strong>Deadline:</strong> ${job.deadline}</p>
-              <a href="${job.link}" target="_blank" class="link-style">Find Out More</a>
-            </div>
-          </div>
+          <h6>${job.title}</h6>
+          <p><strong>Company:</strong> ${job.company}</p>
+          <p><strong>Type:</strong> ${job.type}</p>
+          <p><strong>Category:</strong> ${job.category}</p>
+          <p><strong>Deadline:</strong> ${job.deadline}</p>
+          <a href="${job.link}" target="_blank" class="link-style">Find Out More</a>
         `;
         jobsList.appendChild(card);
       });
