@@ -73,6 +73,15 @@
     </div>
   </section>
 
+  <!-- Jobs Listing Section -->
+  <section class="container my-5" aria-label="Job Listings">
+    <h2 class="mb-4">All Job Opportunities</h2>
+    <div id="jobsContainer" class="row g-3">
+      <!-- Jobs will be appended here -->
+      <p>Loading jobs...</p>
+    </div>
+  </section>
+
   <!-- Browse Filter Modal -->
   <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -190,111 +199,149 @@
       <a href="https://twitter.com/YourProfile" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
         <img src="twitter.png" alt="Twitter" />
       </a>
-      <a href="https://instagram.com/YourProfile" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+      <a href="https://www.instagram.com/YourProfile" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
         <img src="instagram.png" alt="Instagram" />
       </a>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="text-center py-4 border-top bg-light">
-    <p class="mb-0">
-      &copy; 2025 SA Job Opportunities. All Rights Reserved.
-    </p>
+  <footer class="footer bg-light py-4 border-top">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+      <p class="mb-2 mb-md-0">© 2025 SA Job Opportunities. All rights reserved.</p>
+      <ul class="footer-links list-inline mb-0">
+        <li class="list-inline-item"><a href="privacy.html">Privacy Policy</a></li>
+        <li class="list-inline-item"><a href="terms.html">Terms of Service</a></li>
+        <li class="list-inline-item"><a href="contact.html">Contact Us</a></li>
+      </ul>
+    </div>
   </footer>
 
-  <!-- Bootstrap JS Bundle with Popper -->
+  <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Firebase Initialization and Firestore fetch script -->
   <script>
-    // Replace this config with your Firebase project's config
+    // Your Firebase config here
     const firebaseConfig = {
-    apiKey: "AIzaSyDTfLfb9gnn4zBGju8XoqAe-i7g9ahJyJk",
-    authDomain: "sa-job-opportunities.firebaseapp.com",
-    projectId: "sa-job-opportunities",
-    storageBucket: "sa-job-opportunities.appspot.com",
-    messagingSenderId: "370537417491",
-    appId: "1:370537417491:web:520e9dc1efb1d8cf38a8e6",
-    measurementId: "G-ZTK2KXSLXD"
-  };
+      apiKey: "AIzaSyCexm1PTk0cst8i3NJxh8MJvqvgm0ys84A",
+      authDomain: "sa-job-opportunities.firebaseapp.com",
+      projectId: "sa-job-opportunities",
+      storageBucket: "sa-job-opportunities.appspot.com",
+      messagingSenderId: "1055979762474",
+      appId: "1:1055979762474:web:54ea80e0f1e2e339793f5a",
+      measurementId: "G-T1Z3MRRX2H"
+    };
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Populate dropdown select from Firestore collection
-    function populateSelectFromFirestore(collectionName, selectElementId) {
-      const select = document.getElementById(selectElementId);
-      // Clear existing options except default
-      select.querySelectorAll('option:not([value=""])').forEach(opt => opt.remove());
+    // Populate dropdown from Firestore collection
+    function populateSelectFromFirestore(collection, selectId) {
+      const select = document.getElementById(selectId);
+      if (!select) return;
 
-      db.collection(collectionName)
+      db.collection(collection)
         .orderBy('name')
         .get()
         .then(snapshot => {
           snapshot.forEach(doc => {
             const data = doc.data();
             const option = document.createElement('option');
-            option.value = data.name;
-            option.textContent = data.name;
+            option.value = data.name || doc.id;
+            option.textContent = data.name || doc.id;
             select.appendChild(option);
           });
         })
-        .catch(error => {
-          console.error(`Error loading ${collectionName}:`, error);
-        });
+        .catch(console.error);
     }
 
-    // Render filter buttons inside modal for a collection
-    function loadFilterList(collectionName, containerId) {
+    // Load filter list (regions, cities, sectors)
+    function loadFilterList(collection, containerId) {
       const container = document.getElementById(containerId);
-      container.textContent = 'Loading...';
-      db.collection(collectionName)
+      if (!container) return;
+
+      db.collection(collection)
         .orderBy('name')
         .get()
         .then(snapshot => {
-          container.textContent = '';
+          container.innerHTML = '';
           if (snapshot.empty) {
-            container.textContent = 'No filters found.';
+            container.innerHTML = '<p>No filters found.</p>';
             return;
           }
           snapshot.forEach(doc => {
             const data = doc.data();
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'btn btn-outline-primary m-1';
-            btn.textContent = data.name;
-            btn.setAttribute('aria-pressed', 'false');
-            btn.onclick = () => {
-              // Toggle button active state on click
-              const pressed = btn.getAttribute('aria-pressed') === 'true';
-              btn.setAttribute('aria-pressed', String(!pressed));
-              btn.classList.toggle('active');
-            };
-            container.appendChild(btn);
+            const filterLink = document.createElement('a');
+            filterLink.href = `jobs.html?${collection.slice(0, -1)}=${encodeURIComponent(data.name)}`;
+            filterLink.textContent = data.name;
+            filterLink.className = 'd-block mb-1';
+            container.appendChild(filterLink);
+          });
+        })
+        .catch(console.error);
+    }
+
+    // Load job count
+    function loadJobCount() {
+      const jobCountElem = document.getElementById('jobCount');
+      db.collection('jobs')
+        .get()
+        .then(snapshot => {
+          jobCountElem.textContent = `${snapshot.size.toLocaleString()}+`;
+        })
+        .catch(() => {
+          jobCountElem.textContent = 'N/A';
+        });
+    }
+
+    // Function to display all jobs from Firestore
+    function displayAllJobs() {
+      const jobsContainer = document.getElementById('jobsContainer');
+      jobsContainer.innerHTML = 'Loading jobs...';
+
+      db.collection('jobs')
+        .orderBy('deadline', 'desc')
+        .get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            jobsContainer.innerHTML = '<p>No jobs found.</p>';
+            return;
+          }
+          jobsContainer.innerHTML = '';  // Clear loading text
+
+          snapshot.forEach(doc => {
+            const job = doc.data();
+
+            const jobCard = document.createElement('div');
+            jobCard.className = 'col-md-6 col-lg-4';
+
+            jobCard.innerHTML = `
+              <div class="card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title">${job.title || 'No title'}</h5>
+                  <p class="card-subtitle mb-2 text-muted">${job.company || 'Unknown Company'}</p>
+                  <p class="card-text mb-1"><strong>Type:</strong> ${job.type || 'N/A'}</p>
+                  <p class="card-text mb-1"><strong>Category:</strong> ${job.category || 'N/A'}</p>
+                  <p class="card-text mb-1"><strong>Location:</strong> ${job.location || 'N/A'}</p>
+                  <p class="card-text mb-2"><strong>Deadline:</strong> ${
+                    job.deadline ? new Date(job.deadline.seconds * 1000).toLocaleDateString() : 'N/A'
+                  }</p>
+                  <a href="${job.link || '#'}" target="_blank" rel="noopener" class="mt-auto btn btn-primary btn-sm">View Job</a>
+                </div>
+              </div>
+            `;
+
+            jobsContainer.appendChild(jobCard);
           });
         })
         .catch(error => {
-          container.textContent = `Error loading ${collectionName}`;
-          console.error(error);
+          console.error('Error fetching jobs:', error);
+          jobsContainer.innerHTML = '<p>Error loading jobs.</p>';
         });
     }
 
-    // Load job count (example: count documents in jobs collection)
-    function loadJobCount() {
-      const countElem = document.getElementById('jobCount');
-      db.collection('jobs').get()
-        .then(snapshot => {
-          countElem.textContent = snapshot.size.toLocaleString();
-        })
-        .catch(err => {
-          countElem.textContent = 'N/A';
-          console.error('Error fetching job count:', err);
-        });
-    }
-
-    // On page load
+    // DOMContentLoaded setup
     window.addEventListener('DOMContentLoaded', () => {
       populateSelectFromFirestore('types', 'typeSelect');
       populateSelectFromFirestore('categories', 'categorySelect');
@@ -302,6 +349,7 @@
       loadFilterList('cities', 'cityFilterList');
       loadFilterList('sectors', 'sectorFilterList');
       loadJobCount();
+      displayAllJobs();
     });
   </script>
 </body>
