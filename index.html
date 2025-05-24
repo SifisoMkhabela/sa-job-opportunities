@@ -1,34 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SA Job Opportunities</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>SA Job Opportunities</h1>
-    <nav>
-      <a href="#">Jobs</a> |
-      <a href="#">Companies</a> |
-      <a href="#">Courses</a> |
-      <a href="#">Career Advice</a>
-    </nav>
-    <p><strong>8112 Jobs in South Africa</strong></p>
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="container">
+      <img src="logo.png" alt="SA Job Opportunities" class="logo">
+      <div class="top-links">
+        <a href="#">EMPLOYERS & RECRUITERS</a> |
+        <a href="#">POST A JOB</a>
+        <i class="fas fa-user-circle"></i>
+      </div>
+    </div>
   </header>
 
-  <main>
-    <section>
-      <h2>Browse Jobs by:</h2>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1>Find your dream career</h1>
+      <p><strong>8112</strong> Jobs in South Africa</p>
+      <div class="tabs">
+        <a href="#">Jobs</a>
+        <a href="#">Companies</a>
+        <a href="#">Courses</a>
+        <a href="#">Career Advice</a>
+      </div>
+      <div class="search-bar">
+        <input type="text" placeholder="Job Title, Skill or Company">
+        <input type="text" placeholder="Location">
+        <button><i class="fas fa-search"></i></button>
+        <label>
+          <input type="checkbox" checked>
+          Include Remote Jobs
+        </label>
+      </div>
+    </div>
+  </section>
 
-      <!-- Search by Region -->
-      <div class="section">
+  <!-- Browse Jobs -->
+  <section class="browse container">
+    <h2>Browse Jobs by:</h2>
+    <div class="columns">
+      <div>
         <h3>Search by Region</h3>
         <ul>
           <li><a href="job.html?region=Gauteng">Gauteng Jobs (3425)</a></li>
           <li><a href="job.html?region=Western Cape">Western Cape Jobs (3224)</a></li>
-          <li><a href="job.html?region=KwaZulu-Natal">KwaZulu-Natal Jobs (1075)</a></li>
+          <li><a href="job.html?region=KwaZulu-Natal">KwaZulu Natal Jobs (1075)</a></li>
           <li><a href="job.html?region=Eastern Cape">Eastern Cape Jobs (609)</a></li>
           <li><a href="job.html?region=Mpumalanga">Mpumalanga Jobs (756)</a></li>
           <li><a href="job.html?region=Northern Cape">Northern Cape Jobs (487)</a></li>
@@ -37,9 +61,7 @@
           <li><a href="job.html?region=Limpopo">Limpopo Jobs (582)</a></li>
         </ul>
       </div>
-
-      <!-- Search by City -->
-      <div class="section">
+      <div>
         <h3>Search by City</h3>
         <ul>
           <li><a href="job.html?city=Johannesburg">Johannesburg Jobs (1740)</a></li>
@@ -53,9 +75,7 @@
           <li><a href="job.html?city=Pietermaritzburg">Pietermaritzburg Jobs (449)</a></li>
         </ul>
       </div>
-
-      <!-- Search by Sector -->
-      <div class="section">
+      <div>
         <h3>Search by Sector</h3>
         <ul>
           <li><a href="job.html?sector=IT">IT Jobs (882)</a></li>
@@ -69,23 +89,67 @@
           <li><a href="job.html?sector=Admin">Admin Jobs (471)</a></li>
         </ul>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="cta">
-      <h3>Never miss a job opportunity</h3>
-      <p>Get SA Job Opportunities on your phone.</p>
-      <ul>
-        <li>Access 1000s of jobs, on the go</li>
-        <li>Filtering to find the jobs that suit you</li>
-        <li>Apply directly and in real time</li>
-      </ul>
-    </section>
-  </main>
+  <!-- Companies -->
+  <section class="companies container">
+    <h3>Companies Hiring Now</h3>
+    <div class="logos">
+      <img src="img/hollywoodbets.png" alt="Hollywoodbets">
+      <img src="img/we-buy-cars.png" alt="WeBuyCars">
+      <img src="img/building-company.png" alt="The Building Company">
+      <img src="img/vkb.png" alt="VKB">
+      <img src="img/pep.png" alt="Pepkor">
+    </div>
+  </section>
 
+  <!-- CTA -->
+  <section class="cta container">
+    <h3>Never miss a job opportunity</h3>
+    <p><strong>Get SA Job Opportunities on your phone</strong></p>
+    <ul>
+      <li>Access 1000s of jobs, on the go</li>
+      <li>Filtering to the jobs that suit you</li>
+      <li>Apply directly in real time</li>
+    </ul>
+    <div class="store-buttons">
+      <img src="img/appstore.png" alt="App Store">
+      <img src="img/playstore.png" alt="Google Play">
+      <img src="img/appgallery.png" alt="App Gallery">
+    </div>
+  </section>
+
+  <!-- Footer -->
   <footer>
-    <p><strong>About SA Job Opportunities</strong></p>
-    <p>SA Job Opportunities is a platform that connects jobseekers with top employers across South Africa.</p>
-    <p>&copy; 2025 SA Job Opportunities. All rights reserved.</p>
+    <div class="container footer-grid">
+      <div>
+        <h4>About SA Job Opportunities</h4>
+        <p>SA Job Opportunities is a platform that assists jobseekers from all sectors to find and apply for top jobs in South Africa.</p>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">Work For Us</a></li>
+          <li><a href="#">Advertise With Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#">Recruiters Directory</a></li>
+          <li><a href="#">Site Map</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Follow Us</h4>
+        <a href="#"><i class="fab fa-facebook-square"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-twitter-square"></i></a>
+      </div>
+    </div>
+    <p class="centered">&copy; 2025 SA Job Opportunities. All rights reserved.</p>
   </footer>
 </body>
 </html>
