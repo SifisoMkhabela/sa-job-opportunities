@@ -8,135 +8,186 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="index.html">SA Job Opportunities</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div id="navbarNav" class="collapse navbar-collapse">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              Menu
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="index.html">Home</a></li>
-              <li><a class="dropdown-item" href="jobs.html">Jobs (Filter)</a></li>
-            </ul>
-          </li>
-          <li class="nav-item"><a class="nav-link" href="company.html">Companies</a></li>
-          <li class="nav-item"><a class="nav-link" href="courses.html">Courses</a></li>
-          <li class="nav-item"><a class="nav-link" href="career-advice.html">Career Advice</a></li>
-          <li class="nav-item"><a class="nav-link" href="post-job.html">Post a Job</a></li>
-        </ul>
+  <!-- Top Header Bar -->
+  <div class="bg-light py-2 border-bottom">
+    <div class="container d-flex justify-content-between align-items-center">
+      <h4 class="mb-0 fw-bold">Careers24</h4>
+      <div>
+        <a href="#" class="text-decoration-none me-3">EMPLOYERS & RECRUITERS</a>
+        <a href="post-job.html" class="btn btn-primary btn-sm">POST A JOB</a>
       </div>
     </div>
-  </nav>
+  </div>
 
-  <main class="container my-5">
-    <h1>Job Listings</h1>
+  <main class="container my-4">
+    <div class="row">
+      <!-- Sidebar Filters -->
+      <aside class="col-md-3">
+        <h5 class="fw-bold">REFINE YOUR SEARCH</h5>
+        <a href="#" class="d-block mb-3 text-danger">CLEAR FILTERS</a>
 
-    <form id="filter-form" class="row g-3 mb-4">
-      <div class="col-md-4">
-        <input
-          type="text"
-          id="filter-keyword"
-          class="form-control"
-          placeholder="Job Title, Skill or Company"
-          autocomplete="off"
-        />
-      </div>
-      <div class="col-md-3">
-        <input
-          type="text"
-          id="filter-location"
-          class="form-control"
-          placeholder="Location"
-          autocomplete="off"
-        />
-      </div>
-      <div class="col-md-3">
-        <select id="filter-category" class="form-select">
-          <option value="">All Categories</option>
-          <option value="IT">IT</option>
-          <option value="Finance">Finance</option>
-          <option value="Sales">Sales</option>
-          <option value="Engineering">Engineering</option>
-          <option value="Manufacturing">Manufacturing</option>
-          <option value="General">General</option>
-          <option value="Accounting">Accounting</option>
-          <option value="Insurance">Insurance</option>
-          <option value="Admin">Admin</option>
-        </select>
-      </div>
-      <div class="col-md-2">
-        <button type="submit" class="btn btn-primary w-100">Filter</button>
-      </div>
-    </form>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Location:</label>
+          <select class="form-select" id="filter-location">
+            <option value="">Any</option>
+            <!-- Add more regions if needed -->
+          </select>
+        </div>
 
-    <div id="jobs-list" class="list-group">
-      <div class="text-center text-muted">Loading jobs...</div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Remote Jobs</label>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="remote" id="remote-any" checked>
+            <label class="form-check-label" for="remote-any">Include Remote Jobs</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="remote" id="remote-only">
+            <label class="form-check-label" for="remote-only">Show Remote Jobs Only (413)</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="remote" id="remote-exclude">
+            <label class="form-check-label" for="remote-exclude">Exclude Remote Jobs</label>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Minimum Salary</label>
+          <select class="form-select">
+            <option>Any</option>
+            <option>R12000 (1946)</option>
+            <option>R24000 (1307)</option>
+            <option>R36000 (878)</option>
+            <option>R48000 (644)</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Sectors</label>
+          <select class="form-select" id="filter-category">
+            <option value="">All</option>
+            <option value="IT">IT</option>
+            <option value="Finance">Finance</option>
+            <option value="Sales">Sales</option>
+            <option value="Engineering">Engineering</option>
+            <option value="General">General</option>
+            <option value="Accounting">Accounting</option>
+            <option value="Insurance">Insurance</option>
+            <option value="Admin">Admin</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Date Posted</label>
+          <select class="form-select">
+            <option>Any</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Contract Type</label>
+          <select class="form-select">
+            <option>Any</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">EE/AA Status</label>
+          <select class="form-select">
+            <option>Any</option>
+          </select>
+        </div>
+      </aside>
+
+      <!-- Job Listings -->
+      <section class="col-md-9">
+        <p class="text-muted">Home / Job Search</p>
+        <h4 class="fw-bold mb-3"><span id="job-count">0</span> South Africa Jobs</h4>
+
+        <div id="jobs-list" class="mb-4">
+          <div class="text-center text-muted">Loading jobs...</div>
+        </div>
+
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+            <li class="page-item disabled"><a class="page-link" href="#">First</a></li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+          </ul>
+        </nav>
+      </section>
     </div>
   </main>
 
-  <footer class="bg-dark text-white py-4 mt-5">
-    <div class="container text-center">&copy; 2025 SA Job Opportunities. All rights reserved.</div>
+  <!-- Footer -->
+  <footer class="bg-dark text-white py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <h6>About Careers24.com</h6>
+          <p>Careers24 is a leading South African job portal... part of the Naspers group of companies.</p>
+        </div>
+        <div class="col-md-2 mb-3">
+          <h6>Company</h6>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white">Work For Us</a></li>
+            <li><a href="#" class="text-white">Advertise With Us</a></li>
+          </ul>
+        </div>
+        <div class="col-md-2 mb-3">
+          <h6>Quick Links</h6>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white">Recruiters Directory</a></li>
+            <li><a href="#" class="text-white">Site Map</a></li>
+            <li><a href="#" class="text-white">Widgets</a></li>
+            <li><a href="#" class="text-white">Recruiter Terms</a></li>
+            <li><a href="#" class="text-white">Faq</a></li>
+          </ul>
+        </div>
+        <div class="col-md-2 mb-3">
+          <h6>Partner Sites</h6>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white">Simplify.hr</a></li>
+            <li><a href="#" class="text-white">News24</a></li>
+            <li><a href="#" class="text-white">Property24</a></li>
+            <li><a href="#" class="text-white">Media24</a></li>
+          </ul>
+        </div>
+        <div class="col-md-2 text-end">
+          <h6>Follow Us</h6>
+          <!-- Add social icons here if needed -->
+        </div>
+      </div>
+      <div class="text-center mt-3">&copy; Careers24. All rights reserved.</div>
+    </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  
-  <!-- Your Firebase config should be in this file -->
   <script src="js/firebase-config.js"></script>
-
   <script>
-    // Wait for Firebase to initialize
     document.addEventListener('DOMContentLoaded', () => {
       const jobsList = document.getElementById('jobs-list');
-      const filterForm = document.getElementById('filter-form');
-      const keywordInput = document.getElementById('filter-keyword');
-      const locationInput = document.getElementById('filter-location');
-      const categorySelect = document.getElementById('filter-category');
-
+      const jobCount = document.getElementById('job-count');
       let allJobs = [];
 
-      // Render job card function
-      function renderJob(jobData) {
-        const card = document.createElement('div');
-        card.className = 'list-group-item list-group-item-action flex-column align-items-start mb-3';
-
-        card.innerHTML = `
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">${jobData.title}</h5>
-            <small>${jobData.postedDate || ''}</small>
-          </div>
-          <p class="mb-1">${jobData.company} — ${jobData.location}</p>
-          <small>Job Type: ${jobData.type} | ${jobData.daysLeft ? jobData.daysLeft + ' days left' : ''}</small>
+      function renderJob(job) {
+        const div = document.createElement('div');
+        div.className = 'border p-3 mb-3';
+        div.innerHTML = `
+          <h5>${job.title}</h5>
+          <p class="mb-1">${job.location}</p>
+          <p class="mb-1">Job Type: ${job.type}</p>
+          <small>Posted: ${job.postedDate} | ${job.daysLeft} Days left</small>
           <div class="mt-2">
-            <a href="${jobData.link || '#'}" target="_blank" class="btn btn-sm btn-primary">Apply Now</a>
+            <a href="${job.link || '#'}" target="_blank" class="btn btn-sm btn-primary">Apply Now</a>
           </div>
         `;
-
-        return card;
+        return div;
       }
 
-      // Display jobs on the page
       function displayJobs(jobs) {
         jobsList.innerHTML = '';
+        jobCount.textContent = jobs.length;
         if (jobs.length === 0) {
           jobsList.innerHTML = '<div class="text-center text-muted">No jobs found.</div>';
           return;
@@ -146,43 +197,14 @@
         });
       }
 
-      // Filter jobs by keyword, location, category
-      function filterJobs() {
-        const keyword = keywordInput.value.trim().toLowerCase();
-        const location = locationInput.value.trim().toLowerCase();
-        const category = categorySelect.value;
-
-        const filtered = allJobs.filter(job => {
-          const matchesKeyword =
-            keyword === '' ||
-            job.title.toLowerCase().includes(keyword) ||
-            job.company.toLowerCase().includes(keyword);
-
-          const matchesLocation =
-            location === '' || (job.location && job.location.toLowerCase().includes(location));
-
-          const matchesCategory =
-            category === '' || (job.category && job.category === category);
-
-          return matchesKeyword && matchesLocation && matchesCategory;
-        });
-
-        displayJobs(filtered);
-      }
-
-      // Load jobs from Firebase
       function loadJobs() {
         const db = firebase.firestore();
-
         db.collection('jobs')
           .get()
           .then(snapshot => {
             allJobs = [];
             snapshot.forEach(doc => {
               const job = doc.data();
-
-              // Optional: compute days left if you have deadline dates stored
-              const postedDate = job.postedDate || '';
               const deadline = job.deadline ? new Date(job.deadline) : null;
               let daysLeft = '';
               if (deadline) {
@@ -193,32 +215,22 @@
 
               allJobs.push({
                 title: job.title || 'No title',
-                company: job.company || 'No company',
-                location: job.location || 'No location',
-                type: job.type || 'N/A',
-                postedDate: postedDate,
+                company: job.company || 'Unknown',
+                location: job.location || 'South Africa',
+                type: job.type || 'Permanent',
+                postedDate: job.postedDate || 'N/A',
                 daysLeft: daysLeft,
                 link: job.link || '#',
                 category: job.category || ''
               });
             });
-
             displayJobs(allJobs);
           })
           .catch(error => {
-            console.error('Error fetching jobs:', error);
-            jobsList.innerHTML =
-              '<div class="text-center text-danger">Failed to load jobs. Please try again later.</div>';
+            jobsList.innerHTML = '<div class="text-danger">Error loading jobs. Try again later.</div>';
           });
       }
 
-      // Event listener for filter form
-      filterForm.addEventListener('submit', e => {
-        e.preventDefault();
-        filterJobs();
-      });
-
-      // Load jobs initially
       loadJobs();
     });
   </script>
