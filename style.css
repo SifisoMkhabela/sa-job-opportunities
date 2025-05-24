@@ -1,49 +1,57 @@
+/* General Styles */
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #fff;
-  color: #000;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-.navbar {
+
+/* Header Styling */
+.header-section {
   background-color: #000;
   color: #fff;
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  padding: 3rem 1rem;
 }
-.logo {
-  font-weight: bold;
-  font-size: 20px;
-}
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 15px;
+
+/* Browse List Styling */
+.browse-list {
   padding: 0;
   margin: 0;
 }
-.nav-links li a {
+
+.browse-list li {
+  margin: 0.5rem 1rem 0.5rem 0;
+  display: inline-block;
+  background-color: #f8f9fa;
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+/* Job Card */
+.card h5 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.card h6 {
+  font-size: 0.9rem;
+}
+
+/* Companies Hiring */
+.companies-hiring {
+  text-align: center;
+}
+
+/* Footer Styling */
+.footer {
+  background-color: #212529;
+  color: #fff;
+  padding: 2rem 1rem;
+}
+
+.footer a {
   color: #fff;
   text-decoration: none;
-  font-size: 14px;
 }
-.nav-links li a:hover {
+
+.footer a:hover {
   text-decoration: underline;
-}
-.hero {
-  text-align: center;
-  padding: 50px 20px;
-}
-.search-bar {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
-}
-.search-bar input, .search-bar button {
-  padding: 10px;
-  font-size: 16px;
 }
