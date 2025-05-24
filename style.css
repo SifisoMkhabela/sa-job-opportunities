@@ -393,6 +393,29 @@ footer a:hover {
   }
 }
 
+.marquee {
+  white-space: nowrap;
+  animation: scroll-left 25s linear infinite;
+  display: inline-flex;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.job-categories-marquee img {
+  height: 40px;
+}
+.category span {
+  font-weight: 500;
+}
+
+
 @media (max-width: 480px) {
   .top-bar .container {
     flex-direction: column;
