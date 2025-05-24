@@ -1,57 +1,37 @@
-/* General Styles */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
 }
 
-/* Header Styling */
-.header-section {
+.hero-section {
   background-color: #000;
-  color: #fff;
-  padding: 3rem 1rem;
 }
 
-/* Browse List Styling */
+h1, h2 {
+  font-weight: bold;
+}
+
 .browse-list {
-  padding: 0;
-  margin: 0;
+  padding-left: 0;
 }
 
 .browse-list li {
   margin: 0.5rem 1rem 0.5rem 0;
+  background: #f8f9fa;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 1px solid #ccc;
   display: inline-block;
-  background-color: #f8f9fa;
-  padding: 0.4rem 0.75rem;
-  border-radius: 4px;
-  font-size: 0.95rem;
 }
 
-/* Job Card */
-.card h5 {
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.card h6 {
-  font-size: 0.9rem;
-}
-
-/* Companies Hiring */
 .companies-hiring {
   text-align: center;
 }
 
-/* Footer Styling */
-.footer {
-  background-color: #212529;
-  color: #fff;
-  padding: 2rem 1rem;
+footer h5 {
+  margin-bottom: 0.75rem;
 }
 
-.footer a {
-  color: #fff;
-  text-decoration: none;
-}
-
-.footer a:hover {
+footer a:hover {
   text-decoration: underline;
 }
