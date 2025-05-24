@@ -66,11 +66,17 @@ a:hover {
 .hero {
   background: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1470&q=80') center/cover no-repeat;
   color: white;
-  padding: 10px 0 5px;
-  text-align: center;
   position: relative;
   height: 400px;
 
+  /* Flexbox for vertical + horizontal centering */
+  display: flex;
+  justify-content: center;  /* center horizontally */
+  align-items: center;      /* center vertically */
+
+  /* Remove padding here, we’ll control spacing inside container */
+  padding: 0;
+  text-align: center;
 }
 
 .hero::after {
@@ -85,6 +91,14 @@ a:hover {
   position: relative;
   z-index: 2;
   max-width: 700px;
+
+  /* Add some vertical spacing inside container */
+  padding: 20px 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 
 .hero h1 {
