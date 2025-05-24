@@ -46,30 +46,25 @@
         <a href="courses.html" class="btn btn-outline-primary mx-1">Courses</a>
         <a href="career-advice.html" class="btn btn-outline-primary mx-1">Career Advice</a>
       </nav>
+
+      <!-- Updated Search Form with Type and Category dropdowns -->
       <form class="row justify-content-center g-2" role="search" action="jobs.html" method="get" aria-label="Job search form">
         <div class="col-md-4">
-          <input
-            type="search"
-            name="keyword"
-            class="form-control"
-            placeholder="Job Title, Skill or Company"
-            aria-label="Job Title, Skill or Company"
-          />
+          <select name="type" id="typeSelect" class="form-select" aria-label="Select job type">
+            <option value="">All Types</option>
+            <!-- Options loaded dynamically from Firestore -->
+          </select>
         </div>
-        <div class="col-md-3">
-          <input
-            type="search"
-            name="location"
-            class="form-control"
-            placeholder="Location"
-            aria-label="Location"
-          />
+        <div class="col-md-4">
+          <select name="category" id="categorySelect" class="form-select" aria-label="Select job category">
+            <option value="">All Categories</option>
+            <!-- Options loaded dynamically from Firestore -->
+          </select>
         </div>
         <div class="col-auto d-flex gap-2">
           <button type="submit" class="btn btn-primary" aria-label="Search jobs">
             <i class="fas fa-search"></i> Search
           </button>
-          <!-- Button to open Browse Filter Modal -->
           <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#filterModal" aria-label="Browse jobs filters">
             <i class="fas fa-filter"></i> Filters
           </button>
@@ -225,43 +220,69 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Function to render filter list in the modal dynamically
-    function renderFilterList(collectionName, containerId, queryParam) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = 'Loading...';
+    // Populate dropdown select from Firestore collection
+    function populateSelectFromFirestore(collectionName, selectElementId) {
+      const select = document.getElementById(selectElementId);
+      // Remove all options except the default (value="")
+      select.querySelectorAll('option:not([value=""])').forEach(opt => opt.remove());
 
       db.collection(collectionName)
         .orderBy('name')
         .get()
-        .then((querySnapshot) => {
-          if (querySnapshot.empty) {
-            container.innerHTML = '<p>No data found.</p>';
-            return;
-          }
-          let html = '<ul class="list-unstyled">';
-          querySnapshot.forEach((doc) => {
+        .then(snapshot => {
+          snapshot.forEach(doc => {
             const data = doc.data();
-            const name = data.name;
-            const count = data.count || 0;
-            html += `<li><a href="jobs.html?${queryParam}=${encodeURIComponent(name)}">${name} Jobs (${count})</a></li>`;
+            const option = document.createElement('option');
+            option.value = data.name;
+            option.textContent = data.name;
+            select.appendChild(option);
           });
-          html += '</ul>';
-          container.innerHTML = html;
         })
-        .catch((error) => {
-          console.error("Error fetching " + collectionName + ":", error);
-          container.innerHTML = '<p>Error loading data.</p>';
+        .catch(error => {
+          console.error(`Error loading ${collectionName}:`, error);
         });
     }
 
-    // Load filters when modal is about to be shown
-    const filterModal = document.getElementById('filterModal');
-    filterModal.addEventListener('show.bs.modal', () => {
-      renderFilterList('regions', 'regionFilterList', 'region');
-      renderFilterList('cities', 'cityFilterList', 'city');
-      renderFilterList('sectors', 'sectorFilterList', 'sector');
+    // Function to render filter list in the modal dynamically
+    function loadFilterList(collectionName, containerId) {
+      const container = document.getElementById(containerId);
+      container.textContent = 'Loading...';
+      db.collection(collectionName)
+        .orderBy('name')
+        .get()
+        .then(snapshot => {
+          container.textContent = '';
+          if (snapshot.empty) {
+            container.textContent = 'No filters found.';
+            return;
+          }
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn btn-outline-primary btn-sm m-1';
+            btn.textContent = data.name;
+            btn.setAttribute('aria-label', `Filter by ${collectionName.slice(0, -1)} ${data.name}`);
+            // Add click event if needed to filter jobs directly from modal
+            container.appendChild(btn);
+          });
+        })
+        .catch(error => {
+          container.textContent = 'Failed to load filters.';
+          console.error(`Error loading ${collectionName} filters:`, error);
+        });
+    }
+
+    // On DOM load, populate selects and filter modal lists
+    window.addEventListener('DOMContentLoaded', () => {
+      populateSelectFromFirestore('types', 'typeSelect');
+      populateSelectFromFirestore('categories', 'categorySelect');
+
+      // Assuming your Firestore collections for filters are named accordingly:
+      loadFilterList('regions', 'regionFilterList');
+      loadFilterList('cities', 'cityFilterList');
+      loadFilterList('sectors', 'sectorFilterList');
     });
   </script>
 </body>
 </html>
-
