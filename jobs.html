@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jobs - SA Job Opportunities</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">SA Job Opportunities</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div id="navbarNav" class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="jobs.html">Jobs</a></li>
+          <li class="nav-item"><a class="nav-link" href="company.html">Companies</a></li>
+          <li class="nav-item"><a class="nav-link" href="courses.html">Courses</a></li>
+          <li class="nav-item"><a class="nav-link" href="career-advice.html">Career Advice</a></li>
+          <li class="nav-item"><a class="nav-link" href="post-job.html">Post a Job</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container my-5">
+    <h1>Job Listings</h1>
+    <form id="filter-form" class="row g-3 mb-4">
+      <div class="col-md-4">
+        <input type="text" id="filter-keyword" class="form-control" placeholder="Job Title, Skill or Company" />
+      </div>
+      <div class="col-md-3">
+        <input type="text" id="filter-location" class="form-control" placeholder="Location" />
+      </div>
+      <div class="col-md-2">
+        <select id="filter-category" class="form-select">
+          <option value="">All Categories</option>
+          <option value="IT">IT</option>
+          <option value="Finance">Finance</option>
+          <option value="Sales">Sales</option>
+          <option value="Engineering">Engineering</option>
+          <option value="Manufacturing">Manufacturing</option>
+          <option value="General">General</option>
+          <option value="Accounting">Accounting</option>
+          <option value="Insurance">Insurance</option>
+          <option value="Admin">Admin</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Filter</button>
+      </div>
+    </form>
+
+    <div id="jobs-list" class="list-group">
+      <!-- Jobs will be loaded here dynamically -->
+      <div class="text-center text-muted">Loading jobs...</div>
+    </div>
+  </main>
+
+  <footer class="bg-dark text-white py-4 mt-5">
+    <div class="container text-center">&copy; 2025 SA Job Opportunities. All rights reserved.</div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
