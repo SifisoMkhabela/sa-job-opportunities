@@ -20,37 +20,32 @@
 </head>
 <body>
   <!-- Header with logo and site name only -->
-<!-- Header with logo and site name only -->
-<header class="top-bar bg-light py-3 border-bottom">
-  <div class="container d-flex align-items-center">
-    <a href="index.html" class="d-flex align-items-center text-decoration-none">
-      <img src="logo.png" alt="SA Job Opportunities" class="logo" style="height:50px; width:auto; object-fit:contain; flex-shrink: 0;" />
-      <h1 class="ms-3 mb-0 text-dark" style="font-size:0.75rem; font-weight:300; letter-spacing:0.03em; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-        SA Job Opportunities
-      </h1>
-    </a>
-  </div>
-</header>
-
-
-
-
+  <header class="top-bar bg-light py-3 border-bottom">
+    <div class="container d-flex align-items-center">
+      <a href="index.html" class="d-flex align-items-center text-decoration-none" aria-label="SA Job Opportunities Home">
+        <img src="logo.png" alt="SA Job Opportunities Logo" class="logo" style="height:50px; width:auto; object-fit:contain; flex-shrink: 0;" />
+        <h1 class="ms-3 mb-0 text-dark" style="font-size:0.75rem; font-weight:300; letter-spacing:0.03em; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+          SA Job Opportunities
+        </h1>
+      </a>
+    </div>
+  </header>
 
   <!-- Hero Section -->
   <section class="hero bg-light py-5">
     <div class="container text-center">
       <h1>Find your dream career</h1>
       <p><strong>8112</strong> Jobs in South Africa</p>
-      <div class="tabs mb-4">
+      <nav class="tabs mb-4" aria-label="Main navigation tabs">
         <a href="jobs.html" class="btn btn-outline-primary mx-1">Jobs</a>
         <a href="companies.html" class="btn btn-outline-primary mx-1">Companies</a>
         <a href="courses.html" class="btn btn-outline-primary mx-1">Courses</a>
         <a href="career-advice.html" class="btn btn-outline-primary mx-1">Career Advice</a>
-      </div>
-      <form class="row justify-content-center g-2" role="search" action="jobs.html" method="get">
+      </nav>
+      <form class="row justify-content-center g-2" role="search" action="jobs.html" method="get" aria-label="Job search form">
         <div class="col-md-4">
           <input
-            type="text"
+            type="search"
             name="keyword"
             class="form-control"
             placeholder="Job Title, Skill or Company"
@@ -59,7 +54,7 @@
         </div>
         <div class="col-md-3">
           <input
-            type="text"
+            type="search"
             name="location"
             class="form-control"
             placeholder="Location"
@@ -67,7 +62,7 @@
           />
         </div>
         <div class="col-auto">
-          <button type="submit" class="btn btn-primary">
+          <button type="submit" class="btn btn-primary" aria-label="Search jobs">
             <i class="fas fa-search"></i> Search
           </button>
         </div>
@@ -76,135 +71,121 @@
   </section>
 
   <!-- Browse Jobs Section -->
-<section class="browse container my-5">
-  <h2 class="mb-4">Browse Jobs by:</h2>
-  <div class="accordion" id="browseAccordion">
+  <section class="browse container my-5" aria-label="Browse Jobs by filters">
+    <h2 class="mb-4">Browse Jobs by:</h2>
+    <div class="accordion" id="browseAccordion">
 
       <!-- Region -->
-<div class="accordion-item">
-  <h2 class="accordion-header" id="headingRegion">
-    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRegion" aria-expanded="false" aria-controls="collapseRegion">
-      Region
-    </button>
-  </h2>
-  <div id="collapseRegion" class="accordion-collapse collapse" data-bs-parent="#browseAccordion">
-    <div class="accordion-body">
-      <ul class="list-unstyled">
-        <li><a href="job.html?region=Gauteng">Gauteng Jobs (3425)</a></li>
-        <li><a href="job.html?region=Western Cape">Western Cape Jobs (3224)</a></li>
-        <li><a href="job.html?region=KwaZulu-Natal">KwaZulu Natal Jobs (1075)</a></li>
-        <li><a href="job.html?region=Eastern Cape">Eastern Cape Jobs (609)</a></li>
-        <li><a href="job.html?region=Mpumalanga">Mpumalanga Jobs (756)</a></li>
-        <li><a href="job.html?region=Northern Cape">Northern Cape Jobs (487)</a></li>
-        <li><a href="job.html?region=Free State">Free State Jobs (569)</a></li>
-        <li><a href="job.html?region=North West">North West Jobs (512)</a></li>
-        <li><a href="job.html?region=Limpopo">Limpopo Jobs (582)</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-
-    <!-- City -->
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingCity">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCity">
-          City
-        </button>
-      </h2>
-      <div id="collapseCity" class="accordion-collapse collapse" data-bs-parent="#browseAccordion">
-        <div class="accordion-body">
-          <ul class="list-unstyled">
-            <li><a href="job.html?city=Johannesburg">Johannesburg Jobs (1740)</a></li>
-            <li><a href="job.html?city=Cape Town">Cape Town Jobs (1225)</a></li>
-            <li><a href="job.html?city=Pretoria">Pretoria Jobs (1078)</a></li>
-            <li><a href="job.html?city=Durban">Durban Jobs (698)</a></li>
-            <li><a href="job.html?city=Port Elizabeth">Port Elizabeth Jobs (453)</a></li>
-            <li><a href="job.html?city=East London">East London Jobs (449)</a></li>
-            <li><a href="job.html?city=Nelspruit">Nelspruit Jobs (494)</a></li>
-            <li><a href="job.html?city=Bloemfontein">Bloemfontein Jobs (486)</a></li>
-            <li><a href="job.html?city=Pietermaritzburg">Pietermaritzburg Jobs (449)</a></li>
-          </ul>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingRegion">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRegion" aria-expanded="false" aria-controls="collapseRegion">
+            Region
+          </button>
+        </h2>
+        <div id="collapseRegion" class="accordion-collapse collapse" data-bs-parent="#browseAccordion">
+          <div class="accordion-body">
+            <ul class="list-unstyled">
+              <li><a href="job.html?region=Gauteng">Gauteng Jobs (3425)</a></li>
+              <li><a href="job.html?region=Western Cape">Western Cape Jobs (3224)</a></li>
+              <li><a href="job.html?region=KwaZulu-Natal">KwaZulu Natal Jobs (1075)</a></li>
+              <li><a href="job.html?region=Eastern Cape">Eastern Cape Jobs (609)</a></li>
+              <li><a href="job.html?region=Mpumalanga">Mpumalanga Jobs (756)</a></li>
+              <li><a href="job.html?region=Northern Cape">Northern Cape Jobs (487)</a></li>
+              <li><a href="job.html?region=Free State">Free State Jobs (569)</a></li>
+              <li><a href="job.html?region=North West">North West Jobs (512)</a></li>
+              <li><a href="job.html?region=Limpopo">Limpopo Jobs (582)</a></li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Sector -->
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingSector">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSector">
-          Sector
-        </button>
-      </h2>
-      <div id="collapseSector" class="accordion-collapse collapse" data-bs-parent="#browseAccordion">
-        <div class="accordion-body">
-          <ul class="list-unstyled">
-            <li><a href="job.html?sector=IT">IT Jobs (882)</a></li>
-            <li><a href="job.html?sector=Finance">Finance Jobs (838)</a></li>
-            <li><a href="job.html?sector=Sales">Sales Jobs (1356)</a></li>
-            <li><a href="job.html?sector=Engineering">Engineering Jobs (1090)</a></li>
-            <li><a href="job.html?sector=Manufacturing">Manufacturing Jobs (955)</a></li>
-            <li><a href="job.html?sector=General">General Jobs (1091)</a></li>
-            <li><a href="job.html?sector=Accounting">Accounting Jobs (487)</a></li>
-            <li><a href="job.html?sector=Insurance">Insurance Jobs (740)</a></li>
-            <li><a href="job.html?sector=Admin">Admin Jobs (471)</a></li>
-          </ul>
+      <!-- City -->
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingCity">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCity" aria-expanded="false" aria-controls="collapseCity">
+            City
+          </button>
+        </h2>
+        <div id="collapseCity" class="accordion-collapse collapse" data-bs-parent="#browseAccordion">
+          <div class="accordion-body">
+            <ul class="list-unstyled">
+              <li><a href="job.html?city=Johannesburg">Johannesburg Jobs (1740)</a></li>
+              <li><a href="job.html?city=Cape Town">Cape Town Jobs (1225)</a></li>
+              <li><a href="job.html?city=Pretoria">Pretoria Jobs (1078)</a></li>
+              <li><a href="job.html?city=Durban">Durban Jobs (698)</a></li>
+              <li><a href="job.html?city=Port Elizabeth">Port Elizabeth Jobs (453)</a></li>
+              <li><a href="job.html?city=East London">East London Jobs (449)</a></li>
+              <li><a href="job.html?city=Nelspruit">Nelspruit Jobs (494)</a></li>
+              <li><a href="job.html?city=Bloemfontein">Bloemfontein Jobs (486)</a></li>
+              <li><a href="job.html?city=Pietermaritzburg">Pietermaritzburg Jobs (449)</a></li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
 
-  </div>
-</section>
+      <!-- Sector -->
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingSector">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSector" aria-expanded="false" aria-controls="collapseSector">
+            Sector
+          </button>
+        </h2>
+        <div id="collapseSector" class="accordion-collapse collapse" data-bs-parent="#browseAccordion">
+          <div class="accordion-body">
+            <ul class="list-unstyled">
+              <li><a href="job.html?sector=IT">IT Jobs (882)</a></li>
+              <li><a href="job.html?sector=Finance">Finance Jobs (838)</a></li>
+              <li><a href="job.html?sector=Sales">Sales Jobs (1356)</a></li>
+              <li><a href="job.html?sector=Engineering">Engineering Jobs (1090)</a></li>
+              <li><a href="job.html?sector=Manufacturing">Manufacturing Jobs (955)</a></li>
+              <li><a href="job.html?sector=General">General Jobs (1091)</a></li>
+              <li><a href="job.html?sector=Accounting">Accounting Jobs (487)</a></li>
+              <li><a href="job.html?sector=Insurance">Insurance Jobs (740)</a></li>
+              <li><a href="job.html?sector=Admin">Admin Jobs (471)</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
 
-  <!-- Companies Section 
-  <section class="companies container mb-5">
-    <h3>Companies Hiring Now</h3>
-    <div class="d-flex flex-wrap gap-4 justify-content-center align-items-center">
-      <img src="img/hollywoodbets.png" alt="Hollywoodbets" style="max-height:60px" />
-      <img src="img/we-buy-cars.png" alt="WeBuyCars" style="max-height:60px" />
-      <img src="img/building-company.png" alt="The Building Company" style="max-height:60px" />
-      <img src="img/vkb.png" alt="VKB" style="max-height:60px" />
-      <img src="img/pep.png" alt="Pepkor" style="max-height:60px" />
     </div>
-  </section> -->
+  </section>
 
   <!-- Animated Job Categories Marquee -->
-<section class="job-categories-marquee bg-light py-3 mb-5">
-  <div class="container overflow-hidden">
-    <h4 class="mb-3">Explore Job Categories</h4>
-    <div class="marquee d-flex gap-5">
-      <div class="category d-flex align-items-center gap-2">
-        <img src="https://img.icons8.com/fluency/48/000000/computer.png" alt="IT" />
-        <span>IT Jobs</span>
-      </div>
-      <div class="category d-flex align-items-center gap-2">
-        <img src="https://img.icons8.com/color/48/accounting.png" alt="Accounting" />
-        <span>Accounting</span>
-      </div>
-      <div class="category d-flex align-items-center gap-2">
-        <img src="https://img.icons8.com/color/48/engineering.png" alt="Engineering" />
-        <span>Engineering</span>
-      </div>
-      <div class="category d-flex align-items-center gap-2">
-        <img src="https://img.icons8.com/color/48/sales-performance.png" alt="Sales" />
-        <span>Sales</span>
-      </div>
-      <div class="category d-flex align-items-center gap-2">
-        <img src="https://img.icons8.com/color/48/administrator-male.png" alt="Admin" />
-        <span>Admin</span>
-      </div>
-      <div class="category d-flex align-items-center gap-2">
-        <img src="https://img.icons8.com/color/48/life-cycle.png" alt="General" />
-        <span>General</span>
-      </div>
-      <div class="category d-flex align-items-center gap-2">
-        <img src="https://img.icons8.com/color/48/bank-cards.png" alt="Finance" />
-        <span>Finance</span>
+  <section class="job-categories-marquee bg-light py-3 mb-5" aria-label="Job Categories">
+    <div class="container overflow-hidden">
+      <h4 class="mb-3">Explore Job Categories</h4>
+      <div class="marquee d-flex gap-5">
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/fluency/48/000000/computer.png" alt="IT Icon" />
+          <span>IT Jobs</span>
+        </div>
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/color/48/accounting.png" alt="Accounting Icon" />
+          <span>Accounting</span>
+        </div>
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/color/48/engineering.png" alt="Engineering Icon" />
+          <span>Engineering</span>
+        </div>
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/color/48/sales-performance.png" alt="Sales Icon" />
+          <span>Sales</span>
+        </div>
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/color/48/administrator-male.png" alt="Admin Icon" />
+          <span>Admin</span>
+        </div>
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/color/48/life-cycle.png" alt="General Icon" />
+          <span>General</span>
+        </div>
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/color/48/bank-cards.png" alt="Finance Icon" />
+          <span>Finance</span>
+        </div>
       </div>
     </div>
-  </div>
-</section>
-
+  </section>
 
   <!-- CTA Section -->
   <section class="cta container bg-light p-4 rounded mb-5">
@@ -216,19 +197,18 @@
       <li>Apply directly in real time</li>
     </ul>
     
-<p><strong>Follow us:</strong></p>
-<div class="store-buttons d-flex gap-3">
-  <a href="https://www.facebook.com/YourPage" target="_blank" rel="noopener">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Facebook_icon.svg" alt="Facebook" style="height:50px" />
-  </a>
-  <a href="https://www.linkedin.com/in/YourProfile" target="_blank" rel="noopener">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn" style="height:50px" />
-  </a>
-  <a href="https://wa.me/YourPhoneNumber" target="_blank" rel="noopener">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="height:50px" />
-  </a>
-</div>
-
+    <p><strong>Follow us:</strong></p>
+    <div class="store-buttons d-flex gap-3">
+      <a href="https://www.facebook.com/YourPage" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Facebook_icon.svg" alt="Facebook" style="height:50px" />
+      </a>
+      <a href="https://www.linkedin.com/in/YourProfile" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn" style="height:50px" />
+      </a>
+      <a href="https://wa.me/YourPhoneNumber" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="height:50px" />
+      </a>
+    </div>
   </section>
 
   <!-- Footer -->
@@ -242,3 +222,5 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+
