@@ -1,93 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Post a Job - SA Job Opportunities</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js"></script>
-  <script src="js/firebase-config.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 </head>
-<body>
-  <div class="container mt-5">
-    <h2>Post a Job</h2>
+<body class="container py-4">
+  <h1 class="mb-4">Post a Job</h1>
 
-    <!-- Authentication Section -->
-    <div id="auth-section" class="mb-4">
-      <button id="sign-in-btn" class="btn btn-primary">Sign in with Google</button>
-      <button id="sign-out-btn" class="btn btn-danger d-none">Sign Out</button>
-      <p id="user-info" class="mt-2"></p>
-    </div>
+  <!-- Authentication Section -->
+  <div id="auth-section" class="mb-4">
+    <h3>Sign In or Register</h3>
+    <input type="email" id="email" class="form-control mb-2" placeholder="Email">
+    <input type="password" id="password" class="form-control mb-2" placeholder="Password">
+    <button class="btn btn-primary" onclick="signIn()">Sign In</button>
+    <button class="btn btn-secondary" onclick="signUp()">Sign Up</button>
+  </div>
 
-    <!-- Job Form -->
-    <form id="job-form" class="d-none">
-      <div class="mb-3">
-        <label for="title" class="form-label">Job Title</label>
-        <input type="text" class="form-control" id="title" required />
-      </div>
-      <div class="mb-3">
-        <label for="company" class="form-label">Company</label>
-        <input type="text" class="form-control" id="company" required />
-      </div>
-      <div class="mb-3">
-        <label for="type" class="form-label">Job Type</label>
-        <input type="text" class="form-control" id="type" placeholder="Full-time, Part-time" required />
-      </div>
-      <div class="mb-3">
-        <label for="category" class="form-label">Category</label>
-        <input type="text" class="form-control" id="category" required />
-      </div>
-      <div class="mb-3">
-        <label for="experience" class="form-label">Experience Level</label>
-        <input type="text" class="form-control" id="experience" required />
-      </div>
-      <div class="mb-3">
-        <label for="deadline" class="form-label">Application Deadline</label>
-        <input type="date" class="form-control" id="deadline" required />
-      </div>
-      <div class="mb-3">
-        <label for="link" class="form-label">Application Link</label>
-        <input type="url" class="form-control" id="link" required />
-      </div>
+  <!-- Job Posting Form -->
+  <div id="job-form-section" style="display:none;">
+    <h3>Post a New Job</h3>
+    <form id="job-form" class="mb-4">
+      <input type="text" id="title" class="form-control mb-2" placeholder="Job Title" required>
+      <input type="text" id="company" class="form-control mb-2" placeholder="Company" required>
+      <input type="text" id="type" class="form-control mb-2" placeholder="Job Type" required>
+      <input type="text" id="category" class="form-control mb-2" placeholder="Category" required>
+      <input type="text" id="experience" class="form-control mb-2" placeholder="Experience Level" required>
+      <input type="text" id="region" class="form-control mb-2" placeholder="Region" required>
+      <input type="text" id="city" class="form-control mb-2" placeholder="City" required>
+      <input type="date" id="deadline" class="form-control mb-2" required>
+      <input type="url" id="link" class="form-control mb-2" placeholder="Application Link" required>
       <button type="submit" class="btn btn-success">Post Job</button>
     </form>
   </div>
 
+  <!-- Jobs Display Section -->
+  <div>
+    <h3>Posted Jobs</h3>
+    <ul id="jobs" class="list-group"></ul>
+  </div>
+
   <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+    };
+
+    firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    const signInBtn = document.getElementById("sign-in-btn");
-    const signOutBtn = document.getElementById("sign-out-btn");
-    const userInfo = document.getElementById("user-info");
-    const jobForm = document.getElementById("job-form");
+    function signUp() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(() => alert("Signed up successfully"))
+        .catch(err => alert(err.message));
+    }
 
-    signInBtn.addEventListener("click", () => {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider);
-    });
+    function signIn() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => alert("Signed in successfully"))
+        .catch(err => alert(err.message));
+    }
 
-    signOutBtn.addEventListener("click", () => {
-      auth.signOut();
-    });
-
-    auth.onAuthStateChanged((user) => {
+    auth.onAuthStateChanged(user => {
       if (user) {
-        userInfo.textContent = `Signed in as: ${user.displayName}`;
-        signInBtn.classList.add("d-none");
-        signOutBtn.classList.remove("d-none");
-        jobForm.classList.remove("d-none");
+        document.getElementById("auth-section").style.display = "none";
+        document.getElementById("job-form-section").style.display = "block";
       } else {
-        userInfo.textContent = "";
-        signInBtn.classList.remove("d-none");
-        signOutBtn.classList.add("d-none");
-        jobForm.classList.add("d-none");
+        document.getElementById("auth-section").style.display = "block";
+        document.getElementById("job-form-section").style.display = "none";
       }
     });
 
-    jobForm.addEventListener("submit", async (e) => {
+    document.getElementById("job-form").addEventListener("submit", function (e) {
       e.preventDefault();
       const jobData = {
         title: document.getElementById("title").value,
@@ -95,21 +90,42 @@
         type: document.getElementById("type").value,
         category: document.getElementById("category").value,
         experience: document.getElementById("experience").value,
+        region: document.getElementById("region").value,
+        city: document.getElementById("city").value,
         deadline: document.getElementById("deadline").value,
         link: document.getElementById("link").value,
-        postedBy: auth.currentUser.email,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        postedAt: firebase.firestore.FieldValue.serverTimestamp()
       };
 
-      try {
-        await db.collection("jobs").add(jobData);
-        alert("Job posted successfully!");
-        jobForm.reset();
-      } catch (error) {
-        console.error("Error posting job: ", error);
-        alert("Failed to post job.");
-      }
+      db.collection("jobs").add(jobData)
+        .then(() => {
+          alert("Job posted!");
+          document.getElementById("job-form").reset();
+          loadJobs();
+        })
+        .catch(err => alert(err.message));
     });
+
+    function loadJobs() {
+      db.collection("jobs").orderBy("postedAt", "desc").get()
+        .then(snapshot => {
+          const jobsList = document.getElementById("jobs");
+          jobsList.innerHTML = "";
+          snapshot.forEach(doc => {
+            const job = doc.data();
+            const li = document.createElement("li");
+            li.className = "list-group-item";
+            li.innerHTML = `
+              <strong>${job.title}</strong> at ${job.company} (${job.city}, ${job.region})<br>
+              Type: ${job.type} | Category: ${job.category} | Experience: ${job.experience}<br>
+              Deadline: ${job.deadline} | <a href="${job.link}" target="_blank">Apply Here</a>
+            `;
+            jobsList.appendChild(li);
+          });
+        });
+    }
+
+    window.onload = loadJobs;
   </script>
 </body>
 </html>
