@@ -17,6 +17,10 @@
   />
   <!-- Your Custom CSS -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
   <!-- Header with logo and site name only -->
@@ -61,94 +65,80 @@
             aria-label="Location"
           />
         </div>
-        <div class="col-auto">
+        <div class="col-auto d-flex gap-2">
           <button type="submit" class="btn btn-primary" aria-label="Search jobs">
             <i class="fas fa-search"></i> Search
+          </button>
+          <!-- Button to open Browse Filter Modal -->
+          <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#filterModal" aria-label="Browse jobs filters">
+            <i class="fas fa-filter"></i> Filters
           </button>
         </div>
       </form>
     </div>
   </section>
 
-  <!-- Browse Jobs Section -->
-  <section class="browse container my-5" aria-label="Browse Jobs by filters">
-    <h2 class="mb-4">Browse Jobs by:</h2>
-    <div class="accordion" id="browseAccordion">
+  <!-- Browse Filter Modal -->
+  <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="filterModalLabel">Browse Jobs Filters</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="accordion" id="browseAccordion">
 
-      <!-- Region -->
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingRegion">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRegion" aria-expanded="false" aria-controls="collapseRegion">
-            Region
-          </button>
-        </h2>
-        <div id="collapseRegion" class="accordion-collapse collapse" data-bs-parent="#browseAccordion">
-          <div class="accordion-body">
-            <ul class="list-unstyled">
-              <li><a href="job.html?region=Gauteng">Gauteng Jobs (3425)</a></li>
-              <li><a href="job.html?region=Western Cape">Western Cape Jobs (3224)</a></li>
-              <li><a href="job.html?region=KwaZulu-Natal">KwaZulu Natal Jobs (1075)</a></li>
-              <li><a href="job.html?region=Eastern Cape">Eastern Cape Jobs (609)</a></li>
-              <li><a href="job.html?region=Mpumalanga">Mpumalanga Jobs (756)</a></li>
-              <li><a href="job.html?region=Northern Cape">Northern Cape Jobs (487)</a></li>
-              <li><a href="job.html?region=Free State">Free State Jobs (569)</a></li>
-              <li><a href="job.html?region=North West">North West Jobs (512)</a></li>
-              <li><a href="job.html?region=Limpopo">Limpopo Jobs (582)</a></li>
-            </ul>
+            <!-- Region -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingRegion">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRegion" aria-expanded="true" aria-controls="collapseRegion">
+                  Region
+                </button>
+              </h2>
+              <div id="collapseRegion" class="accordion-collapse collapse show" data-bs-parent="#browseAccordion">
+                <div class="accordion-body" id="regionFilterList">
+                  Loading Regions...
+                </div>
+              </div>
+            </div>
+
+            <!-- City -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingCity">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCity" aria-expanded="false" aria-controls="collapseCity">
+                  City
+                </button>
+              </h2>
+              <div id="collapseCity" class="accordion-collapse collapse" data-bs-parent="#browseAccordion">
+                <div class="accordion-body" id="cityFilterList">
+                  Loading Cities...
+                </div>
+              </div>
+            </div>
+
+            <!-- Sector -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingSector">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSector" aria-expanded="false" aria-controls="collapseSector">
+                  Sector
+                </button>
+              </h2>
+              <div id="collapseSector" class="accordion-collapse collapse" data-bs-parent="#browseAccordion">
+                <div class="accordion-body" id="sectorFilterList">
+                  Loading Sectors...
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
-      </div>
-
-      <!-- City -->
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingCity">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCity" aria-expanded="false" aria-controls="collapseCity">
-            City
-          </button>
-        </h2>
-        <div id="collapseCity" class="accordion-collapse collapse" data-bs-parent="#browseAccordion">
-          <div class="accordion-body">
-            <ul class="list-unstyled">
-              <li><a href="job.html?city=Johannesburg">Johannesburg Jobs (1740)</a></li>
-              <li><a href="job.html?city=Cape Town">Cape Town Jobs (1225)</a></li>
-              <li><a href="job.html?city=Pretoria">Pretoria Jobs (1078)</a></li>
-              <li><a href="job.html?city=Durban">Durban Jobs (698)</a></li>
-              <li><a href="job.html?city=Port Elizabeth">Port Elizabeth Jobs (453)</a></li>
-              <li><a href="job.html?city=East London">East London Jobs (449)</a></li>
-              <li><a href="job.html?city=Nelspruit">Nelspruit Jobs (494)</a></li>
-              <li><a href="job.html?city=Bloemfontein">Bloemfontein Jobs (486)</a></li>
-              <li><a href="job.html?city=Pietermaritzburg">Pietermaritzburg Jobs (449)</a></li>
-            </ul>
-          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
-
-      <!-- Sector -->
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingSector">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSector" aria-expanded="false" aria-controls="collapseSector">
-            Sector
-          </button>
-        </h2>
-        <div id="collapseSector" class="accordion-collapse collapse" data-bs-parent="#browseAccordion">
-          <div class="accordion-body">
-            <ul class="list-unstyled">
-              <li><a href="job.html?sector=IT">IT Jobs (882)</a></li>
-              <li><a href="job.html?sector=Finance">Finance Jobs (838)</a></li>
-              <li><a href="job.html?sector=Sales">Sales Jobs (1356)</a></li>
-              <li><a href="job.html?sector=Engineering">Engineering Jobs (1090)</a></li>
-              <li><a href="job.html?sector=Manufacturing">Manufacturing Jobs (955)</a></li>
-              <li><a href="job.html?sector=General">General Jobs (1091)</a></li>
-              <li><a href="job.html?sector=Accounting">Accounting Jobs (487)</a></li>
-              <li><a href="job.html?sector=Insurance">Insurance Jobs (740)</a></li>
-              <li><a href="job.html?sector=Admin">Admin Jobs (471)</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
     </div>
-  </section>
+  </div>
 
   <!-- Animated Job Categories Marquee -->
   <section class="job-categories-marquee bg-light py-3 mb-5" aria-label="Job Categories">
@@ -200,27 +190,78 @@
     <p><strong>Follow us:</strong></p>
     <div class="store-buttons d-flex gap-3">
       <a href="https://www.facebook.com/YourPage" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Facebook_icon.svg" alt="Facebook" style="height:50px" />
+        <img src="facebook.png" alt="Facebook" />
       </a>
-      <a href="https://www.linkedin.com/in/YourProfile" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn" style="height:50px" />
+      <a href="https://twitter.com/YourProfile" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+        <img src="twitter.png" alt="Twitter" />
       </a>
-      <a href="https://wa.me/YourPhoneNumber" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="height:50px" />
+      <a href="https://instagram.com/YourProfile" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <img src="instagram.png" alt="Instagram" />
       </a>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="bg-dark text-white py-4">
-    <div class="container text-center">
-      &copy; 2025 SA Job Opportunities. All rights reserved.
-    </div>
+  <footer class="text-center py-4 border-top bg-light">
+    <p class="mb-0">
+      &copy; 2025 SA Job Opportunities. All Rights Reserved.
+    </p>
   </footer>
 
-  <!-- Bootstrap JS Bundle (with Popper) -->
+  <!-- Bootstrap JS Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Firebase Initialization and Firestore fetch script -->
+  <script>
+    // Your Firebase configuration - replace with your actual config!
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      // other config fields if needed
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Function to render filter list in the modal dynamically
+    function renderFilterList(collectionName, containerId, queryParam) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = 'Loading...';
+
+      db.collection(collectionName)
+        .orderBy('name')
+        .get()
+        .then((querySnapshot) => {
+          if (querySnapshot.empty) {
+            container.innerHTML = '<p>No data found.</p>';
+            return;
+          }
+          let html = '<ul class="list-unstyled">';
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const name = data.name;
+            const count = data.count || 0;
+            html += `<li><a href="jobs.html?${queryParam}=${encodeURIComponent(name)}">${name} Jobs (${count})</a></li>`;
+          });
+          html += '</ul>';
+          container.innerHTML = html;
+        })
+        .catch((error) => {
+          console.error("Error fetching " + collectionName + ":", error);
+          container.innerHTML = '<p>Error loading data.</p>';
+        });
+    }
+
+    // Load filters when modal is about to be shown
+    const filterModal = document.getElementById('filterModal');
+    filterModal.addEventListener('show.bs.modal', () => {
+      renderFilterList('regions', 'regionFilterList', 'region');
+      renderFilterList('cities', 'cityFilterList', 'city');
+      renderFilterList('sectors', 'sectorFilterList', 'sector');
+    });
+  </script>
 </body>
 </html>
-
 
