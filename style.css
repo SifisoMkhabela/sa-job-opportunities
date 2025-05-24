@@ -1,37 +1,43 @@
 body {
   font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #f8f8f8;
+  color: #333;
+}
+header, footer {
   background-color: #fff;
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
 }
-
-.hero-section {
-  background-color: #000;
+header h1 {
+  margin: 0;
 }
-
-h1, h2 {
-  font-weight: bold;
+nav a {
+  margin-right: 15px;
+  text-decoration: none;
+  color: #007bff;
 }
-
-.browse-list {
-  padding-left: 0;
+main {
+  padding: 20px;
 }
-
-.browse-list li {
-  margin: 0.5rem 1rem 0.5rem 0;
-  background: #f8f9fa;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  border: 1px solid #ccc;
-  display: inline-block;
+.section {
+  margin-bottom: 30px;
 }
-
-.companies-hiring {
-  text-align: center;
+ul {
+  padding-left: 20px;
 }
-
-footer h5 {
-  margin-bottom: 0.75rem;
+ul li {
+  list-style-type: disc;
+  margin-bottom: 6px;
 }
-
-footer a:hover {
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+a:hover {
   text-decoration: underline;
+}
+footer {
+  border-top: 1px solid #ccc;
+  margin-top: 40px;
 }
