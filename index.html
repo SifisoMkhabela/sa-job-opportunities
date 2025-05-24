@@ -2,151 +2,90 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SA Job Opportunities - Find Your Dream Job</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SA Job Opportunities</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="#">SA Job Opportunities</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div id="navbarNav" class="collapse navbar-collapse">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="#">Jobs</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Companies</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Courses</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Career Advice</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <header class="hero-section text-white text-center">
-    <div class="container py-5">
-      <h1>Find your dream career</h1>
-      <p><strong>8,112</strong> Jobs in South Africa</p>
-      <form class="row g-2 justify-content-center mt-4">
-        <div class="col-md-4">
-          <input type="text" class="form-control" placeholder="Job Title, Skill or Company" />
-        </div>
-        <div class="col-md-3">
-          <input type="text" class="form-control" placeholder="Location" />
-        </div>
-        <div class="col-md-2">
-          <button type="submit" class="btn btn-primary w-100">Search</button>
-        </div>
-      </form>
-    </div>
+  <header>
+    <h1>SA Job Opportunities</h1>
+    <nav>
+      <a href="#">Jobs</a> |
+      <a href="#">Companies</a> |
+      <a href="#">Courses</a> |
+      <a href="#">Career Advice</a>
+    </nav>
+    <p><strong>8112 Jobs in South Africa</strong></p>
   </header>
 
-  <main class="container my-5">
+  <main>
     <section>
-      <h2>Search by Region</h2>
-      <ul class="list-inline browse-list">
-        <li class="list-inline-item">Gauteng Jobs (3425)</li>
-        <li class="list-inline-item">Western Cape Jobs (3224)</li>
-        <li class="list-inline-item">Kwazulu Natal Jobs (1075)</li>
-        <li class="list-inline-item">Eastern Cape Jobs (609)</li>
-        <li class="list-inline-item">Mpumalanga Jobs (756)</li>
-        <li class="list-inline-item">Northern Cape Jobs (487)</li>
-        <li class="list-inline-item">Free State Jobs (569)</li>
-        <li class="list-inline-item">North West Jobs (512)</li>
-        <li class="list-inline-item">Limpopo Jobs (582)</li>
-      </ul>
+      <h2>Browse Jobs by:</h2>
+
+      <!-- Search by Region -->
+      <div class="section">
+        <h3>Search by Region</h3>
+        <ul>
+          <li><a href="job.html?region=Gauteng">Gauteng Jobs (3425)</a></li>
+          <li><a href="job.html?region=Western Cape">Western Cape Jobs (3224)</a></li>
+          <li><a href="job.html?region=KwaZulu-Natal">KwaZulu-Natal Jobs (1075)</a></li>
+          <li><a href="job.html?region=Eastern Cape">Eastern Cape Jobs (609)</a></li>
+          <li><a href="job.html?region=Mpumalanga">Mpumalanga Jobs (756)</a></li>
+          <li><a href="job.html?region=Northern Cape">Northern Cape Jobs (487)</a></li>
+          <li><a href="job.html?region=Free State">Free State Jobs (569)</a></li>
+          <li><a href="job.html?region=North West">North West Jobs (512)</a></li>
+          <li><a href="job.html?region=Limpopo">Limpopo Jobs (582)</a></li>
+        </ul>
+      </div>
+
+      <!-- Search by City -->
+      <div class="section">
+        <h3>Search by City</h3>
+        <ul>
+          <li><a href="job.html?city=Johannesburg">Johannesburg Jobs (1740)</a></li>
+          <li><a href="job.html?city=Cape Town">Cape Town Jobs (1225)</a></li>
+          <li><a href="job.html?city=Pretoria">Pretoria Jobs (1078)</a></li>
+          <li><a href="job.html?city=Durban">Durban Jobs (698)</a></li>
+          <li><a href="job.html?city=Port Elizabeth">Port Elizabeth Jobs (453)</a></li>
+          <li><a href="job.html?city=East London">East London Jobs (449)</a></li>
+          <li><a href="job.html?city=Nelspruit">Nelspruit Jobs (494)</a></li>
+          <li><a href="job.html?city=Bloemfontein">Bloemfontein Jobs (486)</a></li>
+          <li><a href="job.html?city=Pietermaritzburg">Pietermaritzburg Jobs (449)</a></li>
+        </ul>
+      </div>
+
+      <!-- Search by Sector -->
+      <div class="section">
+        <h3>Search by Sector</h3>
+        <ul>
+          <li><a href="job.html?sector=IT">IT Jobs (882)</a></li>
+          <li><a href="job.html?sector=Finance">Finance Jobs (838)</a></li>
+          <li><a href="job.html?sector=Sales">Sales Jobs (1356)</a></li>
+          <li><a href="job.html?sector=Engineering">Engineering Jobs (1090)</a></li>
+          <li><a href="job.html?sector=Manufacturing">Manufacturing Jobs (955)</a></li>
+          <li><a href="job.html?sector=General">General Jobs (1091)</a></li>
+          <li><a href="job.html?sector=Accounting">Accounting Jobs (487)</a></li>
+          <li><a href="job.html?sector=Insurance">Insurance Jobs (740)</a></li>
+          <li><a href="job.html?sector=Admin">Admin Jobs (471)</a></li>
+        </ul>
+      </div>
     </section>
 
-    <section class="mt-5">
-      <h2>Search by City</h2>
-      <ul class="list-inline browse-list">
-        <li class="list-inline-item">Johannesburg Jobs (1740)</li>
-        <li class="list-inline-item">Cape Town Jobs (1225)</li>
-        <li class="list-inline-item">Pretoria Jobs (1078)</li>
-        <li class="list-inline-item">Durban Jobs (698)</li>
-        <li class="list-inline-item">Port Elizabeth Jobs (453)</li>
-        <li class="list-inline-item">East London Jobs (449)</li>
-        <li class="list-inline-item">Nelspruit Jobs (494)</li>
-        <li class="list-inline-item">Bloemfontein Jobs (486)</li>
-        <li class="list-inline-item">Pietermaritzburg Jobs (449)</li>
-      </ul>
-    </section>
-
-    <section class="mt-5">
-      <h2>Search by Sector</h2>
-      <ul class="list-inline browse-list">
-        <li class="list-inline-item">IT Jobs (882)</li>
-        <li class="list-inline-item">Finance Jobs (838)</li>
-        <li class="list-inline-item">Sales Jobs (1356)</li>
-        <li class="list-inline-item">Engineering Jobs (1090)</li>
-        <li class="list-inline-item">Manufacturing Jobs (955)</li>
-        <li class="list-inline-item">General Jobs (1091)</li>
-        <li class="list-inline-item">Accounting Jobs (487)</li>
-        <li class="list-inline-item">Insurance Jobs (740)</li>
-        <li class="list-inline-item">Admin Jobs (471)</li>
-      </ul>
-    </section>
-
-    <section class="mt-5 companies-hiring">
-      <h2>Companies Hiring Now</h2>
-      <button class="btn btn-outline-primary">View All</button>
-    </section>
-
-    <section class="mt-5 p-4 bg-light rounded">
-      <h2>Never miss a job opportunity</h2>
-      <p>Get SA Job Opportunities on your phone</p>
+    <section class="cta">
+      <h3>Never miss a job opportunity</h3>
+      <p>Get SA Job Opportunities on your phone.</p>
       <ul>
         <li>Access 1000s of jobs, on the go</li>
         <li>Filtering to find the jobs that suit you</li>
         <li>Apply directly and in real time</li>
       </ul>
     </section>
-
-    <section class="about mt-5">
-      <h2>About SA Job Opportunities</h2>
-      <p>
-        SA Job Opportunities is a leading South African job portal that assists jobseekers from all sectors and experience levels to find and apply for vacancies from top companies. 
-        We aim to be the place where every candidate finds their ideal job and every employer finds the perfect candidate.
-      </p>
-    </section>
   </main>
 
-  <footer class="bg-dark text-white py-4 mt-5">
-    <div class="container d-flex flex-wrap justify-content-between">
-      <div>
-        <h5>Company</h5>
-        <ul class="list-unstyled">
-          <li><a href="#" class="text-white">Work For Us</a></li>
-          <li><a href="#" class="text-white">Advertise With Us</a></li>
-        </ul>
-      </div>
-      <div>
-        <h5>Quick Links</h5>
-        <ul class="list-unstyled">
-          <li><a href="#" class="text-white">Recruiters Directory</a></li>
-          <li><a href="#" class="text-white">Site Map</a></li>
-          <li><a href="#" class="text-white">Privacy Policy</a></li>
-          <li><a href="#" class="text-white">Widgets</a></li>
-          <li><a href="#" class="text-white">Recruiter Terms</a></li>
-          <li><a href="#" class="text-white">FAQ</a></li>
-        </ul>
-      </div>
-      <div>
-        <h5>Partner Sites</h5>
-        <ul class="list-unstyled">
-          <li><a href="#" class="text-white">Simplify.hr</a></li>
-          <li><a href="#" class="text-white">News24</a></li>
-          <li><a href="#" class="text-white">Property24</a></li>
-          <li><a href="#" class="text-white">Media24</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="text-center mt-3">&copy; 2025 SA Job Opportunities. All rights reserved.</div>
+  <footer>
+    <p><strong>About SA Job Opportunities</strong></p>
+    <p>SA Job Opportunities is a platform that connects jobseekers with top employers across South Africa.</p>
+    <p>&copy; 2025 SA Job Opportunities. All rights reserved.</p>
   </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
