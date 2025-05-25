@@ -3,324 +3,175 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SA Job Opportunities - Jobs</title>
-
-  <!-- Bootstrap CSS -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
-  <!-- Font Awesome for icons -->
-  <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    rel="stylesheet"
-  />
-  <!-- Your Custom CSS -->
+  <title>Job Description - SA Job Opportunities</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
   <style>
-    /* Popup overlay styles */
-    #filterPopup {
-      display: none;
-      position: fixed;
-      z-index: 1050;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0,0,0,0.5);
-      align-items: center;
-      justify-content: center;
-    }
-    #filterPopup .popup-content {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 0.5rem;
-      max-width: 400px;
-      width: 90%;
-    }
-    /* Show popup when active */
-    #filterPopup.active {
-      display: flex;
+    .highlight {
+      border: 2px solid #007bff;
+      background-color: #e9f5ff;
     }
   </style>
 </head>
 <body>
+  <div class="container my-5">
+    <button onclick="window.history.back()" class="btn btn-secondary mb-3">← Back to Jobs</button>
 
-<header class="top-bar bg-light py-3 border-bottom">
-  <div class="container d-flex align-items-center">
-    <a href="index.html" class="d-flex align-items-center text-decoration-none">
-      <img src="logo.png" alt="SA Job Opportunities" class="logo" style="height:50px; width:auto; object-fit:contain; flex-shrink: 0;" />
-      <h1 class="ms-3 mb-0 text-dark" style="font-size:0.75rem; font-weight:300; letter-spacing:0.03em; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-        SA Job Opportunities
-      </h1>
-    </a>
-  </div>
-</header>
+    <section id="jobDetails" class="mb-5">
+      <h2 id="title">Loading...</h2>
+      <h5 id="company" class="text-muted"></h5>
+      <p><strong>Type:</strong> <span id="type"></span></p>
+      <p><strong>Category:</strong> <span id="category"></span></p>
+      <p><strong>Deadline:</strong> <span id="deadline"></span></p>
+      <p><strong>Description:</strong></p>
+      <p id="description"></p>
+      <a id="applyLink" href="#" target="_blank" rel="noopener" class="btn btn-primary">Apply Now</a>
+    </section>
 
-<main class="container my-4">
-
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Job Listings</h2>
-    <button id="openFilterBtn" class="btn btn-outline-primary d-md-none">
-      <i class="fa fa-filter"></i> Filter Jobs
-    </button>
+    <hr />
+    <h3>Other Available Jobs</h3>
+    <div id="otherJobs" class="row g-3"></div>
   </div>
 
-  <!-- Desktop filter -->
-  <form id="filterForm" class="row g-3 mb-4 d-none d-md-flex align-items-end">
-    <div class="col-md-4">
-      <label for="filterType" class="form-label">Job Type</label>
-      <select id="filterType" class="form-select">
-        <option value="">All Types</option>
-        <option value="Internship">Internship</option>
-        <option value="Full time">Full time</option>
-        <option value="Part time">Part time</option>
-        <option value="Contract">Contract</option>
-      </select>
-    </div>
-    <div class="col-md-4">
-      <label for="filterCategory" class="form-label">Category</label>
-      <select id="filterCategory" class="form-select">
-        <option value="">All Categories</option>
-        <option value="IT">IT</option>
-        <option value="Engineering">Engineering</option>
-        <option value="Finance">Finance</option>
-        <option value="Sales">Sales</option>
-        <option value="Marketing">Marketing</option>
-        <option value="General">General</option>
-      </select>
-    </div>
-    <div class="col-md-2">
-      <button type="submit" class="btn btn-primary w-100">Apply Filter</button>
-    </div>
-    <div class="col-md-2">
-      <button type="button" id="clearFiltersBtn" class="btn btn-secondary w-100">Clear Filters</button>
-    </div>
-  </form>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCexm1PTk0cst8i3NJxh8MJvqvgm0ys84A",
+      authDomain: "sa-job-opportunities.firebaseapp.com",
+      projectId: "sa-job-opportunities",
+      storageBucket: "sa-job-opportunities.appspot.com",
+      messagingSenderId: "756042759528",
+      appId: "1:756042759528:web:dd179c0f4c91bfa124ec9c",
+      measurementId: "G-ZT87HWK6XD"
+    };
 
-  <!-- Mobile Filter Popup -->
-  <div id="filterPopup">
-    <div class="popup-content">
-      <h5>Filter Jobs</h5>
-      <form id="mobileFilterForm">
-        <div class="mb-3">
-          <label for="mobileFilterType" class="form-label">Job Type</label>
-          <select id="mobileFilterType" class="form-select">
-            <option value="">All Types</option>
-            <option value="Internship">Internship</option>
-            <option value="Full time">Full time</option>
-            <option value="Part time">Part time</option>
-            <option value="Contract">Contract</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="mobileFilterCategory" class="form-label">Category</label>
-          <select id="mobileFilterCategory" class="form-select">
-            <option value="">All Categories</option>
-            <option value="IT">IT</option>
-            <option value="Engineering">Engineering</option>
-            <option value="Finance">Finance</option>
-            <option value="Sales">Sales</option>
-            <option value="Marketing">Marketing</option>
-            <option value="General">General</option>
-          </select>
-        </div>
-        <div class="d-flex justify-content-between">
-          <button type="button" id="mobileClearFiltersBtn" class="btn btn-secondary">Clear Filters</button>
-          <button type="submit" class="btn btn-primary">Apply Filter</button>
-        </div>
-      </form>
-      <button id="closeFilterBtn" class="btn btn-link mt-3 w-100">Close</button>
-    </div>
-  </div>
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-  <div id="jobsContainer" class="row gy-3">
-    <!-- Job cards will be inserted here -->
-    <div class="text-center text-muted">Loading jobs...</div>
-  </div>
-</main>
-
-<footer class="bg-light text-center py-3 border-top">
-  &copy; 2025 SA Job Opportunities. All rights reserved.
-</footer>
-
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-
-<script>
-  // Your Firebase configuration (replace with your actual config)
-  const firebaseConfig = {
-    apiKey: "AIzaSyDTfLfb9gnn4zBGju8XoqAe-i7g9ahJyJk",
-    authDomain: "sa-job-opportunities.firebaseapp.com",
-    projectId: "sa-job-opportunities",
-    storageBucket: "sa-job-opportunities.appspot.com",
-    messagingSenderId: "370537417491",
-    appId: "1:370537417491:web:520e9dc1efb1d8cf38a8e6",
-    measurementId: "G-ZTK2KXSLXD"
-  };
-
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
-  const jobsContainer = document.getElementById('jobsContainer');
-
-  let allJobs = [];
-  let filteredJobs = [];
-
-  // Render a single job card
-  function renderJobCard(job) {
-    // Format deadline date
-    const deadlineDate = job.deadline ? new Date(job.deadline).toLocaleDateString() : 'N/A';
-
-    // Calculate days left
-    const today = new Date();
-    let daysLeft = '';
-    if (job.deadline) {
-      const diffTime = new Date(job.deadline) - today;
-      daysLeft = diffTime > 0 ? Math.ceil(diffTime / (1000 * 60 * 60 * 24)) : 0;
+    // Helper to get URL param
+    function getParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
     }
 
-    return `
-      <div class="col-md-6 col-lg-4">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title">${job.title}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">${job.company}</h6>
-            <p class="card-text mb-1"><strong>Type:</strong> ${job.type}</p>
-            <p class="card-text mb-1"><strong>Category:</strong> ${job.category}</p>
-            <p class="card-text mb-1"><strong>Deadline:</strong> ${deadlineDate} ${daysLeft > 0 ? `(${daysLeft} days left)` : '(Expired)'}</p>
-            <a href="${job.link}" target="_blank" rel="noopener" class="btn btn-primary mt-auto">Apply Now</a>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  // Display jobs in container
-  function displayJobs(jobs) {
-    if (!jobs.length) {
-      jobsContainer.innerHTML = '<p class="text-center text-muted">No jobs found.</p>';
-      return;
+    // Escape HTML to prevent XSS
+    function escapeHtml(text) {
+      if (!text) return '';
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return text.replace(/[&<>"']/g, function(m) { return map[m]; });
     }
-    const html = jobs.map(renderJobCard).join('');
-    jobsContainer.innerHTML = html;
-  }
 
-  // Filter out expired jobs and sort by deadline ascending
-  function processJobs(rawJobs) {
-    const today = new Date();
-    const validJobs = rawJobs.filter(job => {
-      if (!job.deadline) return true; // include if no deadline
-      return new Date(job.deadline) >= today;
-    });
+    async function loadJobDetails(jobId) {
+      try {
+        const docRef = db.collection('jobs').doc(jobId);
+        const docSnap = await docRef.get();
 
-    validJobs.sort((a, b) => {
-      if (!a.deadline) return 1;
-      if (!b.deadline) return -1;
-      return new Date(a.deadline) - new Date(b.deadline);
-    });
+        if (!docSnap.exists) {
+          document.getElementById('jobDetails').innerHTML = '<p>Job not found.</p>';
+          return;
+        }
 
-    return validJobs;
-  }
+        const job = docSnap.data();
 
-  // Load jobs from Firestore
-  async function loadJobs() {
-    try {
-      const snapshot = await db.collection('jobs').get();
-      allJobs = [];
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        allJobs.push({
-          title: data.title || 'No title',
-          company: data.company || 'No company',
-          type: data.type || 'N/A',
-          category: data.category || 'General',
-          deadline: data.deadline || null,
-          link: data.link || '#'
+        document.getElementById('title').textContent = job.title || 'No Title';
+        document.getElementById('company').textContent = job.company || '';
+        document.getElementById('type').textContent = job.type || 'N/A';
+        document.getElementById('category').textContent = job.category || 'N/A';
+
+        if (job.deadline) {
+          const d = new Date(job.deadline);
+          document.getElementById('deadline').textContent = d.toLocaleDateString('en-ZA', { year:'numeric', month:'short', day:'numeric' });
+        } else {
+          document.getElementById('deadline').textContent = 'N/A';
+        }
+
+        // Description: allow HTML or plain text?
+        // To be safe, escape HTML
+        document.getElementById('description').innerHTML = escapeHtml(job.description || 'No description available.');
+
+        // Apply Link
+        const applyLinkEl = document.getElementById('applyLink');
+        if (job.link) {
+          applyLinkEl.href = job.link;
+          applyLinkEl.style.display = 'inline-block';
+        } else {
+          applyLinkEl.style.display = 'none';
+        }
+      } catch (err) {
+        document.getElementById('jobDetails').innerHTML = `<p>Error loading job: ${err.message}</p>`;
+      }
+    }
+
+    async function loadOtherJobs(currentJobId) {
+      try {
+        const otherJobsContainer = document.getElementById('otherJobs');
+        otherJobsContainer.innerHTML = '<p>Loading other jobs...</p>';
+
+        const snapshot = await db.collection('jobs').orderBy('deadline', 'desc').limit(20).get();
+
+        if (snapshot.empty) {
+          otherJobsContainer.innerHTML = '<p>No other jobs available.</p>';
+          return;
+        }
+
+        otherJobsContainer.innerHTML = '';
+
+        snapshot.forEach(doc => {
+          const job = doc.data();
+          const isCurrent = doc.id === currentJobId;
+
+          // Format deadline
+          let deadlineStr = 'N/A';
+          if (job.deadline) {
+            try {
+              const d = new Date(job.deadline);
+              deadlineStr = d.toLocaleDateString('en-ZA', { year:'numeric', month:'short', day:'numeric' });
+            } catch {}
+          }
+
+          const jobHtml = `
+            <div class="col-md-6 col-lg-4">
+              <div class="card h-100 shadow-sm ${isCurrent ? 'highlight' : ''}">
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title">${escapeHtml(job.title || 'No Title')}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">${escapeHtml(job.company || '')}</h6>
+                  <p class="mb-1"><strong>Type:</strong> ${escapeHtml(job.type || 'N/A')}</p>
+                  <p class="mb-1"><strong>Category:</strong> ${escapeHtml(job.category || 'N/A')}</p>
+                  <p class="mb-2"><strong>Deadline:</strong> ${deadlineStr}</p>
+                  <a href="description.html?id=${doc.id}" class="mt-auto btn btn-primary btn-sm" aria-label="View details for ${escapeHtml(job.title || '')}">View Details</a>
+                </div>
+              </div>
+            </div>
+          `;
+          otherJobsContainer.insertAdjacentHTML('beforeend', jobHtml);
         });
-      });
 
-      allJobs = processJobs(allJobs);
-      filteredJobs = [...allJobs];
-      displayJobs(filteredJobs);
-    } catch (error) {
-      console.error("Error fetching jobs:", error);
-      jobsContainer.innerHTML = '<p class="text-center text-danger">Failed to load jobs. Please try again later.</p>';
+        // Scroll to highlighted job card
+        const highlightEl = document.querySelector('.highlight');
+        if (highlightEl) {
+          highlightEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      } catch (error) {
+        document.getElementById('otherJobs').innerHTML = `<p>Error loading other jobs: ${error.message}</p>`;
+      }
     }
-  }
 
-  // Filter jobs based on type and category
-  function filterJobs(type, category) {
-    filteredJobs = allJobs.filter(job => {
-      const matchType = !type || job.type.toLowerCase() === type.toLowerCase();
-      const matchCategory = !category || job.category.toLowerCase() === category.toLowerCase();
-      return matchType && matchCategory;
+    // On page load
+    document.addEventListener('DOMContentLoaded', () => {
+      const jobId = getParam('id');
+      if (!jobId) {
+        document.getElementById('jobDetails').innerHTML = '<p>No job selected.</p>';
+        return;
+      }
+      loadJobDetails(jobId);
+      loadOtherJobs(jobId);
     });
-    displayJobs(filteredJobs);
-  }
-
-  // DOM elements for filters
-  const filterForm = document.getElementById('filterForm');
-  const filterType = document.getElementById('filterType');
-  const filterCategory = document.getElementById('filterCategory');
-  const clearFiltersBtn = document.getElementById('clearFiltersBtn');
-
-  // Mobile popup elements
-  const filterPopup = document.getElementById('filterPopup');
-  const openFilterBtn = document.getElementById('openFilterBtn');
-  const closeFilterBtn = document.getElementById('closeFilterBtn');
-  const mobileFilterForm = document.getElementById('mobileFilterForm');
-  const mobileFilterType = document.getElementById('mobileFilterType');
-  const mobileFilterCategory = document.getElementById('mobileFilterCategory');
-  const mobileClearFiltersBtn = document.getElementById('mobileClearFiltersBtn');
-
-  // Desktop filter form submit
-  filterForm.addEventListener('submit', e => {
-    e.preventDefault();
-    filterJobs(filterType.value, filterCategory.value);
-  });
-
-  clearFiltersBtn.addEventListener('click', () => {
-    filterType.value = '';
-    filterCategory.value = '';
-    filteredJobs = [...allJobs];
-    displayJobs(filteredJobs);
-  });
-
-  // Mobile filter popup open/close
-  openFilterBtn.addEventListener('click', () => {
-    // Sync desktop filter values to mobile popup before opening
-    mobileFilterType.value = filterType.value;
-    mobileFilterCategory.value = filterCategory.value;
-    filterPopup.classList.add('active');
-  });
-
-  closeFilterBtn.addEventListener('click', () => {
-    filterPopup.classList.remove('active');
-  });
-
-  // Mobile filter form submit
-  mobileFilterForm.addEventListener('submit', e => {
-    e.preventDefault();
-    filterType.value = mobileFilterType.value;
-    filterCategory.value = mobileFilterCategory.value;
-    filterJobs(mobileFilterType.value, mobileFilterCategory.value);
-    filterPopup.classList.remove('active');
-  });
-
-  // Mobile clear filters
-  mobileClearFiltersBtn.addEventListener('click', () => {
-    mobileFilterType.value = '';
-    mobileFilterCategory.value = '';
-  });
-
-  // Initial load
-  loadJobs();
-</script>
-
-<!-- Bootstrap JS Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+  </script>
 </body>
 </html>
