@@ -12,6 +12,338 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
+  <!-- Quill -->
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+  <style>
+    #descriptionEditor {
+      height: 150px;
+      background: white;
+    }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Header -->
+  <header class="bg-primary text-white p-3 mb-4">
+    <div class="container">
+      <h1 class="mb-0">SA Job Opportunities Admin Panel</h1>
+    </div>
+  </header>
+
+  <main class="container flex-grow-1">
+
+    <h2>Admin Login</h2>
+    <form id="loginForm" class="mb-4">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" id="username" class="form-control" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" class="form-control" required />
+      </div>
+
+      <button type="submit" class="btn btn-primary">Login</button>
+      <div id="loginError" class="text-danger mt-2" style="display:none;">Invalid credentials</div>
+    </form>
+
+    <div id="jobFormSection" style="display:none;">
+      <h3>Post a New Job</h3>
+      <form id="jobForm">
+
+        <div class="mb-3">
+          <label for="title" class="form-label">Job Title *</label>
+          <input type="text" id="title" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="company" class="form-label">Company *</label>
+          <input type="text" id="company" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="type" class="form-label">Type *</label>
+          <select id="type" class="form-select" required>
+            <option value="" disabled selected>Select job type</option>
+              <option value="Full-time">Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Contract">Contract</option>
+              <option value="Temporary">Temporary</option>
+              <option value="Internship">Internship</option>
+              <option value="Freelance">Freelance</option>
+              <option value="Permanent">Permanent</option>
+              <option value="Fixed-term">Fixed-term</option>
+              <option value="Seasonal">Seasonal</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="category" class="form-label">Category *</label>
+          <select id="category" class="form-select" required>
+            <option value="" disabled selected>Select category</option>
+            <option value="Information Technology">Information Technology</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Education and Training">Education and Training</option>
+            <option value="Engineering and Technical">Engineering and Technical</option>
+            <option value="Sales and Marketing">Sales and Marketing</option>
+            <option value="Finance and Accounting">Finance and Accounting</option>
+            <option value="Customer Service">Customer Service</option>
+            <option value="Administration and Office Support">Administration and Office Support</option>
+            <option value="Mining and Resources">Mining and Resources</option>
+            <option value="Agriculture">Agriculture</option>
+            <option value="Legal">Legal</option>
+            <option value="Transport and Logistics">Transport and Logistics</option>
+            <option value="Hospitality and Tourism">Hospitality and Tourism</option>
+            <option value="Construction and Trades">Construction and Trades</option>
+            <option value="Creative and Design">Creative and Design</option>
+            <option value="Science and Research">Science and Research</option>
+            <option value="Public Sector">Public Sector</option>
+            <option value="Nature consavation">Public Sector</option>
+
+            <option value="Other">Other</option>
+          </select>
+          <input
+            type="text"
+            id="customCategory"
+            class="form-control mt-2"
+            placeholder="Enter custom category"
+            style="display:none;"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="experience" class="form-label">Experience</label>
+          <input type="text" id="experience" class="form-control" placeholder="Optional" />
+        </div>
+
+        <div class="mb-3">
+          <label for="location" class="form-label">Location</label>
+          <input type="text" id="location" class="form-control" placeholder="Optional" />
+        </div>
+
+        <div class="mb-3">
+          <label for="deadline" class="form-label">Deadline *</label>
+          <input type="date" id="deadline" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="link" class="form-label">Apply Link *</label>
+          <input type="url" id="link" class="form-control" required placeholder="https://example.com/apply" />
+        </div>
+
+        <!-- Description fields -->
+        <div class="mb-3">
+          <label for="purpose" class="form-label">Position Purpose:</label>
+          <textarea id="purpose" rows="4" class="form-control" placeholder="Enter the purpose of the job..."></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="functions" class="form-label">Essential Functions:</label>
+          <textarea id="functions" rows="5" class="form-control" placeholder="List essential duties... (use line breaks or bullets)"></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="qualifications" class="form-label">Qualifications:</label>
+          <textarea id="qualifications" rows="4" class="form-control" placeholder="List required qualifications..."></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="performance" class="form-label">Performance Measurements:</label>
+          <textarea id="performance" rows="4" class="form-control" placeholder="List performance indicators..."></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="experienceReq" class="form-label">Experience Required:</label>
+          <textarea id="experienceReq" rows="2" class="form-control" placeholder="Enter required experience..."></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="skills" class="form-label">Skills & Abilities:</label>
+          <textarea id="skills" rows="3" class="form-control" placeholder="Enter skills required..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success">Submit Job</button>
+      </form>
+
+      <div id="successMsg" class="text-success mt-3" style="display:none;">Job posted successfully!</div>
+      <div id="errorMsg" class="text-danger mt-3" style="display:none;"></div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-light text-center text-muted py-3 mt-auto">
+    <div class="container">
+      &copy; 2025 SA Job Opportunities | Admin Panel
+    </div>
+  </footer>
+
+  <script>
+    // Initialize Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCexm1PTk0cst8i3NJxh8MJvqvgm0ys84A",
+      authDomain: "sa-job-opportunities.firebaseapp.com",
+      projectId: "sa-job-opportunities",
+      storageBucket: "sa-job-opportunities.appspot.com",
+      messagingSenderId: "1055979762474",
+      appId: "1:1055979762474:web:54ea80e0f1e2e339793f5a",
+      measurementId: "G-T1Z3MRRX2H"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Description fields do not use Quill now, so no Quill init
+
+    // Elements for category and custom category
+    const categorySelect = document.getElementById('category');
+    const customCategoryInput = document.getElementById('customCategory');
+
+    categorySelect.addEventListener('change', () => {
+      if (categorySelect.value === 'Other') {
+        customCategoryInput.style.display = 'block';
+        customCategoryInput.required = true;
+      } else {
+        customCategoryInput.style.display = 'none';
+        customCategoryInput.required = false;
+        customCategoryInput.value = '';
+      }
+    });
+
+    // Login form handler
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      if (username === 'sifiso-zethu' && password === 'zethu-sifiso') {
+        this.style.display = 'none';
+        document.getElementById('jobFormSection').style.display = 'block';
+        document.getElementById('loginError').style.display = 'none';
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+      }
+    });
+
+    // Job form handler
+    document.getElementById('jobForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      // Hide previous messages
+      document.getElementById('successMsg').style.display = 'none';
+      document.getElementById('errorMsg').style.display = 'none';
+
+      const title = document.getElementById('title').value.trim();
+      const company = document.getElementById('company').value.trim();
+      const type = document.getElementById('type').value;
+      let category = categorySelect.value;
+      if (category === 'Other') {
+        category = customCategoryInput.value.trim();
+      }
+      const experience = document.getElementById('experience').value.trim();
+      const location = document.getElementById('location').value.trim();
+      const deadlineValue = document.getElementById('deadline').value;
+      const link = document.getElementById('link').value.trim();
+
+      // Description parts
+      const purpose = document.getElementById('purpose').value.trim();
+      const functions = document.getElementById('functions').value.trim();
+      const qualifications = document.getElementById('qualifications').value.trim();
+      const performance = document.getElementById('performance').value.trim();
+      const experienceReq = document.getElementById('experienceReq').value.trim();
+      const skills = document.getElementById('skills').value.trim();
+
+      if (!title || !company || !type || !category || !deadlineValue || !link) {
+        document.getElementById('errorMsg').textContent = 'Please fill all required fields.';
+        document.getElementById('errorMsg').style.display = 'block';
+        return;
+      }
+
+      if (category === '') {
+        document.getElementById('errorMsg').textContent = 'Please select or enter a category.';
+        document.getElementById('errorMsg').style.display = 'block';
+        return;
+      }
+
+      const deadline = new Date(deadlineValue);
+
+      // Combine description fields into HTML
+      const descriptionHTML = `
+        <h4><strong>POSITION PURPOSE</strong></h4>
+        <p>${escapeHtml(purpose)}</p>
+
+        <h4><strong>ESSENTIAL FUNCTIONS AND BASIC DUTIES</strong></h4>
+        <p>${escapeHtml(functions).replace(/\n/g, '<br/>')}</p>
+
+        <h4><strong>QUALIFICATIONS</strong></h4>
+        <p>${escapeHtml(qualifications).replace(/\n/g, '<br/>')}</p>
+
+        <h4><strong>PERFORMANCE MEASUREMENTS</strong></h4>
+        <p>${escapeHtml(performance).replace(/\n/g, '<br/>')}</p>
+
+        <h4><strong>EXPERIENCE REQUIRED</strong></h4>
+        <p>${escapeHtml(experienceReq)}</p>
+
+        <h4><strong>SKILLS & ABILITIES</strong></h4>
+        <p>${escapeHtml(skills).replace(/\n/g, '<br/>')}</p>
+      `;
+
+      try {
+        await db.collection('jobs').add({
+          title,
+          company,
+          type,
+          category,
+          experience,
+          location,
+          deadline: firebase.firestore.Timestamp.fromDate(deadline),
+          link,
+          descriptionHTML,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+
+        this.reset();
+        customCategoryInput.style.display = 'none';
+        customCategoryInput.required = false;
+        document.getElementById('successMsg').style.display = 'block';
+      } catch (error) {
+        document.getElementById('errorMsg').textContent = 'Error adding job: ' + error.message;
+        document.getElementById('errorMsg').style.display = 'block';
+      }
+    });
+
+    // Basic HTML escaping to avoid injection (you can enhance this)
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+
+  <!-- Bootstrap JS Bundle (Popper + Bootstrap JS) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Job Input with Description Editor</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
   <style>
     body {
       background-color: #f8f9fa;
