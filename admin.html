@@ -3,29 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SA Job Opportunities - Admin Post Job</title>
+  <title>Admin Job Input with Description Editor</title>
 
-  <!-- Bootstrap 5 CSS CDN -->
+  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
   <style>
     body {
-      padding-top: 56px; /* navbar height */
       background-color: #f8f9fa;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    main {
-      flex-grow: 1;
     }
     footer {
-      background-color: #212529;
-      color: #fff;
+      background-color: #343a40;
+      color: white;
       padding: 1rem 0;
+      text-align: center;
+      margin-top: 3rem;
+    }
+    .form-section {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+      margin-top: 2rem;
+      margin-bottom: 2rem;
     }
     textarea {
       resize: vertical;
@@ -33,244 +37,273 @@
   </style>
 </head>
 <body>
-  <!-- Navbar Header -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
-    <div class="container">
-      <a class="navbar-brand" href="#">SA Job Opportunities</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-    </div>
-  </nav>
 
-  <!-- Main content container -->
-  <main class="container my-5">
-    <h2 class="mb-4 text-center">Admin Login</h2>
+<header class="bg-dark text-white p-3">
+  <div class="container">
+    <h1 class="mb-0">SA Job Opportunities - Admin Panel</h1>
+  </div>
+</header>
 
-    <!-- Login Form -->
-    <form id="loginForm" class="mx-auto" style="max-width: 400px;">
+<div class="container">
+  <div class="form-section mx-auto" style="max-width: 700px;">
+
+    <h2 class="mb-4">Admin Login</h2>
+    <form id="loginForm">
       <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
+        <label for="username" class="form-label">Username:</label>
         <input type="text" id="username" class="form-control" required />
       </div>
       <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
+        <label for="password" class="form-label">Password:</label>
         <input type="password" id="password" class="form-control" required />
       </div>
-      <button type="submit" class="btn btn-primary w-100">Login</button>
+      <button type="submit" class="btn btn-primary">Login</button>
       <div id="loginError" class="text-danger mt-2" style="display:none;">Invalid credentials</div>
     </form>
 
-    <!-- Job Form Section -->
-    <section id="jobFormSection" style="display:none;">
-      <h3 class="mb-4 text-center">Post a New Job</h3>
+    <div id="jobFormSection" style="display:none;">
+      <h3 class="mt-5 mb-4">Post a New Job</h3>
+      <form id="jobForm">
 
-      <form id="jobForm" class="mx-auto" style="max-width: 900px;">
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label for="title" class="form-label">Job Title *</label>
-            <input type="text" id="title" class="form-control" required />
-          </div>
-          <div class="col-md-6">
-            <label for="company" class="form-label">Company *</label>
-            <input type="text" id="company" class="form-control" required />
-          </div>
+        <div class="mb-3">
+          <label for="title" class="form-label">Job Title *</label>
+          <input type="text" id="title" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="company" class="form-label">Company *</label>
+          <input type="text" id="company" class="form-control" required />
         </div>
 
         <div class="row mb-3">
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label for="type" class="form-label">Type *</label>
-            <input type="text" id="type" class="form-control" required placeholder="Full-time, Part-time, etc." />
+            <select id="type" class="form-select" required>
+              <option value="" disabled selected>Select type</option>
+              <option value="All Types">All Types</option>
+              <option value="Full-time">Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Contract">Contract</option>
+              <option value="Temporary">Temporary</option>
+              <option value="Internship">Internship</option>
+              <option value="Freelance">Freelance</option>
+              <option value="Permanent">Permanent</option>
+              <option value="Fixed-term">Fixed-term</option>
+              <option value="Seasonal">Seasonal</option>
+            </select>
           </div>
-          <div class="col-md-4">
-            <label for="category" class="form-label">Category *</label>
-            <input type="text" id="category" class="form-control" required placeholder="IT, Healthcare, etc." />
-          </div>
-          <div class="col-md-4">
-            <label for="experience" class="form-label">Experience</label>
-            <input type="text" id="experience" class="form-control" placeholder="E.g. 2 years, Entry-level" />
-          </div>
-        </div>
-
-        <div class="row mb-3">
           <div class="col-md-6">
-            <label for="location" class="form-label">Location</label>
-            <input type="text" id="location" class="form-control" placeholder="City, Province" />
-          </div>
-          <div class="col-md-3">
-            <label for="deadline" class="form-label">Deadline *</label>
-            <input type="date" id="deadline" class="form-control" required />
-          </div>
-          <div class="col-md-3">
-            <label for="link" class="form-label">Apply Link *</label>
-            <input type="url" id="link" class="form-control" required placeholder="https://..." />
+            <label for="category" class="form-label">Category *</label>
+            <select id="category" class="form-select" required>
+              <option value="" disabled selected>Select category</option>
+              <option value="All Categories">All Categories</option>
+              <option value="Information Technology">Information Technology</option>
+              <option value="Healthcare">Healthcare</option>
+              <option value="Education and Training">Education and Training</option>
+              <option value="Engineering and Technical">Engineering and Technical</option>
+              <option value="Sales and Marketing">Sales and Marketing</option>
+              <option value="Finance and Accounting">Finance and Accounting</option>
+              <option value="Customer Service">Customer Service</option>
+              <option value="Administration and Office Support">Administration and Office Support</option>
+              <option value="Mining and Resources">Mining and Resources</option>
+              <option value="Agriculture">Agriculture</option>
+              <option value="Legal">Legal</option>
+              <option value="Transport and Logistics">Transport and Logistics</option>
+              <option value="Hospitality and Tourism">Hospitality and Tourism</option>
+              <option value="Construction and Trades">Construction and Trades</option>
+              <option value="Creative and Design">Creative and Design</option>
+              <option value="Science and Research">Science and Research</option>
+              <option value="Public Sector">Public Sector</option>
+            </select>
           </div>
         </div>
 
-        <hr />
-
         <div class="mb-3">
-          <label for="purpose" class="form-label"><strong>Position Purpose</strong></label>
-          <textarea id="purpose" class="form-control" rows="3" placeholder="Enter the purpose of the job..."></textarea>
+          <label for="experience" class="form-label">Experience</label>
+          <input type="text" id="experience" class="form-control" placeholder="e.g. 3+ years" />
         </div>
 
         <div class="mb-3">
-          <label for="functions" class="form-label"><strong>Essential Functions and Basic Duties</strong></label>
-          <textarea id="functions" class="form-control" rows="5" placeholder="List essential duties, one per line..."></textarea>
+          <label for="location" class="form-label">Location</label>
+          <input type="text" id="location" class="form-control" placeholder="e.g. Johannesburg, Cape Town" />
         </div>
 
         <div class="mb-3">
-          <label for="qualifications" class="form-label"><strong>Qualifications</strong></label>
+          <label for="deadline" class="form-label">Deadline *</label>
+          <input type="date" id="deadline" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="link" class="form-label">Apply Link *</label>
+          <input type="url" id="link" class="form-control" placeholder="https://example.com/apply" required />
+        </div>
+
+        <!-- Description parts -->
+        <div class="mb-3">
+          <label for="purpose" class="form-label"><strong>Position Purpose:</strong></label>
+          <textarea id="purpose" class="form-control" rows="4" placeholder="Enter the purpose of the job..."></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="functions" class="form-label"><strong>Essential Functions and Basic Duties:</strong></label>
+          <textarea id="functions" class="form-control" rows="5" placeholder="List essential duties... (use line breaks or bullets)"></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="qualifications" class="form-label"><strong>Qualifications:</strong></label>
           <textarea id="qualifications" class="form-control" rows="4" placeholder="List required qualifications..."></textarea>
         </div>
 
         <div class="mb-3">
-          <label for="performance" class="form-label"><strong>Performance Measurements</strong></label>
+          <label for="performance" class="form-label"><strong>Performance Measurements:</strong></label>
           <textarea id="performance" class="form-control" rows="4" placeholder="List performance indicators..."></textarea>
         </div>
 
         <div class="mb-3">
-          <label for="experienceReq" class="form-label"><strong>Experience Required</strong></label>
+          <label for="experienceReq" class="form-label"><strong>Experience Required:</strong></label>
           <textarea id="experienceReq" class="form-control" rows="2" placeholder="Enter required experience..."></textarea>
         </div>
 
         <div class="mb-3">
-          <label for="skills" class="form-label"><strong>Skills & Abilities</strong></label>
-          <textarea id="skills" class="form-control" rows="3" placeholder="Enter required skills..."></textarea>
+          <label for="skills" class="form-label"><strong>Skills & Abilities:</strong></label>
+          <textarea id="skills" class="form-control" rows="3" placeholder="Enter skills required..."></textarea>
         </div>
 
-        <button type="submit" class="btn btn-success w-100">Submit Job</button>
+        <button type="submit" class="btn btn-success">Submit Job</button>
 
-        <div id="successMsg" class="alert alert-success mt-3" role="alert" style="display:none;">
-          Job posted successfully!
-        </div>
-        <div id="errorMsg" class="alert alert-danger mt-3" role="alert" style="display:none;"></div>
       </form>
-    </section>
-  </main>
 
-  <!-- Footer -->
-  <footer class="text-center">
-    <div class="container">
-      <p class="mb-0">&copy; 2025 SA Job Opportunities | Developed by Your Company</p>
+      <div id="successMsg" class="text-success mt-3" style="display:none;">Job posted successfully!</div>
+      <div id="errorMsg" class="text-danger mt-3" style="display:none;"></div>
     </div>
-  </footer>
+  </div>
+</div>
 
-  <!-- Bootstrap 5 JS Bundle (Popper + Bootstrap JS) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<footer>
+  <div class="container">
+    <small>© 2025 SA Job Opportunities. All rights reserved.</small>
+  </div>
+</footer>
 
-  <script>
-    // Initialize Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyCexm1PTk0cst8i3NJxh8MJvqvgm0ys84A",
-      authDomain: "sa-job-opportunities.firebaseapp.com",
-      projectId: "sa-job-opportunities",
-      storageBucket: "sa-job-opportunities.appspot.com",
-      messagingSenderId: "1055979762474",
-      appId: "1:1055979762474:web:54ea80e0f1e2e339793f5a",
-      measurementId: "G-T1Z3MRRX2H"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+<!-- Bootstrap JS Bundle (Popper + Bootstrap) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    // Convert multiline text to bullet list HTML
-    function toBulletList(text) {
-      if (!text) return '';
-      const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-      if (lines.length === 0) return '';
-      const listItems = lines.map(line => `<li>${line}</li>`).join('');
-      return `<ul>${listItems}</ul>`;
+<script>
+  // Initialize Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyCexm1PTk0cst8i3NJxh8MJvqvgm0ys84A",
+    authDomain: "sa-job-opportunities.firebaseapp.com",
+    projectId: "sa-job-opportunities",
+    storageBucket: "sa-job-opportunities.appspot.com",
+    messagingSenderId: "1055979762474",
+    appId: "1:1055979762474:web:54ea80e0f1e2e339793f5a",
+    measurementId: "G-T1Z3MRRX2H"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // Login form handler
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    if (username === 'sifiso-zethu' && password === 'zethu-sifiso') {
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('jobFormSection').style.display = 'block';
+      document.getElementById('loginError').style.display = 'none';
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  });
+
+  // Job form submission
+  document.getElementById('jobForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // Get all values
+    const title = document.getElementById('title').value.trim();
+    const company = document.getElementById('company').value.trim();
+    const type = document.getElementById('type').value;
+    const category = document.getElementById('category').value;
+    const experience = document.getElementById('experience').value.trim();
+    const location = document.getElementById('location').value.trim();
+    const deadline = document.getElementById('deadline').value;
+    const link = document.getElementById('link').value.trim();
+
+    const purpose = document.getElementById('purpose').value.trim();
+    const functions = document.getElementById('functions').value.trim();
+    const qualifications = document.getElementById('qualifications').value.trim();
+    const performance = document.getElementById('performance').value.trim();
+    const experienceReq = document.getElementById('experienceReq').value.trim();
+    const skills = document.getElementById('skills').value.trim();
+
+    // Basic validation
+    if (!title || !company || !type || !category || !deadline || !link) {
+      alert('Please fill all required fields.');
+      return;
     }
 
-    // Login form submission
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const loginError = document.getElementById('loginError');
-      if (username === 'sifiso-zethu' && password === 'zethu-sifiso') {
-        loginError.style.display = 'none';
-        this.style.display = 'none';
-        document.getElementById('jobFormSection').style.display = 'block';
-      } else {
-        loginError.style.display = 'block';
-      }
-    });
+    // Build combined HTML description with bullet points
+    function textToHtml(text) {
+      if (!text) return '';
+      // Split lines, trim, ignore empty lines
+      const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+      if (lines.length === 0) return '';
+      // Wrap in ul
+      return `<ul>${lines.map(line => `<li>${line}</li>`).join('')}</ul>`;
+    }
 
-    // Job form submission
-    document.getElementById('jobForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const successMsg = document.getElementById('successMsg');
-      const errorMsg = document.getElementById('errorMsg');
-      successMsg.style.display = 'none';
-      errorMsg.style.display = 'none';
+    const descriptionHtml = `
+      <h4>Position Purpose</h4>
+      <p>${purpose.replace(/\n/g, '<br>')}</p>
 
-      const title = document.getElementById('title').value.trim();
-      const company = document.getElementById('company').value.trim();
-      const type = document.getElementById('type').value.trim();
-      const category = document.getElementById('category').value.trim();
-      const experience = document.getElementById('experience').value.trim();
-      const location = document.getElementById('location').value.trim();
-      const deadlineValue = document.getElementById('deadline').value;
-      const link = document.getElementById('link').value.trim();
+      <h4>Essential Functions and Basic Duties</h4>
+      ${textToHtml(functions)}
 
-      const purpose = document.getElementById('purpose').value.trim();
-      const functions = document.getElementById('functions').value.trim();
-      const qualifications = document.getElementById('qualifications').value.trim();
-      const performance = document.getElementById('performance').value.trim();
-      const experienceReq = document.getElementById('experienceReq').value.trim();
-      const skills = document.getElementById('skills').value.trim();
+      <h4>Qualifications</h4>
+      ${textToHtml(qualifications)}
 
-      if (!title || !company || !type || !category || !deadlineValue || !link) {
-        errorMsg.textContent = 'Please fill all required fields marked with *.';
-        errorMsg.style.display = 'block';
-        return;
-      }
+      <h4>Performance Measurements</h4>
+      ${textToHtml(performance)}
 
-      const deadline = new Date(deadlineValue);
+      <h4>Experience Required</h4>
+      <p>${experienceReq.replace(/\n/g, '<br>')}</p>
 
-      const descriptionHTML = `
-        <h4><strong>POSITION PURPOSE</strong></h4>
-        <p>${purpose}</p>
+      <h4>Skills & Abilities</h4>
+      ${textToHtml(skills)}
+    `;
 
-        <h4><strong>ESSENTIAL FUNCTIONS AND BASIC DUTIES</strong></h4>
-        ${toBulletList(functions)}
+    try {
+      await db.collection('jobs').add({
+        title,
+        company,
+        type,
+        category,
+        experience,
+        location,
+        deadline,
+        link,
+        description: descriptionHtml,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
 
-        <h4><strong>QUALIFICATIONS</strong></h4>
-        ${toBulletList(qualifications)}
+      // Clear form after submission
+      document.getElementById('jobForm').reset();
 
-        <h4><strong>PERFORMANCE MEASUREMENTS</strong></h4>
-        ${toBulletList(performance)}
+      // Show success message
+      document.getElementById('successMsg').style.display = 'block';
+      document.getElementById('errorMsg').style.display = 'none';
 
-        <h4><strong>EXPERIENCE REQUIRED</strong></h4>
-        ${toBulletList(experienceReq)}
+      // Scroll to success message
+      window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        <h4><strong>SKILLS/ABILITIES</strong></h4>
-        ${toBulletList(skills)}
-      `;
-
-      try {
-        await db.collection('jobs').add({
-          title,
-          company,
-          type,
-          category,
-          experience,
-          location,
-          deadline,
-          link,
-          description: descriptionHTML,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        successMsg.style.display = 'block';
-        this.reset();
-      } catch (error) {
-        errorMsg.textContent = 'Error posting job: ' + error.message;
-        errorMsg.style.display = 'block';
-      }
-    });
-  </script>
+    } catch (error) {
+      document.getElementById('errorMsg').textContent = 'Error saving job: ' + error.message;
+      document.getElementById('errorMsg').style.display = 'block';
+      document.getElementById('successMsg').style.display = 'none';
+    }
+  });
+</script>
 </body>
 </html>
