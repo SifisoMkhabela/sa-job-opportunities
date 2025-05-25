@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -192,117 +193,214 @@
     
     <p><strong>Follow us:</strong></p>
   
-    <nav aria-label="Social media links">
-      <a href="https://www.facebook.com" target="_blank" rel="noopener" aria-label="Facebook">
-        <i class="fab fa-facebook fa-2x me-3"></i>
+    <div class="store-buttons d-flex gap-3">
+      <a href="https://www.facebook.com/YourPage" target="_blank" rel="noopener">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Facebook_icon.svg" alt="Facebook" style="height:30px" />
       </a>
-      <a href="https://www.twitter.com" target="_blank" rel="noopener" aria-label="Twitter">
-        <i class="fab fa-twitter fa-2x me-3"></i>
+      <a href="https://www.linkedin.com/in/YourProfile" target="_blank" rel="noopener">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn" style="height:30px" />
       </a>
-      <a href="https://www.instagram.com" target="_blank" rel="noopener" aria-label="Instagram">
-        <i class="fab fa-instagram fa-2x me-3"></i>
+      <a href="https://wa.me/YourPhoneNumber" target="_blank" rel="noopener">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="height:30px" />
       </a>
-      <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn">
-        <i class="fab fa-linkedin fa-2x"></i>
-      </a>
-    </nav>
+    </div>
   </section>
 
   <!-- Footer -->
-  <footer class="bg-light text-center py-3 border-top">
-    &copy; 2025 SA Job Opportunities. All rights reserved.
+  <footer class="footer bg-light py-4 border-top">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+      <p class="mb-2 mb-md-0">© 2025 SA Job Opportunities. All rights reserved.</p>
+      <ul class="footer-links list-inline mb-0">
+        <li class="list-inline-item"><a href="privacy.html">Privacy Policy</a></li>
+        <li class="list-inline-item"><a href="terms.html">Terms of Service</a></li>
+        <li class="list-inline-item"><a href="contact.html">Contact Us</a></li>
+      </ul>
+    </div>
   </footer>
 
-  <!-- Bootstrap Bundle JS (with Popper) -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-  ></script>
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-     const firebaseConfig = {
-      apiKey: "AIzaSy...YOUR_API_KEY...",
+    // Your Firebase config here
+    const firebaseConfig = {
+      apiKey: "AIzaSyCexm1PTk0cst8i3NJxh8MJvqvgm0ys84A",
       authDomain: "sa-job-opportunities.firebaseapp.com",
       projectId: "sa-job-opportunities",
       storageBucket: "sa-job-opportunities.appspot.com",
-      messagingSenderId: "1234567890",
-      appId: "1:1234567890:web:abcdef123456",
+      messagingSenderId: "756042759528",
+      appId: "1:756042759528:web:dd179c0f4c91bfa124ec9c",
+      measurementId: "G-ZT87HWK6XD"
     };
-
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Escape HTML helper function to prevent XSS
-    function escapeHTML(str) {
-      if (!str) return '';
-      return str.replace(/[&<>"']/g, function (m) {
-        return (
-          {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;',
-          }[m] || m
-        );
+    // Utility: escape HTML (prevent XSS)
+    function escapeHtml(text) {
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+    // Load total jobs count
+    async function loadJobCount() {
+      try {
+        const snapshot = await db.collection('jobs').get();
+        document.getElementById('jobCount').textContent = snapshot.size.toLocaleString();
+      } catch (e) {
+        document.getElementById('jobCount').textContent = 'Error loading jobs count';
+      }
+    }
+
+    // Load unique values from jobs collection field
+    async function loadUniqueFieldValues(field) {
+      const valuesSet = new Set();
+      const snapshot = await db.collection('jobs').get();
+      snapshot.forEach(doc => {
+        const val = doc.data()[field];
+        if (val) valuesSet.add(val);
+      });
+      return Array.from(valuesSet).sort();
+    }
+
+    // Populate dropdown options for Type and Category in the search form
+    async function populateDropdowns() {
+      const typeSelect = document.getElementById('typeSelect');
+      const categorySelect = document.getElementById('categorySelect');
+
+      const [types, categories] = await Promise.all([
+        loadUniqueFieldValues('type'),
+        loadUniqueFieldValues('category')
+      ]);
+
+      types.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = t;
+        typeSelect.appendChild(opt);
+      });
+
+      categories.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        categorySelect.appendChild(opt);
       });
     }
 
-    // Load jobs from Firestore
+    // Populate filter modal lists (region, city, sector)
+    async function populateFilterLists() {
+      const regionListEl = document.getElementById('regionFilterList');
+      const cityListEl = document.getElementById('cityFilterList');
+      const sectorListEl = document.getElementById('sectorFilterList');
+
+      // Assume these fields exist in job documents, else fallback to empty
+      const [regions, cities, sectors] = await Promise.all([
+        loadUniqueFieldValues('region'),
+        loadUniqueFieldValues('city'),
+        loadUniqueFieldValues('sector'),
+      ]);
+
+      function createListHTML(items) {
+        if (!items.length) return '<p>No data available.</p>';
+        return items
+          .map(item => `<div><a href="jobs.html?filter=${encodeURIComponent(item)}" class="filter-link">${escapeHtml(item)}</a></div>`)
+          .join('');
+      }
+
+      regionListEl.innerHTML = createListHTML(regions);
+      cityListEl.innerHTML = createListHTML(cities);
+      sectorListEl.innerHTML = createListHTML(sectors);
+    }
+
+    // Load jobs and display in #jobsContainer
     async function loadJobs() {
       const container = document.getElementById('jobsContainer');
       container.innerHTML = '<p>Loading jobs...</p>';
-
       try {
         const snapshot = await db.collection('jobs').orderBy('deadline', 'desc').limit(20).get();
-
         if (snapshot.empty) {
           container.innerHTML = '<p>No jobs found.</p>';
-          document.getElementById('jobCount').textContent = '0';
           return;
         }
-
-        document.getElementById('jobCount').textContent = snapshot.size;
-
-        let html = '';
+        container.innerHTML = '';
         snapshot.forEach(doc => {
           const job = doc.data();
 
-          html += `
+          // Format deadline date nicely if available
+          let deadlineStr = '';
+          if (job.deadline) {
+            try {
+              const d = new Date(job.deadline);
+              deadlineStr = d.toLocaleDateString('en-ZA', { year:'numeric', month:'short', day:'numeric' });
+            } catch {}
+          }
+
+          const jobHtml = `
             <div class="col-md-6 col-lg-4">
               <div class="card h-100 shadow-sm">
                 <div class="card-body d-flex flex-column">
-                  <h5 class="card-title">${escapeHTML(job.title)}</h5>
-                  <p class="card-subtitle mb-2 text-muted">${escapeHTML(job.company)}</p>
-                  <p><strong>Type:</strong> ${escapeHTML(job.type)}</p>
-                  <p><strong>Category:</strong> ${escapeHTML(job.category)}</p>
-                  <p><strong>Location:</strong> ${escapeHTML(job.region || job.city || 'N/A')}</p>
-                  <p><strong>Experience:</strong> ${escapeHTML(job.experience)}</p>
-                  <p><strong>Deadline:</strong> ${escapeHTML(job.deadline)}</p>
-                  <a href="${escapeHTML(job.link)}" target="_blank" rel="noopener" class="btn btn-primary mt-auto">Apply Now</a>
+                  <h5 class="card-title">${escapeHtml(job.title || 'No Title')}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">${escapeHtml(job.company || '')}</h6>
+                  <p class="mb-1"><strong>Type:</strong> ${escapeHtml(job.type || 'N/A')}</p>
+                  <p class="mb-1"><strong>Category:</strong> ${escapeHtml(job.category || 'N/A')}</p>
+                  <p class="mb-2"><strong>Deadline:</strong> ${deadlineStr || 'N/A'}</p>
+                  <a href="${job.link || '#'}" target="_blank" rel="noopener" class="mt-auto btn btn-primary btn-sm" aria-label="Apply for ${escapeHtml(job.title || '')} at ${escapeHtml(job.company || '')}">Apply Now</a>
                 </div>
               </div>
             </div>
           `;
+
+          container.insertAdjacentHTML('beforeend', jobHtml);
         });
-
-        container.innerHTML = html;
-
       } catch (error) {
         container.innerHTML = `<p>Error loading jobs: ${error.message}</p>`;
       }
     }
 
-    // Load initial data on page load
-    window.addEventListener('DOMContentLoaded', () => {
+    // Marquee animation for job categories (simple continuous scroll)
+    function startMarquee() {
+      const marquee = document.querySelector('.marquee');
+      if (!marquee) return;
+
+      let scrollAmount = 0;
+      const speed = 0.5; // pixels per frame
+      const resetPoint = marquee.scrollWidth / 2;
+
+      // Duplicate children to create infinite scroll effect
+      marquee.innerHTML += marquee.innerHTML;
+
+      function animate() {
+        scrollAmount += speed;
+        if (scrollAmount >= resetPoint) {
+          scrollAmount = 0;
+        }
+        marquee.style.transform = `translateX(${-scrollAmount}px)`;
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    }
+
+    // Initialize everything on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadJobCount();
+      populateDropdowns();
+      populateFilterLists();
       loadJobs();
+      startMarquee();
     });
   </script>
-</body>
-</html>
 
-
-
-
-
+  <style>
+    /* Custom styles for marquee */
+    .marquee {
+      display: flex;
+      white-space: nowrap;
