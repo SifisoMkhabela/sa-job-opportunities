@@ -2,66 +2,163 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Admin Job Input with Structured Description</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SA Job Opportunities - Admin Post Job</title>
+
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
   <style>
+    body {
+      padding-top: 56px; /* navbar height */
+      background-color: #f8f9fa;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    main {
+      flex-grow: 1;
+    }
+    footer {
+      background-color: #212529;
+      color: #fff;
+      padding: 1rem 0;
+    }
     textarea {
-      width: 100%;
-      max-width: 700px;
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-      padding: 8px;
-      box-sizing: border-box;
       resize: vertical;
     }
   </style>
 </head>
 <body>
-  <h2>Admin Login</h2>
-  <form id="loginForm">
-    <label>Username: <input type="text" id="username" required /></label><br/><br/>
-    <label>Password: <input type="password" id="password" required /></label><br/><br/>
-    <button type="submit">Login</button>
-    <div id="loginError" style="color:red; display:none;">Invalid credentials</div>
-  </form>
+  <!-- Navbar Header -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="#">SA Job Opportunities</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </nav>
 
-  <div id="jobFormSection" style="display:none;">
-    <h3>Post a New Job</h3>
-    <form id="jobForm">
-      <label>Job Title: <input type="text" id="title" required /></label><br/><br/>
-      <label>Company: <input type="text" id="company" required /></label><br/><br/>
-      <label>Type: <input type="text" id="type" required /></label><br/><br/>
-      <label>Category: <input type="text" id="category" required /></label><br/><br/>
-      <label>Experience: <input type="text" id="experience" /></label><br/><br/>
-      <label>Location: <input type="text" id="location" /></label><br/><br/>
-      <label>Deadline: <input type="date" id="deadline" required /></label><br/><br/>
-      <label>Apply Link: <input type="url" id="link" required /></label><br/><br/>
+  <!-- Main content container -->
+  <main class="container my-5">
+    <h2 class="mb-4 text-center">Admin Login</h2>
 
-      <label>Position Purpose:</label><br/>
-      <textarea id="purpose" rows="4" placeholder="Enter the purpose of the job..."></textarea><br/><br/>
-
-      <label>Essential Functions:</label><br/>
-      <textarea id="functions" rows="5" placeholder="List essential duties... (use line breaks or bullets)"></textarea><br/><br/>
-
-      <label>Qualifications:</label><br/>
-      <textarea id="qualifications" rows="4" placeholder="List required qualifications..."></textarea><br/><br/>
-
-      <label>Performance Measurements:</label><br/>
-      <textarea id="performance" rows="4" placeholder="List performance indicators..."></textarea><br/><br/>
-
-      <label>Experience Required:</label><br/>
-      <textarea id="experienceReq" rows="2" placeholder="Enter required experience..."></textarea><br/><br/>
-
-      <label>Skills & Abilities:</label><br/>
-      <textarea id="skills" rows="3" placeholder="Enter skills required..."></textarea><br/><br/>
-
-      <button type="submit">Submit Job</button>
+    <!-- Login Form -->
+    <form id="loginForm" class="mx-auto" style="max-width: 400px;">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" id="username" class="form-control" required />
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" class="form-control" required />
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Login</button>
+      <div id="loginError" class="text-danger mt-2" style="display:none;">Invalid credentials</div>
     </form>
-    <div id="successMsg" style="color:green; display:none;">Job posted successfully!</div>
-    <div id="errorMsg" style="color:red; display:none;"></div>
-  </div>
+
+    <!-- Job Form Section -->
+    <section id="jobFormSection" style="display:none;">
+      <h3 class="mb-4 text-center">Post a New Job</h3>
+
+      <form id="jobForm" class="mx-auto" style="max-width: 900px;">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="title" class="form-label">Job Title *</label>
+            <input type="text" id="title" class="form-control" required />
+          </div>
+          <div class="col-md-6">
+            <label for="company" class="form-label">Company *</label>
+            <input type="text" id="company" class="form-control" required />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <label for="type" class="form-label">Type *</label>
+            <input type="text" id="type" class="form-control" required placeholder="Full-time, Part-time, etc." />
+          </div>
+          <div class="col-md-4">
+            <label for="category" class="form-label">Category *</label>
+            <input type="text" id="category" class="form-control" required placeholder="IT, Healthcare, etc." />
+          </div>
+          <div class="col-md-4">
+            <label for="experience" class="form-label">Experience</label>
+            <input type="text" id="experience" class="form-control" placeholder="E.g. 2 years, Entry-level" />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" id="location" class="form-control" placeholder="City, Province" />
+          </div>
+          <div class="col-md-3">
+            <label for="deadline" class="form-label">Deadline *</label>
+            <input type="date" id="deadline" class="form-control" required />
+          </div>
+          <div class="col-md-3">
+            <label for="link" class="form-label">Apply Link *</label>
+            <input type="url" id="link" class="form-control" required placeholder="https://..." />
+          </div>
+        </div>
+
+        <hr />
+
+        <div class="mb-3">
+          <label for="purpose" class="form-label"><strong>Position Purpose</strong></label>
+          <textarea id="purpose" class="form-control" rows="3" placeholder="Enter the purpose of the job..."></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="functions" class="form-label"><strong>Essential Functions and Basic Duties</strong></label>
+          <textarea id="functions" class="form-control" rows="5" placeholder="List essential duties, one per line..."></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="qualifications" class="form-label"><strong>Qualifications</strong></label>
+          <textarea id="qualifications" class="form-control" rows="4" placeholder="List required qualifications..."></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="performance" class="form-label"><strong>Performance Measurements</strong></label>
+          <textarea id="performance" class="form-control" rows="4" placeholder="List performance indicators..."></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="experienceReq" class="form-label"><strong>Experience Required</strong></label>
+          <textarea id="experienceReq" class="form-control" rows="2" placeholder="Enter required experience..."></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="skills" class="form-label"><strong>Skills & Abilities</strong></label>
+          <textarea id="skills" class="form-control" rows="3" placeholder="Enter required skills..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">Submit Job</button>
+
+        <div id="successMsg" class="alert alert-success mt-3" role="alert" style="display:none;">
+          Job posted successfully!
+        </div>
+        <div id="errorMsg" class="alert alert-danger mt-3" role="alert" style="display:none;"></div>
+      </form>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center">
+    <div class="container">
+      <p class="mb-0">&copy; 2025 SA Job Opportunities | Developed by Your Company</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS Bundle (Popper + Bootstrap JS) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
     // Initialize Firebase
@@ -77,26 +174,37 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Login form handler
+    // Convert multiline text to bullet list HTML
+    function toBulletList(text) {
+      if (!text) return '';
+      const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+      if (lines.length === 0) return '';
+      const listItems = lines.map(line => `<li>${line}</li>`).join('');
+      return `<ul>${listItems}</ul>`;
+    }
+
+    // Login form submission
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value.trim();
+      const loginError = document.getElementById('loginError');
       if (username === 'sifiso-zethu' && password === 'zethu-sifiso') {
-        document.getElementById('loginForm').style.display = 'none';
+        loginError.style.display = 'none';
+        this.style.display = 'none';
         document.getElementById('jobFormSection').style.display = 'block';
       } else {
-        document.getElementById('loginError').style.display = 'block';
+        loginError.style.display = 'block';
       }
     });
 
-    // Job form handler
+    // Job form submission
     document.getElementById('jobForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-
-      // Hide previous messages
-      document.getElementById('successMsg').style.display = 'none';
-      document.getElementById('errorMsg').style.display = 'none';
+      const successMsg = document.getElementById('successMsg');
+      const errorMsg = document.getElementById('errorMsg');
+      successMsg.style.display = 'none';
+      errorMsg.style.display = 'none';
 
       const title = document.getElementById('title').value.trim();
       const company = document.getElementById('company').value.trim();
@@ -107,7 +215,6 @@
       const deadlineValue = document.getElementById('deadline').value;
       const link = document.getElementById('link').value.trim();
 
-      // Get structured description fields
       const purpose = document.getElementById('purpose').value.trim();
       const functions = document.getElementById('functions').value.trim();
       const qualifications = document.getElementById('qualifications').value.trim();
@@ -116,36 +223,35 @@
       const skills = document.getElementById('skills').value.trim();
 
       if (!title || !company || !type || !category || !deadlineValue || !link) {
-        document.getElementById('errorMsg').textContent = 'Please fill all required fields.';
-        document.getElementById('errorMsg').style.display = 'block';
+        errorMsg.textContent = 'Please fill all required fields marked with *.';
+        errorMsg.style.display = 'block';
         return;
       }
 
       const deadline = new Date(deadlineValue);
 
-      // Combine into formatted HTML description
       const descriptionHTML = `
         <h4><strong>POSITION PURPOSE</strong></h4>
         <p>${purpose}</p>
 
         <h4><strong>ESSENTIAL FUNCTIONS AND BASIC DUTIES</strong></h4>
-        <p>${functions.replace(/\n/g, '<br/>')}</p>
+        ${toBulletList(functions)}
 
         <h4><strong>QUALIFICATIONS</strong></h4>
-        <p>${qualifications.replace(/\n/g, '<br/>')}</p>
+        ${toBulletList(qualifications)}
 
         <h4><strong>PERFORMANCE MEASUREMENTS</strong></h4>
-        <p>${performance.replace(/\n/g, '<br/>')}</p>
+        ${toBulletList(performance)}
 
         <h4><strong>EXPERIENCE REQUIRED</strong></h4>
-        <p>${experienceReq}</p>
+        ${toBulletList(experienceReq)}
 
         <h4><strong>SKILLS/ABILITIES</strong></h4>
-        <p>${skills}</p>
+        ${toBulletList(skills)}
       `;
 
       try {
-        const jobData = {
+        await db.collection('jobs').add({
           title,
           company,
           type,
@@ -156,17 +262,13 @@
           link,
           description: descriptionHTML,
           timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        };
+        });
 
-        await db.collection('jobs').add(jobData);
-
-        document.getElementById('successMsg').style.display = 'block';
+        successMsg.style.display = 'block';
         this.reset();
-        ['purpose', 'functions', 'qualifications', 'performance', 'experienceReq', 'skills']
-          .forEach(id => document.getElementById(id).value = '');
       } catch (error) {
-        document.getElementById('errorMsg').textContent = 'Error: ' + error.message;
-        document.getElementById('errorMsg').style.display = 'block';
+        errorMsg.textContent = 'Error posting job: ' + error.message;
+        errorMsg.style.display = 'block';
       }
     });
   </script>
