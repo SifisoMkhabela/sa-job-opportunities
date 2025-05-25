@@ -1,11 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SA Job Opportunities - Home</title>
-
 
   <!-- Bootstrap CSS -->
   <link
@@ -18,58 +16,103 @@
     rel="stylesheet"
   />
   <!-- Your Custom CSS -->
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+    }
+    .logo {
+      height: 50px;
+      width: auto;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+    .job-description {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: all 0.3s ease;
+    }
+    .marquee {
+      overflow: hidden;
+      white-space: nowrap;
+      animation: marquee 20s linear infinite;
+    }
+    .marquee:hover {
+      animation-play-state: paused;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    .category img {
+      height: 32px;
+      width: 32px;
+    }
+    .apply-btn {
+      transition: opacity 0.3s ease;
+    }
+  </style>
 
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <!-- Header with logo and site name only -->
 
-<header class="top-bar bg-light py-3 border-bottom">
-  <div class="container d-flex align-items-center">
-    <a href="index.html" class="d-flex align-items-center text-decoration-none">
-      <img src="logo.png" alt="SA Job Opportunities" class="logo" style="height:50px; width:auto; object-fit:contain; flex-shrink: 0;" />
-      <h1 class="ms-3 mb-0 text-dark" style="font-size:0.75rem; font-weight:300; letter-spacing:0.03em; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-        SA Job Opportunities
-      </h1>
-    </a>
-  </div>
-</header>
-
+  <!-- Header -->
+  <header class="top-bar bg-white py-3 border-bottom shadow-sm">
+    <div class="container d-flex align-items-center">
+      <a href="index.html" class="d-flex align-items-center text-decoration-none">
+        <img src="logo.png" alt="SA Job Opportunities" class="logo" />
+        <h1 class="ms-3 mb-0 text-dark" style="font-size: 1.25rem; font-weight: 700;">
+          SA Job Opportunities
+        </h1>
+      </a>
+    </div>
+  </header>
 
   <!-- Hero Section -->
-  <section class="hero bg-light py-5">
+  <section class="hero bg-white py-5 shadow-sm mb-5">
     <div class="container text-center">
-      <h1>Find your dream job</h1>
-      <p><strong id="jobCount">Loading jobs count...</strong> Jobs in South Africa</p>
-      <nav class="tabs mb-4" aria-label="Main navigation tabs">
+      <h1 class="mb-3">Find Your Dream Job in South Africa</h1>
+      <p class="fs-5 mb-4">
+        <strong id="jobCount">Loading jobs count...</strong> jobs available now
+      </p>
+
+      <!-- Navigation Tabs -->
+      <nav class="mb-4" aria-label="Main navigation tabs">
         <a href="jobs.html" class="btn btn-outline-primary mx-1">Jobs</a>
         <a href="companies.html" class="btn btn-outline-primary mx-1">Companies</a>
         <a href="courses.html" class="btn btn-outline-primary mx-1">Courses</a>
         <a href="career-advice.html" class="btn btn-outline-primary mx-1">Career Advice</a>
       </nav>
 
-      <!-- Updated Search Form with Type and Category dropdowns -->
-      <form class="row justify-content-center g-2" role="search" action="jobs.html" method="get" aria-label="Job search form">
+      <!-- Search Form -->
+      <form class="row justify-content-center g-3" role="search" action="jobs.html" method="get" aria-label="Job search form">
         <div class="col-md-4">
           <select name="type" id="typeSelect" class="form-select" aria-label="Select job type">
-            <option value="">All Types</option>
-            <!-- Options loaded dynamically from Firestore -->
+            <option value="">All Job Types</option>
+            <!-- Dynamically loaded -->
           </select>
         </div>
         <div class="col-md-4">
           <select name="category" id="categorySelect" class="form-select" aria-label="Select job category">
             <option value="">All Categories</option>
-            <!-- Options loaded dynamically from Firestore -->
+            <!-- Dynamically loaded -->
           </select>
         </div>
         <div class="col-auto d-flex gap-2">
           <button type="submit" class="btn btn-primary" aria-label="Search jobs">
             <i class="fas fa-search"></i> Search
           </button>
-          <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#filterModal" aria-label="Browse jobs filters">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            data-bs-toggle="modal"
+            data-bs-target="#filterModal"
+            aria-label="Open job filters"
+          >
             <i class="fas fa-filter"></i> Filters
           </button>
         </div>
@@ -78,10 +121,9 @@
   </section>
 
   <!-- Jobs Listing Section -->
-  <section class="container my-5" aria-label="Job Listings">
-    <div id="jobsContainer" class="row g-3">
-      <!-- Jobs will be appended here -->
-      <p>Loading jobs...</p>
+  <section class="container mb-5" aria-label="Job Listings">
+    <div id="jobsContainer" class="row g-4 text-dark">
+      <p class="text-center">Loading jobs...</p>
     </div>
   </section>
 
@@ -90,68 +132,101 @@
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="filterModalLabel">Browse Jobs Filters</h5>
+          <h5 class="modal-title" id="filterModalLabel">Browse Job Filters</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="accordion" id="browseAccordion">
 
-            <!-- Region -->
+            <!-- Region Filter -->
             <div class="accordion-item">
               <h2 class="accordion-header" id="headingRegion">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRegion" aria-expanded="true" aria-controls="collapseRegion">
+                <button
+                  class="accordion-button"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseRegion"
+                  aria-expanded="true"
+                  aria-controls="collapseRegion"
+                >
                   Region
                 </button>
               </h2>
-              <div id="collapseRegion" class="accordion-collapse collapse show" data-bs-parent="#browseAccordion">
-                <div class="accordion-body" id="regionFilterList">
-                  Loading Regions...
-                </div>
+              <div
+                id="collapseRegion"
+                class="accordion-collapse collapse show"
+                data-bs-parent="#browseAccordion"
+              >
+                <div class="accordion-body" id="regionFilterList">Loading regions...</div>
               </div>
             </div>
 
-            <!-- City -->
+            <!-- City Filter -->
             <div class="accordion-item">
               <h2 class="accordion-header" id="headingCity">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCity" aria-expanded="false" aria-controls="collapseCity">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseCity"
+                  aria-expanded="false"
+                  aria-controls="collapseCity"
+                >
                   City
                 </button>
               </h2>
-              <div id="collapseCity" class="accordion-collapse collapse" data-bs-parent="#browseAccordion">
-                <div class="accordion-body" id="cityFilterList">
-                  Loading Cities...
-                </div>
+              <div
+                id="collapseCity"
+                class="accordion-collapse collapse"
+                data-bs-parent="#browseAccordion"
+              >
+                <div class="accordion-body" id="cityFilterList">Loading cities...</div>
               </div>
             </div>
 
-            <!-- Sector -->
+            <!-- Sector Filter -->
             <div class="accordion-item">
               <h2 class="accordion-header" id="headingSector">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSector" aria-expanded="false" aria-controls="collapseSector">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseSector"
+                  aria-expanded="false"
+                  aria-controls="collapseSector"
+                >
                   Sector
                 </button>
               </h2>
-              <div id="collapseSector" class="accordion-collapse collapse" data-bs-parent="#browseAccordion">
-                <div class="accordion-body" id="sectorFilterList">
-                  Loading Sectors...
-                </div>
+              <div
+                id="collapseSector"
+                class="accordion-collapse collapse"
+                data-bs-parent="#browseAccordion"
+              >
+                <div class="accordion-body" id="sectorFilterList">Loading sectors...</div>
               </div>
             </div>
 
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Animated Job Categories Marquee -->
-  <section class="job-categories-marquee bg-light py-3 mb-5" aria-label="Job Categories">
-    <div class="container overflow-hidden">
+  <!-- Job Categories Marquee -->
+  <section class="job-categories-marquee bg-white py-3 mb-5 shadow-sm">
+    <div class="container">
       <h4 class="mb-3">Explore Job Categories</h4>
-      <div class="marquee d-flex gap-5">
+      <div class="marquee d-flex gap-5 align-items-center">
         <div class="category d-flex align-items-center gap-2">
           <img src="https://img.icons8.com/fluency/48/000000/computer.png" alt="IT Icon" />
           <span>IT Jobs</span>
@@ -169,289 +244,259 @@
           <span>Sales</span>
         </div>
         <div class="category d-flex align-items-center gap-2">
-          <img src="https://img.icons8.com/color/48/administrator-male.png" alt="Admin Icon" />
-          <span>Admin</span>
+          <img src="https://img.icons8.com/color/48/healthcare.png" alt="Healthcare Icon" />
+          <span>Healthcare</span>
         </div>
         <div class="category d-flex align-items-center gap-2">
-          <img src="https://img.icons8.com/color/48/life-cycle.png" alt="General Icon" />
-          <span>General</span>
-        </div>
-        <div class="category d-flex align-items-center gap-2">
-          <img src="https://img.icons8.com/color/48/bank-cards.png" alt="Finance Icon" />
-          <span>Finance</span>
+          <img src="https://img.icons8.com/color/48/education.png" alt="Education Icon" />
+          <span>Education</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA Section -->
-  <section class="cta container bg-light p-4 rounded mb-5">
-    <h3>Never miss a job opportunity</h3>
-    
-    <ul>
-      <li>Access 1000s of jobs, on the go</li>
-      <li>Filtering to the jobs that suit you</li>
-      <li>Apply directly in real time</li>
-    </ul>
-    
-    <p><strong>Follow us:</strong></p>
-  
-    <div class="store-buttons d-flex gap-3">
-      <a href="https://www.facebook.com/YourPage" target="_blank" rel="noopener">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Facebook_icon.svg" alt="Facebook" style="height:30px" />
-      </a>
-      <a href="https://www.linkedin.com/in/YourProfile" target="_blank" rel="noopener">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn" style="height:30px" />
-      </a>
-      <a href="https://wa.me/YourPhoneNumber" target="_blank" rel="noopener">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="height:30px" />
-      </a>
-    </div>
-  </section>
-
   <!-- Footer -->
-  <footer class="footer bg-light py-4 border-top">
-    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
-      <p class="mb-2 mb-md-0">© 2025 SA Job Opportunities. All rights reserved.</p>
-      <ul class="footer-links list-inline mb-0">
-        <li class="list-inline-item"><a href="privacy.html">Privacy Policy</a></li>
-        <li class="list-inline-item"><a href="terms.html">Terms of Service</a></li>
-        <li class="list-inline-item"><a href="contact.html">Contact Us</a></li>
-      </ul>
+  <footer class="bg-dark text-light py-4 mt-auto">
+    <div class="container text-center small">
+      <p class="mb-1">&copy; 2025 SA Job Opportunities. All rights reserved.</p>
+      <p class="mb-0">Built with ❤️ by Your Company</p>
     </div>
   </footer>
 
-  <!-- Bootstrap JS Bundle -->
+  <!-- Bootstrap Bundle JS (includes Popper) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+  <!-- Your Custom JavaScript -->
   <script>
-    // Your Firebase config here
+    // Firebase configuration (replace with your own config)
     const firebaseConfig = {
-      apiKey: "AIzaSyCexm1PTk0cst8i3NJxh8MJvqvgm0ys84A",
-      authDomain: "sa-job-opportunities.firebaseapp.com",
-      projectId: "sa-job-opportunities",
-      storageBucket: "sa-job-opportunities.appspot.com",
-      messagingSenderId: "756042759528",
-      appId: "1:756042759528:web:dd179c0f4c91bfa124ec9c",
-      measurementId: "G-ZT87HWK6XD"
+      apiKey: "YOUR_API_KEY_HERE",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
     };
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Utility: escape HTML (prevent XSS)
+    // Utility: escape HTML to prevent injection
     function escapeHtml(text) {
       const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
+        '&': "&amp;",
+        '<': "&lt;",
+        '>': "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
       };
-      return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+      return text ? text.replace(/[&<>"']/g, m => map[m]) : '';
     }
 
-    // Load total jobs count
+    // Load and show total job count in hero
     async function loadJobCount() {
       try {
         const snapshot = await db.collection('jobs').get();
-        document.getElementById('jobCount').textContent = snapshot.size.toLocaleString();
-      } catch (e) {
-        document.getElementById('jobCount').textContent = 'Error loading jobs count';
+        const count = snapshot.size;
+        document.getElementById('jobCount').textContent = count.toLocaleString();
+      } catch (err) {
+        console.error('Error loading job count:', err);
+        document.getElementById('jobCount').textContent = 'N/A';
       }
     }
 
-    // Load unique values from jobs collection field
-    async function loadUniqueFieldValues(field) {
-      const valuesSet = new Set();
-      const snapshot = await db.collection('jobs').get();
-      snapshot.forEach(doc => {
-        const val = doc.data()[field];
-        if (val) valuesSet.add(val);
-      });
-      return Array.from(valuesSet).sort();
-    }
-
-    // Populate dropdown options for Type and Category in the search form
+    // Populate job type and category dropdowns in search form
     async function populateDropdowns() {
-      const typeSelect = document.getElementById('typeSelect');
-      const categorySelect = document.getElementById('categorySelect');
+      try {
+        const snapshot = await db.collection('jobs').get();
+        const types = new Set();
+        const categories = new Set();
 
-      const [types, categories] = await Promise.all([
-        loadUniqueFieldValues('type'),
-        loadUniqueFieldValues('category')
-      ]);
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          if (data.type) types.add(data.type);
+          if (data.category) categories.add(data.category);
+        });
 
-      types.forEach(t => {
-        const opt = document.createElement('option');
-        opt.value = t;
-        opt.textContent = t;
-        typeSelect.appendChild(opt);
-      });
+        const typeSelect = document.getElementById('typeSelect');
+        const categorySelect = document.getElementById('categorySelect');
 
-      categories.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c;
-        opt.textContent = c;
-        categorySelect.appendChild(opt);
-      });
-    }
+        // Clear existing options except first
+        typeSelect.length = 1;
+        categorySelect.length = 1;
 
-    // Populate filter modal lists (region, city, sector)
-    async function populateFilterLists() {
-      const regionListEl = document.getElementById('regionFilterList');
-      const cityListEl = document.getElementById('cityFilterList');
-      const sectorListEl = document.getElementById('sectorFilterList');
+        Array.from(types).sort().forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t;
+          opt.textContent = t;
+          typeSelect.appendChild(opt);
+        });
 
-      // Assume these fields exist in job documents, else fallback to empty
-      const [regions, cities, sectors] = await Promise.all([
-        loadUniqueFieldValues('region'),
-        loadUniqueFieldValues('city'),
-        loadUniqueFieldValues('sector'),
-      ]);
-
-      function createListHTML(items) {
-        if (!items.length) return '<p>No data available.</p>';
-        return items
-          .map(item => `<div><a href="jobs.html?filter=${encodeURIComponent(item)}" class="filter-link">${escapeHtml(item)}</a></div>`)
-          .join('');
+        Array.from(categories).sort().forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c;
+          opt.textContent = c;
+          categorySelect.appendChild(opt);
+        });
+      } catch (err) {
+        console.error('Error populating dropdowns:', err);
       }
-
-      regionListEl.innerHTML = createListHTML(regions);
-      cityListEl.innerHTML = createListHTML(cities);
-      sectorListEl.innerHTML = createListHTML(sectors);
     }
 
-    // Load jobs and display in #jobsContainer
+    // Populate browse filter lists in the modal
+    async function populateFilterLists() {
+      try {
+        const snapshot = await db.collection('jobs').get();
+        const regions = new Set();
+        const cities = new Set();
+        const sectors = new Set();
+
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          if (data.region) regions.add(data.region);
+          if (data.city) cities.add(data.city);
+          if (data.sector) sectors.add(data.sector);
+        });
+
+        const regionList = document.getElementById('regionFilterList');
+        const cityList = document.getElementById('cityFilterList');
+        const sectorList = document.getElementById('sectorFilterList');
+
+        // Helper: create clickable filter items
+        function createFilterItems(items, container, filterType) {
+          container.innerHTML = '';
+          if (items.size === 0) {
+            container.textContent = 'No data available.';
+            return;
+          }
+          const ul = document.createElement('ul');
+          ul.className = 'list-unstyled';
+          Array.from(items).sort().forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'mb-2';
+
+            // A link to filter jobs by that attribute (opens jobs.html with query)
+            const a = document.createElement('a');
+            a.href = `jobs.html?${filterType}=${encodeURIComponent(item)}`;
+            a.textContent = item;
+            a.className = 'text-decoration-none';
+            a.setAttribute('aria-label', `Filter jobs by ${filterType} ${item}`);
+
+            li.appendChild(a);
+            ul.appendChild(li);
+          });
+          container.appendChild(ul);
+        }
+
+        createFilterItems(regions, regionList, 'region');
+        createFilterItems(cities, cityList, 'city');
+        createFilterItems(sectors, sectorList, 'sector');
+
+      } catch (err) {
+        console.error('Error loading filter lists:', err);
+        ['regionFilterList', 'cityFilterList', 'sectorFilterList'].forEach(id => {
+          document.getElementById(id).textContent = 'Error loading data.';
+        });
+      }
+    }
+
+    // Load and render jobs on the homepage
     async function loadJobs() {
-  const container = document.getElementById('jobsContainer');
-  container.innerHTML = '<p>Loading jobs...</p>';
-  try {
-    const snapshot = await db.collection('jobs').orderBy('deadline', 'desc').limit(20).get();
-    if (snapshot.empty) {
-      container.innerHTML = '<p>No jobs found.</p>';
-      return;
-    }
-    container.innerHTML = '';
-    snapshot.forEach(doc => {
-      const job = doc.data();
-      // ... build jobHtml here ...
-      container.insertAdjacentHTML('beforeend', jobHtml);
-    });
+      const container = document.getElementById('jobsContainer');
+      container.innerHTML = '<p>Loading jobs...</p>';
+      try {
+        const snapshot = await db.collection('jobs').orderBy('deadline', 'desc').limit(20).get();
+        if (snapshot.empty) {
+          container.innerHTML = '<p>No jobs found.</p>';
+          return;
+        }
+        container.innerHTML = '';
+        snapshot.forEach(doc => {
+          const job = doc.data();
 
-    // Setup read more buttons AFTER jobs are rendered
-    setupReadMore();
-
-  } catch (error) {
-    container.innerHTML = `<p>Error loading jobs: ${error.message}</p>`;
-  }
-}
-
+          // Format deadline nicely
+          let deadlineStr = 'N/A';
+          if (job.deadline) {
+            const deadlineDate = job.deadline.toDate ? job.deadline.toDate() : new Date(job.deadline);
+            deadlineStr = deadlineDate.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+          }
 
           const jobHtml = `
-  <div class="col-md-6 col-lg-4">
-    <div class="card h-100 shadow-sm d-flex flex-column">
-      <div class="card-body d-flex flex-column">
-        <h5 class="card-title">${escapeHtml(job.title || 'No Title')}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">${escapeHtml(job.company || '')}</h6>
-        <p class="mb-1"><strong>Type:</strong> ${escapeHtml(job.type || 'N/A')}</p>
-        <p class="mb-1"><strong>Category:</strong> ${escapeHtml(job.category || 'N/A')}</p>
-        <p class="mb-2"><strong>Deadline:</strong> ${deadlineStr || 'N/A'}</p>
+            <div class="col-md-6 col-lg-4">
+              <div class="card h-100 shadow-sm d-flex flex-column">
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title">${escapeHtml(job.title || 'No Title')}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">${escapeHtml(job.company || '')}</h6>
+                  <p class="mb-1"><strong>Type:</strong> ${escapeHtml(job.type || 'N/A')}</p>
+                  <p class="mb-1"><strong>Category:</strong> ${escapeHtml(job.category || 'N/A')}</p>
+                  <p class="mb-2"><strong>Deadline:</strong> ${deadlineStr}</p>
 
-        <p class="mb-2 job-description" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-          <strong>Description:</strong> ${escapeHtml(job.description || 'No description')}
-        </p>
+                  <p class="mb-2 job-description" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    <strong>Description:</strong> ${escapeHtml(job.description || 'No description')}
+                  </p>
 
-        <button type="button" class="btn btn-link p-0 mb-2 read-more-btn" style="width: fit-content;">Read more</button>
+                  <button type="button" class="btn btn-link p-0 mb-2 read-more-btn" style="width: fit-content;">
+                    Read more
+                  </button>
 
-        <a href="${job.link || '#'}" target="_blank" rel="noopener" class="btn btn-primary btn-sm apply-btn mt-auto" style="display:none;" aria-label="Apply for ${escapeHtml(job.title || '')} at ${escapeHtml(job.company || '')}">
-          Apply Now
-        </a>
-      </div>
-    </div>
-  </div>
-`;
-
+                  <a href="${job.link || '#'}" target="_blank" rel="noopener" class="btn btn-primary btn-sm apply-btn mt-auto" style="display:none;" aria-label="Apply for ${escapeHtml(job.title || '')} at ${escapeHtml(job.company || '')}">
+                    Apply Now
+                  </a>
+                </div>
+              </div>
+            </div>
+          `;
 
           container.insertAdjacentHTML('beforeend', jobHtml);
         });
+
+        setupReadMore();
       } catch (error) {
         container.innerHTML = `<p>Error loading jobs: ${error.message}</p>`;
       }
     }
 
-    // After inserting all job cards, add event listeners to toggle description and apply button
-function setupReadMore() {
-  const jobCards = document.querySelectorAll('#jobsContainer .card-body');
+    // Read more toggle functionality
+    function setupReadMore() {
+      const jobCards = document.querySelectorAll('#jobsContainer .card-body');
 
-  jobCards.forEach(card => {
-    const desc = card.querySelector('.job-description');
-    const btn = card.querySelector('.read-more-btn');
-    const applyBtn = card.querySelector('.apply-btn');
+      jobCards.forEach(card => {
+        const desc = card.querySelector('.job-description');
+        const btn = card.querySelector('.read-more-btn');
+        const applyBtn = card.querySelector('.apply-btn');
 
-    if (!desc || !btn || !applyBtn) return;
+        if (!desc || !btn || !applyBtn) return;
 
-    btn.addEventListener('click', () => {
-      if (btn.textContent === 'Read more') {
-        // Expand description
-        desc.style.whiteSpace = 'normal';
-        desc.style.overflow = 'visible';
-        desc.style.textOverflow = 'unset';
+        btn.addEventListener('click', () => {
+          if (btn.textContent === 'Read more') {
+            // Expand description
+            desc.style.whiteSpace = 'normal';
+            desc.style.overflow = 'visible';
+            desc.style.textOverflow = 'unset';
 
-        btn.textContent = 'Read less';
-        applyBtn.style.display = 'inline-block';
-      } else {
-        // Collapse description
-        desc.style.whiteSpace = 'nowrap';
-        desc.style.overflow = 'hidden';
-        desc.style.textOverflow = 'ellipsis';
+            btn.textContent = 'Read less';
+            applyBtn.style.display = 'inline-block';
+          } else {
+            // Collapse description
+            desc.style.whiteSpace = 'nowrap';
+            desc.style.overflow = 'hidden';
+            desc.style.textOverflow = 'ellipsis';
 
-        btn.textContent = 'Read more';
-        applyBtn.style.display = 'none';
-      }
-    });
-  });
-}
-
-    // Marquee animation for job categories (simple continuous scroll)
-    function startMarquee() {
-      const marquee = document.querySelector('.marquee');
-      if (!marquee) return;
-
-      let scrollAmount = 0;
-      const speed = 0.5; // pixels per frame
-      const resetPoint = marquee.scrollWidth / 2;
-
-      // Duplicate children to create infinite scroll effect
-      marquee.innerHTML += marquee.innerHTML;
-
-      function animate() {
-        scrollAmount += speed;
-        if (scrollAmount >= resetPoint) {
-          scrollAmount = 0;
-        }
-        marquee.style.transform = `translateX(${-scrollAmount}px)`;
-        requestAnimationFrame(animate);
-      }
-
-      animate();
+            btn.textContent = 'Read more';
+            applyBtn.style.display = 'none';
+          }
+        });
+      });
     }
 
-    // Initialize everything on page load
+    // Initialize all on DOM load
     document.addEventListener('DOMContentLoaded', () => {
       loadJobCount();
       populateDropdowns();
       populateFilterLists();
       loadJobs();
-      startMarquee();
-      setupReadMore();
-
     });
   </script>
-
-  <style>
-    /* Custom styles for marquee */
-    .marquee {
-      display: flex;
-      white-space: nowrap;
+</body>
+</html>
