@@ -325,41 +325,54 @@
 
     // Load jobs and display in #jobsContainer
     async function loadJobs() {
-      const container = document.getElementById('jobsContainer');
-      container.innerHTML = '<p>Loading jobs...</p>';
-      try {
-        const snapshot = await db.collection('jobs').orderBy('deadline', 'desc').limit(20).get();
-        if (snapshot.empty) {
-          container.innerHTML = '<p>No jobs found.</p>';
-          return;
-        }
-        container.innerHTML = '';
-        snapshot.forEach(doc => {
-          const job = doc.data();
+  const container = document.getElementById('jobsContainer');
+  container.innerHTML = '<p>Loading jobs...</p>';
+  try {
+    const snapshot = await db.collection('jobs').orderBy('deadline', 'desc').limit(20).get();
+    if (snapshot.empty) {
+      container.innerHTML = '<p>No jobs found.</p>';
+      return;
+    }
+    container.innerHTML = '';
+    snapshot.forEach(doc => {
+      const job = doc.data();
+      // ... build jobHtml here ...
+      container.insertAdjacentHTML('beforeend', jobHtml);
+    });
 
-          // Format deadline date nicely if available
-          let deadlineStr = '';
-          if (job.deadline) {
-            try {
-              const d = new Date(job.deadline);
-              deadlineStr = d.toLocaleDateString('en-ZA', { year:'numeric', month:'short', day:'numeric' });
-            } catch {}
-          }
+    // Setup read more buttons AFTER jobs are rendered
+    setupReadMore();
+
+  } catch (error) {
+    container.innerHTML = `<p>Error loading jobs: ${error.message}</p>`;
+  }
+}
+
 
           const jobHtml = `
-            <div class="col-md-6 col-lg-4">
-              <div class="card h-100 shadow-sm">
-                <div class="card-body d-flex flex-column">
-                  <h5 class="card-title">${escapeHtml(job.title || 'No Title')}</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">${escapeHtml(job.company || '')}</h6>
-                  <p class="mb-1"><strong>Type:</strong> ${escapeHtml(job.type || 'N/A')}</p>
-                  <p class="mb-1"><strong>Category:</strong> ${escapeHtml(job.category || 'N/A')}</p>
-                  <p class="mb-2"><strong>Deadline:</strong> ${deadlineStr || 'N/A'}</p>
-                  <a href="${job.link || '#'}" target="_blank" rel="noopener" class="mt-auto btn btn-primary btn-sm" aria-label="Apply for ${escapeHtml(job.title || '')} at ${escapeHtml(job.company || '')}">Apply Now</a>
-                </div>
-              </div>
-            </div>
-          `;
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100 shadow-sm d-flex flex-column">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title">${escapeHtml(job.title || 'No Title')}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">${escapeHtml(job.company || '')}</h6>
+        <p class="mb-1"><strong>Type:</strong> ${escapeHtml(job.type || 'N/A')}</p>
+        <p class="mb-1"><strong>Category:</strong> ${escapeHtml(job.category || 'N/A')}</p>
+        <p class="mb-2"><strong>Deadline:</strong> ${deadlineStr || 'N/A'}</p>
+
+        <p class="mb-2 job-description" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+          <strong>Description:</strong> ${escapeHtml(job.description || 'No description')}
+        </p>
+
+        <button type="button" class="btn btn-link p-0 mb-2 read-more-btn" style="width: fit-content;">Read more</button>
+
+        <a href="${job.link || '#'}" target="_blank" rel="noopener" class="btn btn-primary btn-sm apply-btn mt-auto" style="display:none;" aria-label="Apply for ${escapeHtml(job.title || '')} at ${escapeHtml(job.company || '')}">
+          Apply Now
+        </a>
+      </div>
+    </div>
+  </div>
+`;
+
 
           container.insertAdjacentHTML('beforeend', jobHtml);
         });
@@ -367,6 +380,39 @@
         container.innerHTML = `<p>Error loading jobs: ${error.message}</p>`;
       }
     }
+
+    // After inserting all job cards, add event listeners to toggle description and apply button
+function setupReadMore() {
+  const jobCards = document.querySelectorAll('#jobsContainer .card-body');
+
+  jobCards.forEach(card => {
+    const desc = card.querySelector('.job-description');
+    const btn = card.querySelector('.read-more-btn');
+    const applyBtn = card.querySelector('.apply-btn');
+
+    if (!desc || !btn || !applyBtn) return;
+
+    btn.addEventListener('click', () => {
+      if (btn.textContent === 'Read more') {
+        // Expand description
+        desc.style.whiteSpace = 'normal';
+        desc.style.overflow = 'visible';
+        desc.style.textOverflow = 'unset';
+
+        btn.textContent = 'Read less';
+        applyBtn.style.display = 'inline-block';
+      } else {
+        // Collapse description
+        desc.style.whiteSpace = 'nowrap';
+        desc.style.overflow = 'hidden';
+        desc.style.textOverflow = 'ellipsis';
+
+        btn.textContent = 'Read more';
+        applyBtn.style.display = 'none';
+      }
+    });
+  });
+}
 
     // Marquee animation for job categories (simple continuous scroll)
     function startMarquee() {
@@ -399,6 +445,8 @@
       populateFilterLists();
       loadJobs();
       startMarquee();
+      setupReadMore();
+
     });
   </script>
 
