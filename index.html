@@ -6,6 +6,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SA Job Opportunities - Home</title>
 
+  <!-- Your Custom CSS -->
+  <style>
+    /* Popup overlay styles */
+    #filterPopup {
+      display: none;
+      position: fixed;
+      z-index: 1050;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+    }
+    #filterPopup .popup-content {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      max-width: 400px;
+      width: 90%;
+    }
+    /* Show popup when active */
+    #filterPopup.active {
+      display: flex;
+    }
+  </style>
+
+
 
   <!-- Bootstrap CSS -->
   <link
