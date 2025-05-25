@@ -1,66 +1,229 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SA Job Opportunities</title>
+  <title>SA Job Opportunities - Home</title>
 
   <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
   <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    rel="stylesheet"
+  />
   <!-- Your Custom CSS -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Firebase SDK -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <header class="bg-light py-3 border-bottom">
+  <!-- Header with logo and site name only -->
+  <header class="top-bar bg-light py-3 border-bottom">
     <div class="container d-flex align-items-center">
-      <h1 class="ms-3 mb-0 text-dark">SA Job Opportunities</h1>
+      <a href="index.html" class="d-flex align-items-center text-decoration-none">
+        <img src="logo.png" alt="SA Job Opportunities" class="logo" style="height:50px; width:auto; object-fit:contain; flex-shrink: 0;" />
+        <h1 class="ms-3 mb-0 text-dark" style="font-size:0.75rem; font-weight:300; letter-spacing:0.03em; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+          SA Job Opportunities
+        </h1>
+      </a>
     </div>
   </header>
 
-  <!-- Hero Section with Filters -->
+  <!-- Hero Section -->
   <section class="hero bg-light py-5">
     <div class="container text-center">
       <h1>Find your dream job</h1>
       <p><strong id="jobCount">Loading jobs count...</strong> Jobs in South Africa</p>
+      <nav class="tabs mb-4" aria-label="Main navigation tabs">
+        <a href="jobs.html" class="btn btn-outline-primary mx-1">Jobs</a>
+        <a href="companies.html" class="btn btn-outline-primary mx-1">Companies</a>
+        <a href="courses.html" class="btn btn-outline-primary mx-1">Courses</a>
+        <a href="career-advice.html" class="btn btn-outline-primary mx-1">Career Advice</a>
+      </nav>
 
-      <form class="row justify-content-center g-2" role="search" id="filterForm">
+      <!-- Updated Search Form with Type and Category dropdowns -->
+      <form class="row justify-content-center g-2" role="search" action="jobs.html" method="get" aria-label="Job search form">
         <div class="col-md-4">
-          <select name="type" id="typeSelect" class="form-select">
+          <select name="type" id="typeSelect" class="form-select" aria-label="Select job type">
             <option value="">All Types</option>
+            <!-- Options loaded dynamically from Firestore -->
           </select>
         </div>
         <div class="col-md-4">
-          <select name="category" id="categorySelect" class="form-select">
+          <select name="category" id="categorySelect" class="form-select" aria-label="Select job category">
             <option value="">All Categories</option>
+            <!-- Options loaded dynamically from Firestore -->
           </select>
         </div>
-        <div class="col-auto">
-          <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+        <div class="col-auto d-flex gap-2">
+          <button type="submit" class="btn btn-primary" aria-label="Search jobs">
+            <i class="fas fa-search"></i> Search
+          </button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#filterModal" aria-label="Browse jobs filters">
+            <i class="fas fa-filter"></i> Filters
+          </button>
         </div>
       </form>
     </div>
   </section>
 
-  <!-- Job Listings -->
-  <section class="container my-5">
+  <!-- Jobs Listing Section -->
+  <section class="container my-5" aria-label="Job Listings">
     <div id="jobsContainer" class="row g-3">
+      <!-- Jobs will be appended here -->
       <p>Loading jobs...</p>
     </div>
   </section>
 
+  <!-- Browse Filter Modal -->
+  <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="filterModalLabel">Browse Jobs Filters</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="accordion" id="browseAccordion">
+
+            <!-- Region -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingRegion">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRegion" aria-expanded="true" aria-controls="collapseRegion">
+                  Region
+                </button>
+              </h2>
+              <div id="collapseRegion" class="accordion-collapse collapse show" data-bs-parent="#browseAccordion">
+                <div class="accordion-body" id="regionFilterList">
+                  Loading Regions...
+                </div>
+              </div>
+            </div>
+
+            <!-- City -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingCity">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCity" aria-expanded="false" aria-controls="collapseCity">
+                  City
+                </button>
+              </h2>
+              <div id="collapseCity" class="accordion-collapse collapse" data-bs-parent="#browseAccordion">
+                <div class="accordion-body" id="cityFilterList">
+                  Loading Cities...
+                </div>
+              </div>
+            </div>
+
+            <!-- Sector -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingSector">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSector" aria-expanded="false" aria-controls="collapseSector">
+                  Sector
+                </button>
+              </h2>
+              <div id="collapseSector" class="accordion-collapse collapse" data-bs-parent="#browseAccordion">
+                <div class="accordion-body" id="sectorFilterList">
+                  Loading Sectors...
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Animated Job Categories Marquee -->
+  <section class="job-categories-marquee bg-light py-3 mb-5" aria-label="Job Categories">
+    <div class="container overflow-hidden">
+      <h4 class="mb-3">Explore Job Categories</h4>
+      <div class="marquee d-flex gap-5">
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/fluency/48/000000/computer.png" alt="IT Icon" />
+          <span>IT Jobs</span>
+        </div>
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/color/48/accounting.png" alt="Accounting Icon" />
+          <span>Accounting</span>
+        </div>
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/color/48/engineering.png" alt="Engineering Icon" />
+          <span>Engineering</span>
+        </div>
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/color/48/sales-performance.png" alt="Sales Icon" />
+          <span>Sales</span>
+        </div>
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/color/48/administrator-male.png" alt="Admin Icon" />
+          <span>Admin</span>
+        </div>
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/color/48/life-cycle.png" alt="General Icon" />
+          <span>General</span>
+        </div>
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/color/48/bank-cards.png" alt="Finance Icon" />
+          <span>Finance</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta container bg-light p-4 rounded mb-5">
+    <h3>Never miss a job opportunity</h3>
+    
+    <ul>
+      <li>Access 1000s of jobs, on the go</li>
+      <li>Filtering to the jobs that suit you</li>
+      <li>Apply directly in real time</li>
+    </ul>
+    
+    <p><strong>Follow us:</strong></p>
+  
+<div class="store-buttons d-flex gap-3">
+  <a href="https://www.facebook.com/YourPage" target="_blank" rel="noopener">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Facebook_icon.svg" alt="Facebook" style="height:30px" />
+  </a>
+  <a href="https://www.linkedin.com/in/YourProfile" target="_blank" rel="noopener">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn" style="height:30px" />
+  </a>
+  <a href="https://wa.me/YourPhoneNumber" target="_blank" rel="noopener">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="height:30px" />
+  </a>
+</div>
+
+  </section>
+
   <!-- Footer -->
-  <footer class="bg-light py-4 border-top text-center">
-    <div class="container">© 2025 SA Job Opportunities</div>
+  <footer class="footer bg-light py-4 border-top">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+      <p class="mb-2 mb-md-0">© 2025 SA Job Opportunities. All rights reserved.</p>
+      <ul class="footer-links list-inline mb-0">
+        <li class="list-inline-item"><a href="privacy.html">Privacy Policy</a></li>
+        <li class="list-inline-item"><a href="terms.html">Terms of Service</a></li>
+        <li class="list-inline-item"><a href="contact.html">Contact Us</a></li>
+      </ul>
+    </div>
   </footer>
 
-  <!-- Firebase config and logic -->
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
   <script>
+    // Your Firebase config here
     const firebaseConfig = {
       apiKey: "AIzaSyCexm1PTk0cst8i3NJxh8MJvqvgm0ys84A",
       authDomain: "sa-job-opportunities.firebaseapp.com",
@@ -70,104 +233,126 @@
       appId: "1:1055979762474:web:54ea80e0f1e2e339793f5a",
       measurementId: "G-T1Z3MRRX2H"
     };
+
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+
+    // Populate dropdown from Firestore collection
+    function populateSelectFromFirestore(collection, selectId) {
+      const select = document.getElementById(selectId);
+      if (!select) return;
+
+      db.collection(collection)
+        .orderBy('name')
+        .get()
+        .then(snapshot => {
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const option = document.createElement('option');
+            option.value = data.name || doc.id;
+            option.textContent = data.name || doc.id;
+            select.appendChild(option);
+          });
+        })
+        .catch(console.error);
+    }
+
+    // Load filter list (regions, cities, sectors)
+    function loadFilterList(collection, containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      db.collection(collection)
+        .orderBy('name')
+        .get()
+        .then(snapshot => {
+          container.innerHTML = '';
+          if (snapshot.empty) {
+            container.innerHTML = '<p>No filters found.</p>';
+            return;
+          }
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const filterLink = document.createElement('a');
+            filterLink.href = `jobs.html?${collection.slice(0, -1)}=${encodeURIComponent(data.name)}`;
+            filterLink.textContent = data.name;
+            filterLink.className = 'd-block mb-1';
+            container.appendChild(filterLink);
+          });
+        })
+        .catch(console.error);
+    }
 
     // Load job count
     function loadJobCount() {
       const jobCountElem = document.getElementById('jobCount');
-      db.collection('jobs').get().then(snapshot => {
-        jobCountElem.textContent = `${snapshot.size}+`;
-      });
-    }
-
-    // Load dropdowns dynamically
-    function populateDropdown(collection, selectId) {
-      const select = document.getElementById(selectId);
-      db.collection(collection).orderBy('name').get().then(snapshot => {
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          const option = document.createElement('option');
-          option.value = data.name;
-          option.textContent = data.name;
-          select.appendChild(option);
+      db.collection('jobs')
+        .get()
+        .then(snapshot => {
+          jobCountElem.textContent = `${snapshot.size.toLocaleString()}+`;
+        })
+        .catch(() => {
+          jobCountElem.textContent = 'N/A';
         });
-      });
     }
 
-    // Fetch jobs with optional filters
-    function fetchJobs(type = '', category = '') {
-      const container = document.getElementById('jobsContainer');
-      container.innerHTML = 'Loading jobs...';
+    // Function to display all jobs from Firestore
+    function displayAllJobs() {
+      const jobsContainer = document.getElementById('jobsContainer');
+      jobsContainer.innerHTML = 'Loading jobs...';
 
-      let query = db.collection('jobs').orderBy('deadline', 'desc');
+      db.collection('jobs')
+        .orderBy('deadline', 'desc')
+        .get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            jobsContainer.innerHTML = '<p>No jobs found.</p>';
+            return;
+          }
+          jobsContainer.innerHTML = '';  // Clear loading text
 
-      if (type) query = query.where('type', '==', type);
-      if (category) query = query.where('category', '==', category);
+          snapshot.forEach(doc => {
+            const job = doc.data();
 
-      query.get().then(snapshot => {
-        if (snapshot.empty) {
-          container.innerHTML = '<p>No jobs found.</p>';
-          return;
-        }
+            const jobCard = document.createElement('div');
+            jobCard.className = 'col-md-6 col-lg-4';
 
-        container.innerHTML = '';
-        snapshot.forEach(doc => {
-          const job = doc.data();
-          const card = document.createElement('div');
-          card.className = 'col-md-6 col-lg-4';
-          card.innerHTML = `
-            <div class="card h-100 shadow-sm">
-              <div class="card-body d-flex flex-column">
-                <h5 class="card-title">${job.title || 'No title'}</h5>
-                <p class="card-subtitle mb-2 text-muted">${job.company || 'Unknown Company'}</p>
-                <p class="card-text"><strong>Type:</strong> ${job.type || 'N/A'}</p>
-                <p class="card-text"><strong>Category:</strong> ${job.category || 'N/A'}</p>
-                <p class="card-text"><strong>Location:</strong> ${job.location || 'N/A'}</p>
-                <p class="card-text"><strong>Deadline:</strong> ${
-                  job.deadline ? new Date(job.deadline.seconds * 1000).toLocaleDateString() : 'N/A'
-                }</p>
-                <a href="${job.link || '#'}" class="btn btn-primary mt-auto" target="_blank">View Job</a>
+            jobCard.innerHTML = `
+              <div class="card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title">${job.title || 'No title'}</h5>
+                  <p class="card-subtitle mb-2 text-muted">${job.company || 'Unknown Company'}</p>
+                  <p class="card-text mb-1"><strong>Type:</strong> ${job.type || 'N/A'}</p>
+                  <p class="card-text mb-1"><strong>Category:</strong> ${job.category || 'N/A'}</p>
+                  <p class="card-text mb-1"><strong>Location:</strong> ${job.location || 'N/A'}</p>
+                  <p class="card-text mb-2"><strong>Deadline:</strong> ${
+                    job.deadline ? new Date(job.deadline.seconds * 1000).toLocaleDateString() : 'N/A'
+                  }</p>
+                  <a href="${job.link || '#'}" target="_blank" rel="noopener" class="mt-auto btn btn-primary btn-sm">View Job</a>
+                </div>
               </div>
-            </div>
-          `;
-          container.appendChild(card);
+            `;
+
+            jobsContainer.appendChild(jobCard);
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching jobs:', error);
+          jobsContainer.innerHTML = '<p>Error loading jobs.</p>';
         });
-      });
     }
 
-    // On page load
+    // DOMContentLoaded setup
     window.addEventListener('DOMContentLoaded', () => {
+      populateSelectFromFirestore('types', 'typeSelect');
+      populateSelectFromFirestore('categories', 'categorySelect');
+      loadFilterList('regions', 'regionFilterList');
+      loadFilterList('cities', 'cityFilterList');
+      loadFilterList('sectors', 'sectorFilterList');
       loadJobCount();
-      populateDropdown('types', 'typeSelect');
-      populateDropdown('categories', 'categorySelect');
-
-      // Check for filter params
-      const params = new URLSearchParams(window.location.search);
-      const type = params.get('type') || '';
-      const category = params.get('category') || '';
-
-      if (type) document.getElementById('typeSelect').value = type;
-      if (category) document.getElementById('categorySelect').value = category;
-
-      fetchJobs(type, category);
-
-      // Form submit
-      document.getElementById('filterForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const selectedType = document.getElementById('typeSelect').value;
-        const selectedCategory = document.getElementById('categorySelect').value;
-        const queryParams = new URLSearchParams();
-        if (selectedType) queryParams.append('type', selectedType);
-        if (selectedCategory) queryParams.append('category', selectedCategory);
-        window.location.href = `index.html?${queryParams.toString()}`;
-      });
+      displayAllJobs();
     });
   </script>
-
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-
