@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -193,18 +192,17 @@
     
     <p><strong>Follow us:</strong></p>
   
-<div class="store-buttons d-flex gap-3">
-  <a href="https://www.facebook.com/YourPage" target="_blank" rel="noopener">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Facebook_icon.svg" alt="Facebook" style="height:30px" />
-  </a>
-  <a href="https://www.linkedin.com/in/YourProfile" target="_blank" rel="noopener">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn" style="height:30px" />
-  </a>
-  <a href="https://wa.me/YourPhoneNumber" target="_blank" rel="noopener">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="height:30px" />
-  </a>
-</div>
-
+    <div class="store-buttons d-flex gap-3">
+      <a href="https://www.facebook.com/YourPage" target="_blank" rel="noopener">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Facebook_icon.svg" alt="Facebook" style="height:30px" />
+      </a>
+      <a href="https://www.linkedin.com/in/YourProfile" target="_blank" rel="noopener">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn" style="height:30px" />
+      </a>
+      <a href="https://wa.me/YourPhoneNumber" target="_blank" rel="noopener">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="height:30px" />
+      </a>
+    </div>
   </section>
 
   <!-- Footer -->
@@ -229,130 +227,215 @@
       authDomain: "sa-job-opportunities.firebaseapp.com",
       projectId: "sa-job-opportunities",
       storageBucket: "sa-job-opportunities.appspot.com",
-      messagingSenderId: "1055979762474",
-      appId: "1:1055979762474:web:54ea80e0f1e2e339793f5a",
-      measurementId: "G-T1Z3MRRX2H"
+      messagingSenderId: "756042759528",
+      appId: "1:756042759528:web:dd179c0f4c91bfa124ec9c",
+      measurementId: "G-ZT87HWK6XD"
     };
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Populate dropdown from Firestore collection
-    function populateSelectFromFirestore(collection, selectId) {
-      const select = document.getElementById(selectId);
-      if (!select) return;
-
-      db.collection(collection)
-        .orderBy('name')
-        .get()
-        .then(snapshot => {
-          snapshot.forEach(doc => {
-            const data = doc.data();
-            const option = document.createElement('option');
-            option.value = data.name || doc.id;
-            option.textContent = data.name || doc.id;
-            select.appendChild(option);
-          });
-        })
-        .catch(console.error);
+    // Utility: escape HTML (prevent XSS)
+    function escapeHtml(text) {
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return text.replace(/[&<>"']/g, function(m) { return map[m]; });
     }
 
-    // Load filter list (regions, cities, sectors)
-    function loadFilterList(collection, containerId) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
+    // Load total jobs count
+    async function loadJobCount() {
+      try {
+        const snapshot = await db.collection('jobs').get();
+        document.getElementById('jobCount').textContent = snapshot.size.toLocaleString();
+      } catch (e) {
+        document.getElementById('jobCount').textContent = 'Error loading jobs count';
+      }
+    }
 
-      db.collection(collection)
-        .orderBy('name')
-        .get()
-        .then(snapshot => {
-          container.innerHTML = '';
-          if (snapshot.empty) {
-            container.innerHTML = '<p>No filters found.</p>';
-            return;
+    // Load unique values from jobs collection field
+    async function loadUniqueFieldValues(field) {
+      const valuesSet = new Set();
+      const snapshot = await db.collection('jobs').get();
+      snapshot.forEach(doc => {
+        const val = doc.data()[field];
+        if (val) valuesSet.add(val);
+      });
+      return Array.from(valuesSet).sort();
+    }
+
+    // Populate dropdown options for Type and Category in the search form
+    async function populateDropdowns() {
+      const typeSelect = document.getElementById('typeSelect');
+      const categorySelect = document.getElementById('categorySelect');
+
+      const [types, categories] = await Promise.all([
+        loadUniqueFieldValues('type'),
+        loadUniqueFieldValues('category')
+      ]);
+
+      types.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = t;
+        typeSelect.appendChild(opt);
+      });
+
+      categories.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        categorySelect.appendChild(opt);
+      });
+    }
+
+    // Populate filter modal lists (region, city, sector)
+    async function populateFilterLists() {
+      const regionListEl = document.getElementById('regionFilterList');
+      const cityListEl = document.getElementById('cityFilterList');
+      const sectorListEl = document.getElementById('sectorFilterList');
+
+      // Assume these fields exist in job documents, else fallback to empty
+      const [regions, cities, sectors] = await Promise.all([
+        loadUniqueFieldValues('region'),
+        loadUniqueFieldValues('city'),
+        loadUniqueFieldValues('sector'),
+      ]);
+
+      function createListHTML(items) {
+        if (!items.length) return '<p>No data available.</p>';
+        return items
+          .map(item => `<div><a href="jobs.html?filter=${encodeURIComponent(item)}" class="filter-link">${escapeHtml(item)}</a></div>`)
+          .join('');
+      }
+
+      regionListEl.innerHTML = createListHTML(regions);
+      cityListEl.innerHTML = createListHTML(cities);
+      sectorListEl.innerHTML = createListHTML(sectors);
+    }
+
+    // Load jobs and display in #jobsContainer
+    async function loadJobs() {
+      const container = document.getElementById('jobsContainer');
+      container.innerHTML = '<p>Loading jobs...</p>';
+      try {
+        const snapshot = await db.collection('jobs').orderBy('deadline', 'desc').limit(20).get();
+        if (snapshot.empty) {
+          container.innerHTML = '<p>No jobs found.</p>';
+          return;
+        }
+        container.innerHTML = '';
+        snapshot.forEach(doc => {
+          const job = doc.data();
+
+          // Format deadline date nicely if available
+          let deadlineStr = '';
+          if (job.deadline) {
+            try {
+              const d = new Date(job.deadline);
+              deadlineStr = d.toLocaleDateString('en-ZA', { year:'numeric', month:'short', day:'numeric' });
+            } catch {}
           }
-          snapshot.forEach(doc => {
-            const data = doc.data();
-            const filterLink = document.createElement('a');
-            filterLink.href = `jobs.html?${collection.slice(0, -1)}=${encodeURIComponent(data.name)}`;
-            filterLink.textContent = data.name;
-            filterLink.className = 'd-block mb-1';
-            container.appendChild(filterLink);
-          });
-        })
-        .catch(console.error);
-    }
 
-    // Load job count
-    function loadJobCount() {
-      const jobCountElem = document.getElementById('jobCount');
-      db.collection('jobs')
-        .get()
-        .then(snapshot => {
-          jobCountElem.textContent = `${snapshot.size.toLocaleString()}+`;
-        })
-        .catch(() => {
-          jobCountElem.textContent = 'N/A';
-        });
-    }
-
-    // Function to display all jobs from Firestore
-    function displayAllJobs() {
-      const jobsContainer = document.getElementById('jobsContainer');
-      jobsContainer.innerHTML = 'Loading jobs...';
-
-      db.collection('jobs')
-        .orderBy('deadline', 'desc')
-        .get()
-        .then(snapshot => {
-          if (snapshot.empty) {
-            jobsContainer.innerHTML = '<p>No jobs found.</p>';
-            return;
-          }
-          jobsContainer.innerHTML = '';  // Clear loading text
-
-          snapshot.forEach(doc => {
-            const job = doc.data();
-
-            const jobCard = document.createElement('div');
-            jobCard.className = 'col-md-6 col-lg-4';
-
-            jobCard.innerHTML = `
+          const jobHtml = `
+            <div class="col-md-6 col-lg-4">
               <div class="card h-100 shadow-sm">
                 <div class="card-body d-flex flex-column">
-                  <h5 class="card-title">${job.title || 'No title'}</h5>
-                  <p class="card-subtitle mb-2 text-muted">${job.company || 'Unknown Company'}</p>
-                  <p class="card-text mb-1"><strong>Type:</strong> ${job.type || 'N/A'}</p>
-                  <p class="card-text mb-1"><strong>Category:</strong> ${job.category || 'N/A'}</p>
-                  <p class="card-text mb-1"><strong>Location:</strong> ${job.location || 'N/A'}</p>
-                  <p class="card-text mb-2"><strong>Deadline:</strong> ${
-                    job.deadline ? new Date(job.deadline.seconds * 1000).toLocaleDateString() : 'N/A'
-                  }</p>
-                  <a href="${job.link || '#'}" target="_blank" rel="noopener" class="mt-auto btn btn-primary btn-sm">View Job</a>
+                  <h5 class="card-title">${escapeHtml(job.title || 'No Title')}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">${escapeHtml(job.company || '')}</h6>
+                  <p class="mb-1"><strong>Type:</strong> ${escapeHtml(job.type || 'N/A')}</p>
+                  <p class="mb-1"><strong>Category:</strong> ${escapeHtml(job.category || 'N/A')}</p>
+                  <p class="mb-2"><strong>Deadline:</strong> ${deadlineStr || 'N/A'}</p>
+                  <a href="${job.link || '#'}" target="_blank" rel="noopener" class="mt-auto btn btn-primary btn-sm" aria-label="Apply for ${escapeHtml(job.title || '')} at ${escapeHtml(job.company || '')}">Apply Now</a>
                 </div>
               </div>
-            `;
+            </div>
+          `;
 
-            jobsContainer.appendChild(jobCard);
-          });
-        })
-        .catch(error => {
-          console.error('Error fetching jobs:', error);
-          jobsContainer.innerHTML = '<p>Error loading jobs.</p>';
+          container.insertAdjacentHTML('beforeend', jobHtml);
         });
+      } catch (error) {
+        container.innerHTML = `<p>Error loading jobs: ${error.message}</p>`;
+      }
     }
 
-    // DOMContentLoaded setup
-    window.addEventListener('DOMContentLoaded', () => {
-      populateSelectFromFirestore('types', 'typeSelect');
-      populateSelectFromFirestore('categories', 'categorySelect');
-      loadFilterList('regions', 'regionFilterList');
-      loadFilterList('cities', 'cityFilterList');
-      loadFilterList('sectors', 'sectorFilterList');
+    // Marquee animation for job categories (simple continuous scroll)
+    function startMarquee() {
+      const marquee = document.querySelector('.marquee');
+      if (!marquee) return;
+
+      let scrollAmount = 0;
+      const speed = 0.5; // pixels per frame
+      const resetPoint = marquee.scrollWidth / 2;
+
+      // Duplicate children to create infinite scroll effect
+      marquee.innerHTML += marquee.innerHTML;
+
+      function animate() {
+        scrollAmount += speed;
+        if (scrollAmount >= resetPoint) {
+          scrollAmount = 0;
+        }
+        marquee.style.transform = `translateX(${-scrollAmount}px)`;
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    }
+
+    // Initialize everything on page load
+    document.addEventListener('DOMContentLoaded', () => {
       loadJobCount();
-      displayAllJobs();
+      populateDropdowns();
+      populateFilterLists();
+      loadJobs();
+      startMarquee();
     });
   </script>
+
+  <style>
+    /* Custom styles for marquee */
+    .marquee {
+      display: flex;
+      white-space: nowrap;
+      overflow: hidden;
+      user-select: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .category {
+      flex: 0 0 auto;
+      padding: 0 1rem;
+      font-size: 1.1rem;
+      color: #333;
+      align-items: center;
+    }
+
+    /* Optional: add spacing between categories */
+    .category + .category {
+      border-left: 1px solid #ddd;
+    }
+
+    /* Filter modal links styling */
+    .filter-link {
+      display: block;
+      padding: 4px 0;
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .filter-link:hover,
+    .filter-link:focus {
+      text-decoration: underline;
+      outline: none;
+    }
+  </style>
 </body>
 </html>
