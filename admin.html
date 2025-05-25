@@ -51,6 +51,13 @@
           <label for="location" class="form-label">Location</label>
           <input type="text" id="location" class="form-control" />
         </div>
+
+        <!-- New Description Field -->
+        <div class="mb-3">
+          <label for="description" class="form-label">Job Description</label>
+          <textarea id="description" class="form-control" rows="5" placeholder="Write a detailed job description here..." required></textarea>
+        </div>
+
         <div class="mb-3">
           <label for="deadline" class="form-label">Deadline</label>
           <input type="date" id="deadline" class="form-control" required />
@@ -78,6 +85,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
+    // Login handling
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const username = document.getElementById('username').value.trim();
@@ -86,23 +94,26 @@
       if (username === 'sifiso-zethu' && password === 'zethu-sifiso') {
         document.getElementById('loginForm').classList.add('d-none');
         document.getElementById('jobFormSection').classList.remove('d-none');
+        document.getElementById('loginError').classList.add('d-none');
       } else {
         document.getElementById('loginError').classList.remove('d-none');
       }
     });
 
+    // Job posting handling
     document.getElementById('jobForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
       const jobData = {
-        title: document.getElementById('title').value,
-        company: document.getElementById('company').value,
-        type: document.getElementById('type').value,
-        category: document.getElementById('category').value,
-        experience: document.getElementById('experience').value,
-        location: document.getElementById('location').value,
+        title: document.getElementById('title').value.trim(),
+        company: document.getElementById('company').value.trim(),
+        type: document.getElementById('type').value.trim(),
+        category: document.getElementById('category').value.trim(),
+        experience: document.getElementById('experience').value.trim(),
+        location: document.getElementById('location').value.trim(),
+        description: document.getElementById('description').value.trim(),
         deadline: new Date(document.getElementById('deadline').value),
-        link: document.getElementById('link').value
+        link: document.getElementById('link').value.trim()
       };
 
       db.collection('jobs').add(jobData)
