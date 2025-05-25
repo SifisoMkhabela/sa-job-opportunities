@@ -2,146 +2,173 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Admin Job Input with Description Editor</title>
+  <title>Admin Job Input with Structured Description</title>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  
-  <!-- Quill CSS & JS -->
-  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
-  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-  
+
   <style>
-    #descriptionEditor {
-      height: 150px;
-      background: white;
+    textarea {
+      width: 100%;
+      max-width: 700px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      padding: 8px;
+      box-sizing: border-box;
+      resize: vertical;
     }
   </style>
 </head>
 <body>
-
-<h2>Admin Login</h2>
-<form id="loginForm">
-  <label>Username: <input type="text" id="username" required /></label><br/><br/>
-  <label>Password: <input type="password" id="password" required /></label><br/><br/>
-  <button type="submit">Login</button>
-  <div id="loginError" style="color:red; display:none;">Invalid credentials</div>
-</form>
-
-<div id="jobFormSection" style="display:none;">
-  <h3>Post a New Job</h3>
-  <form id="jobForm">
-    <label>Job Title: <input type="text" id="title" required /></label><br/><br/>
-    <label>Company: <input type="text" id="company" required /></label><br/><br/>
-    <label>Type: <input type="text" id="type" required /></label><br/><br/>
-    <label>Category: <input type="text" id="category" required /></label><br/><br/>
-    <label>Experience: <input type="text" id="experience" /></label><br/><br/>
-    <label>Location: <input type="text" id="location" /></label><br/><br/>
-    <label>Deadline: <input type="date" id="deadline" required /></label><br/><br/>
-    <label>Apply Link: <input type="url" id="link" required /></label><br/><br/>
-    
-    <label>Description:</label>
-    <div id="descriptionEditor"></div>
-    <br/>
-    
-    <button type="submit">Submit Job</button>
+  <h2>Admin Login</h2>
+  <form id="loginForm">
+    <label>Username: <input type="text" id="username" required /></label><br/><br/>
+    <label>Password: <input type="password" id="password" required /></label><br/><br/>
+    <button type="submit">Login</button>
+    <div id="loginError" style="color:red; display:none;">Invalid credentials</div>
   </form>
-  <div id="successMsg" style="color:green; display:none;">Job posted successfully!</div>
-  <div id="errorMsg" style="color:red; display:none;"></div>
-</div>
 
-<script>
-  // Initialize Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyCexm1PTk0cst8i3NJxh8MJvqvgm0ys84A",
-    authDomain: "sa-job-opportunities.firebaseapp.com",
-    projectId: "sa-job-opportunities",
-    storageBucket: "sa-job-opportunities.appspot.com",
-    messagingSenderId: "1055979762474",
-    appId: "1:1055979762474:web:54ea80e0f1e2e339793f5a",
-    measurementId: "G-T1Z3MRRX2H"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+  <div id="jobFormSection" style="display:none;">
+    <h3>Post a New Job</h3>
+    <form id="jobForm">
+      <label>Job Title: <input type="text" id="title" required /></label><br/><br/>
+      <label>Company: <input type="text" id="company" required /></label><br/><br/>
+      <label>Type: <input type="text" id="type" required /></label><br/><br/>
+      <label>Category: <input type="text" id="category" required /></label><br/><br/>
+      <label>Experience: <input type="text" id="experience" /></label><br/><br/>
+      <label>Location: <input type="text" id="location" /></label><br/><br/>
+      <label>Deadline: <input type="date" id="deadline" required /></label><br/><br/>
+      <label>Apply Link: <input type="url" id="link" required /></label><br/><br/>
 
-  // Initialize Quill editor
-  const quill = new Quill('#descriptionEditor', {
-    theme: 'snow',
-    placeholder: 'Enter the job description here...',
-    modules: {
-      toolbar: [
-        [{ header: [1, 2, 3, false] }],
-        ['bold', 'italic', 'underline', 'strike'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        ['clean']
-      ]
-    }
-  });
+      <label>Position Purpose:</label><br/>
+      <textarea id="purpose" rows="4" placeholder="Enter the purpose of the job..."></textarea><br/><br/>
 
-  // Login form handler
-  document.getElementById('loginForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
-    if (username === 'sifiso-zethu' && password === 'zethu-sifiso') {
-      document.getElementById('loginForm').style.display = 'none';
-      document.getElementById('jobFormSection').style.display = 'block';
-    } else {
-      document.getElementById('loginError').style.display = 'block';
-    }
-  });
+      <label>Essential Functions:</label><br/>
+      <textarea id="functions" rows="5" placeholder="List essential duties... (use line breaks or bullets)"></textarea><br/><br/>
 
-  // Job form handler
-  document.getElementById('jobForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
+      <label>Qualifications:</label><br/>
+      <textarea id="qualifications" rows="4" placeholder="List required qualifications..."></textarea><br/><br/>
 
-    // Hide previous messages
-    document.getElementById('successMsg').style.display = 'none';
-    document.getElementById('errorMsg').style.display = 'none';
+      <label>Performance Measurements:</label><br/>
+      <textarea id="performance" rows="4" placeholder="List performance indicators..."></textarea><br/><br/>
 
-    const title = document.getElementById('title').value.trim();
-    const company = document.getElementById('company').value.trim();
-    const type = document.getElementById('type').value.trim();
-    const category = document.getElementById('category').value.trim();
-    const experience = document.getElementById('experience').value.trim();
-    const location = document.getElementById('location').value.trim();
-    const deadlineValue = document.getElementById('deadline').value;
-    const link = document.getElementById('link').value.trim();
-    const descriptionHTML = quill.root.innerHTML;
+      <label>Experience Required:</label><br/>
+      <textarea id="experienceReq" rows="2" placeholder="Enter required experience..."></textarea><br/><br/>
 
-    if (!title || !company || !type || !category || !deadlineValue || !link) {
-      document.getElementById('errorMsg').textContent = 'Please fill all required fields.';
-      document.getElementById('errorMsg').style.display = 'block';
-      return;
-    }
+      <label>Skills & Abilities:</label><br/>
+      <textarea id="skills" rows="3" placeholder="Enter skills required..."></textarea><br/><br/>
 
-    const deadline = new Date(deadlineValue);
+      <button type="submit">Submit Job</button>
+    </form>
+    <div id="successMsg" style="color:green; display:none;">Job posted successfully!</div>
+    <div id="errorMsg" style="color:red; display:none;"></div>
+  </div>
 
-    try {
-      const jobData = {
-        title,
-        company,
-        type,
-        category,
-        experience,
-        location,
-        deadline,
-        link,
-        description: descriptionHTML,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      };
+  <script>
+    // Initialize Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCexm1PTk0cst8i3NJxh8MJvqvgm0ys84A",
+      authDomain: "sa-job-opportunities.firebaseapp.com",
+      projectId: "sa-job-opportunities",
+      storageBucket: "sa-job-opportunities.appspot.com",
+      messagingSenderId: "1055979762474",
+      appId: "1:1055979762474:web:54ea80e0f1e2e339793f5a",
+      measurementId: "G-T1Z3MRRX2H"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-      await db.collection('jobs').add(jobData);
+    // Login form handler
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      if (username === 'sifiso-zethu' && password === 'zethu-sifiso') {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('jobFormSection').style.display = 'block';
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+      }
+    });
 
-      document.getElementById('successMsg').style.display = 'block';
-      this.reset();
-      quill.setContents([]);
+    // Job form handler
+    document.getElementById('jobForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
 
-    } catch (error) {
-      document.getElementById('errorMsg').textContent = 'Error: ' + error.message;
-      document.getElementById('errorMsg').style.display = 'block';
-    }
-  });
-</script>
+      // Hide previous messages
+      document.getElementById('successMsg').style.display = 'none';
+      document.getElementById('errorMsg').style.display = 'none';
 
+      const title = document.getElementById('title').value.trim();
+      const company = document.getElementById('company').value.trim();
+      const type = document.getElementById('type').value.trim();
+      const category = document.getElementById('category').value.trim();
+      const experience = document.getElementById('experience').value.trim();
+      const location = document.getElementById('location').value.trim();
+      const deadlineValue = document.getElementById('deadline').value;
+      const link = document.getElementById('link').value.trim();
+
+      // Get structured description fields
+      const purpose = document.getElementById('purpose').value.trim();
+      const functions = document.getElementById('functions').value.trim();
+      const qualifications = document.getElementById('qualifications').value.trim();
+      const performance = document.getElementById('performance').value.trim();
+      const experienceReq = document.getElementById('experienceReq').value.trim();
+      const skills = document.getElementById('skills').value.trim();
+
+      if (!title || !company || !type || !category || !deadlineValue || !link) {
+        document.getElementById('errorMsg').textContent = 'Please fill all required fields.';
+        document.getElementById('errorMsg').style.display = 'block';
+        return;
+      }
+
+      const deadline = new Date(deadlineValue);
+
+      // Combine into formatted HTML description
+      const descriptionHTML = `
+        <h4><strong>POSITION PURPOSE</strong></h4>
+        <p>${purpose}</p>
+
+        <h4><strong>ESSENTIAL FUNCTIONS AND BASIC DUTIES</strong></h4>
+        <p>${functions.replace(/\n/g, '<br/>')}</p>
+
+        <h4><strong>QUALIFICATIONS</strong></h4>
+        <p>${qualifications.replace(/\n/g, '<br/>')}</p>
+
+        <h4><strong>PERFORMANCE MEASUREMENTS</strong></h4>
+        <p>${performance.replace(/\n/g, '<br/>')}</p>
+
+        <h4><strong>EXPERIENCE REQUIRED</strong></h4>
+        <p>${experienceReq}</p>
+
+        <h4><strong>SKILLS/ABILITIES</strong></h4>
+        <p>${skills}</p>
+      `;
+
+      try {
+        const jobData = {
+          title,
+          company,
+          type,
+          category,
+          experience,
+          location,
+          deadline,
+          link,
+          description: descriptionHTML,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        await db.collection('jobs').add(jobData);
+
+        document.getElementById('successMsg').style.display = 'block';
+        this.reset();
+        ['purpose', 'functions', 'qualifications', 'performance', 'experienceReq', 'skills']
+          .forEach(id => document.getElementById(id).value = '');
+      } catch (error) {
+        document.getElementById('errorMsg').textContent = 'Error: ' + error.message;
+        document.getElementById('errorMsg').style.display = 'block';
+      }
+    });
+  </script>
 </body>
 </html>
