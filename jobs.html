@@ -86,7 +86,7 @@
               <p><strong>Deadline:</strong> ${formatDate(job.deadline)}</p>
               <p><strong>Description:</strong></p>
               <p>${escapeHtml(job.description || 'No description available.')}</p>
-              ${job.link ? `<a href="${job.link}" target="_blank" rel="noopener" class="btn btn-primary">Apply Now</a>` : ''}
+              <a href="jobs.html?jobId=${encodeURIComponent(doc.id)}" class="btn btn-outline-primary">Read More</a>
             </article>
           `;
 
