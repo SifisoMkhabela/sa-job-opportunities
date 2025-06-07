@@ -1,5 +1,11 @@
+/* --- Base Styles --- */
+
 body {
   background-color: #f9fafc;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scroll when sidebar open */
 }
 
 .top-bar {
@@ -9,27 +15,103 @@ body {
   position: sticky;
   top: 0;
   z-index: 1030;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.hero h1 {
-  font-weight: 700;
-  color: #222;
+/* Sidebar toggle button */
+#sidebarToggle {
+  background-color: #0d6efd;
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 2px 5px rgba(13,110,253,0.5);
+  transition: background-color 0.3s ease;
+  user-select: none;
 }
 
-.hero p.lead {
-  color: #555;
+#sidebarToggle:hover {
+  background-color: #084ecb;
 }
 
-/* Smaller, compact filter bar style */
-#filterForm select,
-#filterForm button {
-  min-width: 150px;
+/* --- Sidebar Styles --- */
+
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: -280px; /* Hidden by default */
+  width: 280px;
+  height: 100vh;
+  background-color: #fff;
+  box-shadow: 2px 0 12px rgba(0,0,0,0.1);
+  padding: 1.5rem 1.2rem;
+  z-index: 1040;
+  transition: left 0.3s ease;
+  overflow-y: auto;
+  border-radius: 0 0 10px 0;
 }
+
+#sidebar.open {
+  left: 0;
+}
+
+/* Sidebar close button */
+#sidebarCloseBtn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  float: right;
+  margin-bottom: 1rem;
+  user-select: none;
+}
+
+/* Sidebar nav links */
+#sidebar nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#sidebar nav ul li {
+  margin: 1rem 0;
+}
+
+#sidebar nav ul li a {
+  color: #0d6efd;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1.1rem;
+  display: block;
+  padding: 0.4rem 0;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+#sidebar nav ul li a:hover {
+  background-color: #e7f1ff;
+}
+
+/* --- Main Content adjustment when sidebar open --- */
+body.sidebar-open #mainContent {
+  margin-left: 280px;
+  transition: margin-left 0.3s ease;
+}
+
+/* --- Card styles (your existing styles enhanced) --- */
 
 .card.h-100.shadow-sm {
   border-radius: 16px;
   transition: transform 0.3s, box-shadow 0.3s;
   position: relative;
+  background-color: #fff;
 }
 
 .card.h-100.shadow-sm:hover {
@@ -120,4 +202,22 @@ footer {
 .share-btn:hover {
   background-color: #f1f1f1;
   transform: scale(1.1);
+}
+
+/* --- Responsive tweaks --- */
+
+@media (max-width: 768px) {
+  #sidebar {
+    width: 220px;
+    left: -220px;
+  }
+
+  body.sidebar-open #mainContent {
+    margin-left: 220px;
+  }
+
+  #sidebarToggle {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+  }
 }
