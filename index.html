@@ -46,7 +46,7 @@
       projectId: "sa-job-opportunities",
       storageBucket: "sa-job-opportunities.appspot.com",
       messagingSenderId: "756042759528",
-      appId: "1:756042759528:web:your-app-id"
+      appId: "1:756042759528:web:your-app-id" // Replace with actual App ID
     };
 
     // Initialize Firebase
@@ -117,7 +117,7 @@
               <h5 class="card-title">${job.title || "Untitled Job"}</h5>
               <h6 class="card-subtitle mb-2 text-muted">${job.type || "N/A"} | ${job.category || "N/A"}</h6>
               <p class="card-text">${job.description || "No description provided."}</p>
-              <a href="#" class="btn btn-primary">Apply Now</a>
+              <a href="${job.url || "#"}" target="_blank" class="btn btn-primary">Apply Now</a>
             </div>
           </div>
         `;
