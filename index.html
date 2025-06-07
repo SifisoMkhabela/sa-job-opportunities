@@ -5,39 +5,113 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Job Listings</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+  <style>
+    body {
+      padding-top: 56px;
+    }
+    .sidebar {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      height: 100%;
+      width: 250px;
+      background-color: #f8f9fa;
+      border-right: 1px solid #dee2e6;
+      padding-top: 20px;
+      display: none;
+    }
+    .sidebar a {
+      display: block;
+      padding: 10px 20px;
+      color: #333;
+      text-decoration: none;
+    }
+    .sidebar a:hover {
+      background-color: #e9ecef;
+    }
+    .content {
+      margin-left: 0;
+    }
+    .sidebar-open .sidebar {
+      display: block;
+    }
+    .sidebar-open .content {
+      margin-left: 250px;
+    }
+    footer {
+      background-color: #343a40;
+      color: white;
+      padding: 20px 0;
+      margin-top: 40px;
+    }
+    footer a {
+      color: #ccc;
+    }
+  </style>
 </head>
 <body>
-  <div class="container my-5">
-    <h1 class="text-center mb-4">Job Listings</h1>
 
-    <form class="mb-4">
-      <div class="form-row">
-        <div class="col-md-5 mb-2">
-          <select class="form-control" id="typeSelect">
-            <option value="">-- Select Job Type --</option>
-          </select>
-        </div>
-        <div class="col-md-5 mb-2">
-          <select class="form-control" id="categorySelect">
-            <option value="">-- Select Category --</option>
-          </select>
-        </div>
-        <div class="col-md-2 mb-2">
-          <button type="submit" class="btn btn-primary btn-block">Search</button>
-        </div>
-      </div>
-    </form>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <button class="btn btn-outline-light mr-2" id="sidebarToggle">☰</button>
+    <a class="navbar-brand" href="#">SA Job Listings</a>
+  </nav>
 
-    <p class="text-muted">Total Jobs: <span id="jobCount">0</span></p>
-
-    <div id="jobsContainer" class="row"></div>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <a href="#">Home</a>
+    <a href="#">About Us</a>
+    <a href="#">Contact</a>
+    <a href="#">Terms & Conditions</a>
+    <a href="#">Privacy Policy</a>
   </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <div class="container my-5">
+      <h1 class="text-center mb-4">Job Listings</h1>
+
+      <form class="mb-4">
+        <div class="form-row">
+          <div class="col-md-5 mb-2">
+            <select class="form-control" id="typeSelect">
+              <option value="">-- Select Job Type --</option>
+            </select>
+          </div>
+          <div class="col-md-5 mb-2">
+            <select class="form-control" id="categorySelect">
+              <option value="">-- Select Category --</option>
+            </select>
+          </div>
+          <div class="col-md-2 mb-2">
+            <button type="submit" class="btn btn-primary btn-block">Search</button>
+          </div>
+        </div>
+      </form>
+
+      <p class="text-muted">Total Jobs: <span id="jobCount">0</span></p>
+      <div id="jobsContainer" class="row"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center">
+    <div class="container">
+      <p>&copy; 2025 SA Job Opportunities</p>
+      <p>
+        <a href="#">Contact</a> |
+        <a href="#">About Us</a> |
+        <a href="#">Terms & Conditions</a> |
+        <a href="#">Privacy Policy</a>
+      </p>
+    </div>
+  </footer>
 
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
-  <!-- Firebase Configuration & Script -->
+  <!-- Script -->
   <script>
     // Firebase configuration
     const firebaseConfig = {
@@ -46,7 +120,7 @@
       projectId: "sa-job-opportunities",
       storageBucket: "sa-job-opportunities.appspot.com",
       messagingSenderId: "756042759528",
-      appId: "1:756042759528:web:your-app-id" // Replace with actual App ID
+      appId: "1:756042759528:web:your-app-id"
     };
 
     // Initialize Firebase
@@ -58,7 +132,7 @@
     const jobsContainer = document.getElementById("jobsContainer");
     const jobCount = document.getElementById("jobCount");
 
-    // Load unique job types and categories
+    // Load filters
     async function loadFilters() {
       const jobsSnapshot = await db.collection("jobs").get();
       const types = new Set();
@@ -87,7 +161,7 @@
       jobCount.textContent = jobsSnapshot.size;
     }
 
-    // Load jobs with optional filters
+    // Load jobs
     async function loadJobs(filter = {}) {
       jobsContainer.innerHTML = "<p class='text-center'>Loading jobs...</p>";
       let query = db.collection("jobs");
@@ -115,30 +189,57 @@
           <div class="card h-100 shadow-sm">
             <div class="card-body">
               <h5 class="card-title">${job.title || "Untitled Job"}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">${job.type || "N/A"} | ${job.category || "N/A"}</h6>
-              <p class="card-text">${job.description || "No description provided."}</p>
-              <a href="${job.url || "#"}" target="_blank" class="btn btn-primary">Apply Now</a>
+              <h6 class="card-subtitle mb-2 text-muted">${job.location || "Location"} | ${job.updated || "Date"}</h6>
+              <p class="card-text short-text">${(job.description || "No description provided.").slice(0, 150)}...</p>
+              <p class="card-text full-text d-none">${job.description || "No description provided."}</p>
+              <button class="btn btn-link p-0 read-toggle">Read more</button>
+              <a href="#" class="btn btn-primary mt-3 d-none apply-button">Apply Now</a>
             </div>
           </div>
         `;
         jobsContainer.appendChild(col);
       });
+
+      // Read more/less toggle
+      jobsContainer.querySelectorAll(".read-toggle").forEach(button => {
+        button.addEventListener("click", function () {
+          const cardBody = this.closest(".card-body");
+          const shortText = cardBody.querySelector(".short-text");
+          const fullText = cardBody.querySelector(".full-text");
+          const applyButton = cardBody.querySelector(".apply-button");
+
+          const isExpanded = !fullText.classList.contains("d-none");
+
+          if (isExpanded) {
+            fullText.classList.add("d-none");
+            shortText.classList.remove("d-none");
+            applyButton.classList.add("d-none");
+            this.textContent = "Read more";
+          } else {
+            fullText.classList.remove("d-none");
+            shortText.classList.add("d-none");
+            applyButton.classList.remove("d-none");
+            this.textContent = "Read less";
+          }
+        });
+      });
     }
 
-    // Form submission handler
+    // Form filter
     document.querySelector("form").addEventListener("submit", e => {
       e.preventDefault();
-      const selectedType = typeSelect.value;
-      const selectedCategory = categorySelect.value;
-
       const filters = {};
-      if (selectedType) filters.type = selectedType;
-      if (selectedCategory) filters.category = selectedCategory;
-
+      if (typeSelect.value) filters.type = typeSelect.value;
+      if (categorySelect.value) filters.category = categorySelect.value;
       loadJobs(filters);
     });
 
-    // Initialize page
+    // Sidebar toggle
+    document.getElementById("sidebarToggle").addEventListener("click", () => {
+      document.body.classList.toggle("sidebar-open");
+    });
+
+    // Initialize
     loadFilters();
     loadJobs();
   </script>
