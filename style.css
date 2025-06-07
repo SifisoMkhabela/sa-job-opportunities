@@ -20,6 +20,12 @@ body {
   color: #555;
 }
 
+/* Smaller, compact filter bar style */
+#filterForm select,
+#filterForm button {
+  min-width: 150px;
+}
+
 .card.h-100.shadow-sm {
   border-radius: 16px;
   transition: transform 0.3s, box-shadow 0.3s;
