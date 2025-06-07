@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SA Job Opportunities</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+
   <style>
     html, body {
       height: 100%;
@@ -13,6 +13,7 @@
       padding: 0;
       font-family: 'Segoe UI', sans-serif;
       background-color: #fff;
+      overflow-y: auto;
     }
 
     .container {
@@ -22,14 +23,11 @@
     }
 
     .job-card {
-      position: relative;
       border: 1px solid #ccc;
       border-radius: 10px;
-      padding: 16px;
-      margin-bottom: 20px;
+      padding: 12px;
+      margin-bottom: 16px;
       font-size: 14px;
-      background-color: #f9f9f9;
-      min-height: 220px;
     }
 
     .job-card h6 {
@@ -38,50 +36,28 @@
 
     .filter-bar {
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
-      align-items: stretch;
       gap: 10px;
       margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
-    .filter-bar select,
-    .filter-bar button {
-      height: 40px;
-      font-size: 14px;
     }
 
     .link-style {
       font-size: 13px;
-      color: #3498db;
+      color: #0d6efd;
       text-decoration: underline;
     }
 
     .link-style:hover {
       text-decoration: none;
     }
-
-    .share-icon {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      font-size: 20px;
-      color: #3498db;
-      cursor: pointer;
-      transition: color 0.3s;
-    }
-
-    .share-icon:hover {
-      color: #2980b9;
-    }
   </style>
 </head>
 <body>
-  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">SA Job Opportunities</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
@@ -115,9 +91,10 @@
         <option value="Construction">Construction</option>
         <option value="Customer Service">Customer Service</option>
         <option value="Cybersecurity">Cybersecurity</option>
+        <!-- Add more categories as needed -->
       </select>
 
-      <button class="btn btn-sm btn-dark w-auto" id="applyButton">Apply Filter</button>
+      <button class="btn btn-sm btn-dark" id="applyButton">Apply</button>
     </div>
 
     <!-- Job Listings -->
@@ -140,22 +117,24 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    let allJobs = [];
 
-    document.getElementById("applyButton").addEventListener("click", () => {
-      filterAndDisplayJobs();
-    });
-
-    function filterAndDisplayJobs() {
+    document.getElementById("applyButton").addEventListener("click", async () => {
       const type = document.getElementById("typeFilter").value;
       const category = document.getElementById("categoryFilter").value;
+
+      const querySnapshot = await getDocs(collection(db, "jobs"));
+      const allJobs = querySnapshot.docs.map(doc => doc.data());
 
       const filteredJobs = allJobs.filter(job => {
         const matchType = type ? job.type === type : true;
         const matchCategory = category ? job.category === category : true;
+
         const jobDeadline = new Date(job.deadline);
         const today = new Date();
-        if (jobDeadline < today) return false;
+        if (jobDeadline < today) {
+          return false;
+        }
+
         return matchType && matchCategory;
       });
 
@@ -164,7 +143,7 @@
       });
 
       displayJobs(sortedJobs);
-    }
+    });
 
     function displayJobs(jobs) {
       const jobsList = document.getElementById("jobsList");
@@ -175,10 +154,9 @@
         return;
       }
 
-      jobs.forEach((job, index) => {
+      jobs.forEach(job => {
         const card = document.createElement("div");
         card.className = "job-card";
-        card.id = `job-${index}`;
         card.innerHTML = `
           <h6>${job.title}</h6>
           <p><strong>Company:</strong> ${job.company}</p>
@@ -186,38 +164,13 @@
           <p><strong>Category:</strong> ${job.category}</p>
           <p><strong>Deadline:</strong> ${job.deadline}</p>
           <a href="${job.link}" target="_blank" class="link-style">Find Out More</a>
-          <i class="bi bi-share-fill share-icon" onclick="shareJob(${index})" title="Share this job"></i>
         `;
         jobsList.appendChild(card);
       });
-
-      scrollToSharedJob();
     }
 
-    window.shareJob = function(index) {
-      const url = `${window.location.origin}${window.location.pathname}#job-${index}`;
-      navigator.clipboard.writeText(url).then(() => {
-        alert("Job link copied to clipboard!");
-      });
-    }
-
-    function scrollToSharedJob() {
-      const hash = window.location.hash;
-      if (hash && hash.startsWith("#job-")) {
-        const target = document.querySelector(hash);
-        if (target) {
-          target.scrollIntoView({ behavior: "smooth" });
-        }
-      }
-    }
-
-    async function loadJobs() {
-      const querySnapshot = await getDocs(collection(db, "jobs"));
-      allJobs = querySnapshot.docs.map(doc => doc.data());
-      filterAndDisplayJobs();
-    }
-
-    loadJobs();
+    // Initial load
+    document.getElementById("applyButton").click();
   </script>
 </body>
 </html>
