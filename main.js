@@ -15,6 +15,19 @@ const db = firebase.firestore();
 let allJobs = [];
 let expandedIndex = null; // To track which job is expanded
 
+// Format date helper (deadline or createdAt)
+function formatDate(dateObj) {
+  if (!dateObj) return "N/A";
+  let date;
+  // Firestore timestamp or ISO string support
+  if (dateObj.seconds) {
+    date = new Date(dateObj.seconds * 1000);
+  } else {
+    date = new Date(dateObj);
+  }
+  return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
 // Load jobs
 db.collection("jobs").orderBy("createdAt", "desc").get().then(snapshot => {
   allJobs = snapshot.docs.map((doc, index) => {
@@ -24,7 +37,7 @@ db.collection("jobs").orderBy("createdAt", "desc").get().then(snapshot => {
     return data;
   });
 
-document.getElementById("jobCountText").textContent = `${allJobs.length} Jobs available in SA`;
+  document.getElementById("jobCountText").textContent = `${allJobs.length} Jobs available in SA`;
 
   populateFilterOptions(allJobs);
   renderJobs(allJobs);
@@ -38,7 +51,6 @@ document.getElementById("jobCountText").textContent = `${allJobs.length} Jobs av
       expandJob(jobIndex);
     }
   }
-
 }).catch(error => {
   console.error("Error fetching jobs:", error);
   document.getElementById("jobsContainer").innerHTML = `<p class="text-danger">Failed to load jobs. Please try again later.</p>`;
@@ -51,6 +63,9 @@ function populateFilterOptions(jobs) {
 
   const typeSelect = document.getElementById("typeSelect");
   const categorySelect = document.getElementById("categorySelect");
+
+  typeSelect.innerHTML = '<option value="">All Types</option>';
+  categorySelect.innerHTML = '<option value="">All Categories</option>';
 
   typeSet.forEach(type => {
     typeSelect.innerHTML += `<option value="${type}">${type}</option>`;
@@ -68,7 +83,10 @@ function renderJobs(jobs) {
     return;
   }
 
-  jobsContainer.innerHTML = jobs.map((job, index) => `
+  jobsContainer.innerHTML = jobs.map((job, index) => {
+    const deadlineFormatted = formatDate(job.deadline);
+
+    return `
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm position-relative">
         <!-- Share button -->
@@ -80,17 +98,17 @@ function renderJobs(jobs) {
           <h5 class="card-title">${job.title || 'Untitled Job'}</h5>
           <p class="text-primary mb-1">${job.company || 'Company not specified'}</p>
           <p class="text-secondary mb-2"><i class="fas fa-map-marker-alt me-1"></i>${job.location || 'Location not specified'}</p>
-          <p class="card-text mb-2">
+          <p class="card-text mb-1">
             ${job.type ? `<span class="badge bg-secondary">${job.type}</span>` : ''}
             ${job.category ? `<span class="badge bg-info text-dark">${job.category}</span>` : ''}
           </p>
+          <p class="text-danger mb-2"><strong>Deadline:</strong> ${deadlineFormatted}</p>
 
           <div id="readMore-${index}" class="read-more mt-2" style="display: none;">
             ${job.descriptionHTML || '<p>No additional details provided.</p>'}
             <div class="mt-3">
               <a href="${job.link || '#'}" target="_blank" class="btn btn-primary btn-sm">Apply Here</a>
             </div>
-           
           </div>
 
           <div class="mt-3 text-center">
@@ -98,10 +116,10 @@ function renderJobs(jobs) {
           </div>
         </div>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 
-  // Add event listeners
+  // Add event listeners for Read more toggles
   document.querySelectorAll('.read-toggle').forEach(toggle => {
     toggle.addEventListener('click', function() {
       const index = parseInt(this.getAttribute('data-index'));
