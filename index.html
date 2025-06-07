@@ -7,98 +7,52 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <style>
-    /* Global Improvements */
     body {
       background-color: #f9fafc;
     }
-
-    /* Header */
     .top-bar {
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-
-    /* Hero */
     .hero h1 {
       font-weight: 700;
       color: #222;
     }
-
     .hero p.lead {
       color: #555;
     }
-
-    /* Buttons */
-    .btn-outline-primary {
-      border-radius: 50px;
-    }
-
-    .btn-primary {
-      border-radius: 50px;
-    }
-
-    /* Category cards */
-    .category {
-      background: #fff;
-      border: 1px solid #e0e0e0;
-      padding: 1rem;
-      border-radius: 16px;
-      text-align: center;
-      min-width: 120px;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-      flex: 1 0 140px;
-      max-width: 160px;
-    }
-
-    .category img {
-      margin-bottom: 0.5rem;
-    }
-
-    .category:hover {
-      background: #f9fbff;
-      transform: translateY(-4px);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    /* Job card */
     .card.h-100.shadow-sm {
       border-radius: 16px;
       transition: transform 0.3s, box-shadow 0.3s;
     }
-
     .card.h-100.shadow-sm:hover {
       transform: translateY(-5px);
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     }
-
     .card-title {
       font-size: 1.1rem;
       font-weight: 600;
       color: #333;
     }
-
     .card-text.text-muted {
       font-size: 0.9rem;
       margin-bottom: 0.75rem;
     }
-
     .card-text .badge {
       margin-right: 0.4rem;
       margin-bottom: 0.3rem;
       font-size: 0.75rem;
       padding: 0.4em 0.6em;
     }
-
-    .badge.bg-secondary {
-      background-color: #6c757d !important;
+    .read-more {
+      display: none;
+      font-size: 0.9rem;
+      margin-top: 10px;
     }
-
-    .badge.bg-info {
-      background-color: #0dcaf0 !important;
-      color: #0a0a0a !important;
+    .read-toggle {
+      cursor: pointer;
+      color: #0d6efd;
+      font-size: 0.9rem;
     }
-
-    /* Footer */
     footer {
       font-size: 0.9rem;
     }
@@ -124,77 +78,14 @@
     <div class="container text-center">
       <h1 class="display-5 mb-3">Find Your Dream Job</h1>
       <p class="lead mb-4"><strong id="jobCount">Loading jobs count...</strong> jobs across South Africa</p>
-
-      <!-- Navigation -->
-      <div class="d-flex justify-content-center gap-3 mb-4 flex-wrap">
-        <a href="jobs.html" class="btn btn-outline-primary">Jobs</a>
-        <a href="companies.html" class="btn btn-outline-primary">Companies</a>
-        <a href="courses.html" class="btn btn-outline-primary">Courses</a>
-        <a href="career-advice.html" class="btn btn-outline-primary">Career Advice</a>
-      </div>
-
-      <!-- Search Form -->
-      <form class="row g-2 justify-content-center" role="search" action="jobs.html" method="get">
-        <div class="col-md-4 col-sm-6">
-          <select name="type" id="typeSelect" class="form-select shadow-sm">
-            <option value="">All Types</option>
-          </select>
-        </div>
-        <div class="col-md-4 col-sm-6">
-          <select name="category" id="categorySelect" class="form-select shadow-sm">
-            <option value="">All Categories</option>
-          </select>
-        </div>
-        <div class="col-auto">
-          <button type="submit" class="btn btn-primary px-4 shadow-sm">
-            <i class="fas fa-search me-1"></i> Search
-          </button>
-        </div>
-      </form>
     </div>
   </section>
 
   <!-- Job Listings -->
   <section class="container my-5">
+    <h4 class="mb-4 text-center">Latest Job Opportunities</h4>
     <div id="jobsContainer" class="row g-4">
       <p>Loading jobs...</p>
-    </div>
-  </section>
-
-  <!-- Job Categories -->
-  <section class="bg-light py-4">
-    <div class="container">
-      <h4 class="mb-3 text-center">Explore Job Categories</h4>
-      <div class="d-flex flex-wrap justify-content-center gap-4">
-        <div class="category">
-          <img src="https://img.icons8.com/fluency/48/000000/computer.png" alt="IT Icon" />
-          <div>IT Jobs</div>
-        </div>
-        <div class="category">
-          <img src="https://img.icons8.com/color/48/accounting.png" alt="Accounting Icon" />
-          <div>Accounting</div>
-        </div>
-        <div class="category">
-          <img src="https://img.icons8.com/color/48/engineering.png" alt="Engineering Icon" />
-          <div>Engineering</div>
-        </div>
-        <div class="category">
-          <img src="https://img.icons8.com/color/48/sales-performance.png" alt="Sales Icon" />
-          <div>Sales</div>
-        </div>
-        <div class="category">
-          <img src="https://img.icons8.com/color/48/administrator-male.png" alt="Admin Icon" />
-          <div>Admin</div>
-        </div>
-        <div class="category">
-          <img src="https://img.icons8.com/color/48/life-cycle.png" alt="General Icon" />
-          <div>General</div>
-        </div>
-        <div class="category">
-          <img src="https://img.icons8.com/color/48/bank-cards.png" alt="Finance Icon" />
-          <div>Finance</div>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -222,36 +113,39 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Load job count, filters, and latest jobs
-    db.collection("jobs").get().then(snapshot => {
+    // Load jobs
+    db.collection("jobs").orderBy("createdAt", "desc").get().then(snapshot => {
       const jobs = snapshot.docs.map(doc => doc.data());
       document.getElementById("jobCount").textContent = jobs.length;
 
-      const types = [...new Set(jobs.map(job => job.type).filter(Boolean))];
-      const categories = [...new Set(jobs.map(job => job.category).filter(Boolean))];
-
-      const typeSelect = document.getElementById("typeSelect");
-      const categorySelect = document.getElementById("categorySelect");
-
-      types.forEach(type => {
-        typeSelect.innerHTML += `<option value="${type}">${type}</option>`;
-      });
-      categories.forEach(category => {
-        categorySelect.innerHTML += `<option value="${category}">${category}</option>`;
-      });
-
       const jobsContainer = document.getElementById("jobsContainer");
-      jobsContainer.innerHTML = jobs.slice(0, 6).map(job => `
-        <div class="col-md-4">
+      if (jobs.length === 0) {
+        jobsContainer.innerHTML = '<p>No jobs found.</p>';
+        return;
+      }
+
+      jobsContainer.innerHTML = jobs.map((job, index) => `
+        <div class="col-md-6 col-lg-4">
           <div class="card h-100 shadow-sm">
-            <div class="card-body">
+            <div class="card-body d-flex flex-column">
               <h5 class="card-title">${job.title || 'Untitled Job'}</h5>
               <p class="card-text text-muted">${job.company || 'Company not specified'}</p>
-              <p class="card-text">
+              <p class="card-text mb-2">
                 ${job.type ? `<span class="badge bg-secondary">${job.type}</span>` : ''}
                 ${job.category ? `<span class="badge bg-info text-dark">${job.category}</span>` : ''}
               </p>
-              <a href="${job.link || '#'}" class="btn btn-outline-primary btn-sm" target="_blank">View Job</a>
+              <div>
+                <span class="read-toggle" onclick="toggleReadMore(${index})">Read more</span>
+                <div id="readMore-${index}" class="read-more mt-2">
+                  ${job.descriptionHTML || '<p>No additional details provided.</p>'}
+                  <div class="mt-3">
+                    <a href="${job.link || '#'}" target="_blank" class="btn btn-primary btn-sm">Apply Here</a>
+                  </div>
+                  <div class="mt-2">
+                    <span class="read-toggle" onclick="toggleReadMore(${index})">Read less</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -260,6 +154,15 @@
       console.error("Error fetching jobs:", error);
       document.getElementById("jobsContainer").innerHTML = `<p class="text-danger">Failed to load jobs. Please try again later.</p>`;
     });
+
+    function toggleReadMore(index) {
+      const content = document.getElementById(`readMore-${index}`);
+      if (content.style.display === "block") {
+        content.style.display = "none";
+      } else {
+        content.style.display = "block";
+      }
+    }
   </script>
 </body>
 </html>
