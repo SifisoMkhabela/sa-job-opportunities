@@ -78,29 +78,31 @@ function renderJobs(jobs) {
 
         <div class="card-body d-flex flex-column">
           <h5 class="card-title">${job.title || 'Untitled Job'}</h5>
-          <p class="card-text text-muted">${job.company || 'Company not specified'}</p>
+          <p class="mb-1 text-primary fw-semibold">${job.company || 'Company not specified'}</p>
+          <p class="mb-2 text-secondary"><i class="fas fa-map-marker-alt me-1"></i>${job.location || 'Location not specified'}</p>
+
           <p class="card-text mb-2">
             ${job.type ? `<span class="badge bg-secondary">${job.type}</span>` : ''}
             ${job.category ? `<span class="badge bg-info text-dark">${job.category}</span>` : ''}
           </p>
+
           <div id="readMore-${index}" class="read-more mt-2" style="display: none;">
             ${job.descriptionHTML || '<p>No additional details provided.</p>'}
-            <div class="mt-3">
+            <div class="mt-3 d-flex flex-column gap-2">
               <a href="${job.link || '#'}" target="_blank" class="btn btn-primary btn-sm">Apply Here</a>
-            </div>
-            <div class="mt-2">
-              <span class="read-toggle text-primary" data-index="${index}" style="cursor: pointer;">Read less</span>
+              <span class="read-toggle text-primary fw-semibold" data-index="${index}" style="cursor: pointer; text-align: center;">Read less</span>
             </div>
           </div>
-          <div class="mt-3">
-            <span class="read-toggle text-primary" data-index="${index}" style="cursor: pointer;">Read more</span>
+
+          <div class="mt-3 text-center">
+            <span class="read-toggle text-primary fw-semibold" data-index="${index}" style="cursor: pointer;">Read more</span>
           </div>
         </div>
       </div>
     </div>
   `).join('');
 
-  // Add event listeners
+  // Add event listeners for read toggles
   document.querySelectorAll('.read-toggle').forEach(toggle => {
     toggle.addEventListener('click', function() {
       const index = parseInt(this.getAttribute('data-index'));
@@ -108,7 +110,7 @@ function renderJobs(jobs) {
     });
   });
 
-  // Add share button event listeners
+  // Add event listeners for share buttons
   document.querySelectorAll('.share-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       const jobId = this.getAttribute('data-id');
