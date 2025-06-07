@@ -28,7 +28,7 @@ function formatDate(dateObj) {
   return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
-// Load jobs
+// Load jobs from Firestore
 db.collection("jobs").orderBy("createdAt", "desc").get().then(snapshot => {
   allJobs = snapshot.docs.map((doc, index) => {
     const data = doc.data();
@@ -42,7 +42,7 @@ db.collection("jobs").orderBy("createdAt", "desc").get().then(snapshot => {
   populateFilterOptions(allJobs);
   renderJobs(allJobs);
 
-  // Check if link has ?jobId=
+  // Check if URL has ?jobId= to expand a job
   const urlParams = new URLSearchParams(window.location.search);
   const jobIdParam = urlParams.get('jobId');
   if (jobIdParam) {
@@ -56,7 +56,7 @@ db.collection("jobs").orderBy("createdAt", "desc").get().then(snapshot => {
   document.getElementById("jobsContainer").innerHTML = `<p class="text-danger">Failed to load jobs. Please try again later.</p>`;
 });
 
-// Populate dropdowns
+// Populate filter dropdowns
 function populateFilterOptions(jobs) {
   const typeSet = new Set(jobs.map(job => job.type).filter(Boolean));
   const categorySet = new Set(jobs.map(job => job.category).filter(Boolean));
@@ -75,7 +75,7 @@ function populateFilterOptions(jobs) {
   });
 }
 
-// Render jobs
+// Render jobs with deadline filtering and black color for deadline text
 function renderJobs(jobs) {
   const jobsContainer = document.getElementById("jobsContainer");
   if (jobs.length === 0) {
@@ -83,7 +83,29 @@ function renderJobs(jobs) {
     return;
   }
 
-  jobsContainer.innerHTML = jobs.map((job, index) => {
+  // Get today's date at midnight for comparison
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Filter out jobs with deadline before today
+  const validJobs = jobs.filter(job => {
+    if (!job.deadline) return true; // If no deadline, assume valid
+    let deadlineDate;
+    if (job.deadline.seconds) {
+      deadlineDate = new Date(job.deadline.seconds * 1000);
+    } else {
+      deadlineDate = new Date(job.deadline);
+    }
+    deadlineDate.setHours(0, 0, 0, 0);
+    return deadlineDate >= today;
+  });
+
+  if (validJobs.length === 0) {
+    jobsContainer.innerHTML = '<p>No jobs found with upcoming deadlines.</p>';
+    return;
+  }
+
+  jobsContainer.innerHTML = validJobs.map((job, index) => {
     const deadlineFormatted = formatDate(job.deadline);
 
     return `
@@ -102,7 +124,7 @@ function renderJobs(jobs) {
             ${job.type ? `<span class="badge bg-secondary">${job.type}</span>` : ''}
             ${job.category ? `<span class="badge bg-info text-dark">${job.category}</span>` : ''}
           </p>
-          <p class="text-danger mb-2"><strong>Deadline:</strong> ${deadlineFormatted}</p>
+          <p class="text-dark mb-2"><strong>Deadline:</strong> ${deadlineFormatted}</p>
 
           <div id="readMore-${index}" class="read-more mt-2" style="display: none;">
             ${job.descriptionHTML || '<p>No additional details provided.</p>'}
@@ -139,7 +161,7 @@ function renderJobs(jobs) {
   });
 }
 
-// Expand/collapse logic
+// Expand/collapse logic for job description
 function toggleExpandCollapse(index) {
   if (expandedIndex !== null && expandedIndex !== index) {
     // Collapse previously expanded
@@ -163,7 +185,7 @@ function toggleExpandCollapse(index) {
   }
 }
 
-// Toggle the read more / read less text for given index
+// Toggle "Read more" / "Read less" text
 function toggleText(index, isExpanded) {
   const toggles = document.querySelectorAll(`.read-toggle[data-index="${index}"]`);
   toggles.forEach(toggle => {
@@ -183,7 +205,7 @@ function expandJob(index) {
   }
 }
 
-// Filter form submission
+// Filter form submission handler
 document.getElementById('filterForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const type = document.getElementById('typeSelect').value;
