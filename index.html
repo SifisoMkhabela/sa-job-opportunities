@@ -2,108 +2,119 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Job Listings</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
   <style>
     body {
       padding-top: 56px;
     }
-    .sidebar {
+    /* Sidebar styles */
+    #sidebarMenu {
+      min-width: 200px;
+      max-width: 200px;
+      background-color: #f8f9fa;
       position: fixed;
       top: 56px;
-      left: 0;
-      height: 100%;
-      width: 250px;
-      background-color: #f8f9fa;
+      bottom: 0;
+      padding-top: 1rem;
       border-right: 1px solid #dee2e6;
-      padding-top: 20px;
-      display: none;
     }
-    .sidebar a {
-      display: block;
-      padding: 10px 20px;
-      color: #333;
-      text-decoration: none;
+    main {
+      margin-left: 210px;
+      padding: 1rem;
     }
-    .sidebar a:hover {
-      background-color: #e9ecef;
-    }
-    .content {
-      margin-left: 0;
-    }
-    .sidebar-open .sidebar {
-      display: block;
-    }
-    .sidebar-open .content {
-      margin-left: 250px;
+    @media (max-width: 768px) {
+      #sidebarMenu {
+        position: static;
+        width: 100%;
+        max-width: none;
+        border-right: none;
+      }
+      main {
+        margin-left: 0;
+      }
     }
     footer {
-      background-color: #343a40;
-      color: white;
-      padding: 20px 0;
-      margin-top: 40px;
+      background-color: #f8f9fa;
+      padding: 1rem 0;
+      border-top: 1px solid #dee2e6;
     }
-    footer a {
-      color: #ccc;
+    .card-text.short-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   </style>
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <button class="btn btn-outline-light mr-2" id="sidebarToggle">☰</button>
-    <a class="navbar-brand" href="#">SA Job Listings</a>
+  <!-- Header Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
+    <a class="navbar-brand" href="#">Job Portal</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" 
+      aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
   </nav>
 
-  <!-- Sidebar -->
-  <div class="sidebar" id="sidebar">
-    <a href="#">Home</a>
-    <a href="#">About Us</a>
-    <a href="#">Contact</a>
-    <a href="#">Terms & Conditions</a>
-    <a href="#">Privacy Policy</a>
-  </div>
+  <!-- Sidebar Menu -->
+  <nav id="sidebarMenu" class="d-none d-md-block sidebar">
+    <ul class="nav flex-column">
+      <li class="nav-item"><a href="#contacts" class="nav-link">Contacts</a></li>
+      <li class="nav-item"><a href="#aboutus" class="nav-link">About Us</a></li>
+    </ul>
+  </nav>
 
   <!-- Main Content -->
-  <div class="content">
-    <div class="container my-5">
-      <h1 class="text-center mb-4">Job Listings</h1>
+  <main role="main" class="container">
 
-      <form class="mb-4">
-        <div class="form-row">
-          <div class="col-md-5 mb-2">
-            <select class="form-control" id="typeSelect">
-              <option value="">-- Select Job Type --</option>
-            </select>
-          </div>
-          <div class="col-md-5 mb-2">
-            <select class="form-control" id="categorySelect">
-              <option value="">-- Select Category --</option>
-            </select>
-          </div>
-          <div class="col-md-2 mb-2">
-            <button type="submit" class="btn btn-primary btn-block">Search</button>
-          </div>
+    <h1 class="mb-4">Job Listings</h1>
+
+    <form id="filterForm" class="mb-4">
+      <div class="form-row">
+        <div class="col-md-5 mb-2">
+          <select class="form-control" id="typeSelect">
+            <option value="">-- Select Job Type --</option>
+          </select>
         </div>
-      </form>
+        <div class="col-md-5 mb-2">
+          <select class="form-control" id="categorySelect">
+            <option value="">-- Select Category --</option>
+          </select>
+        </div>
+        <div class="col-md-2 mb-2">
+          <button type="submit" class="btn btn-primary btn-block">Search</button>
+        </div>
+      </div>
+    </form>
 
-      <p class="text-muted">Total Jobs: <span id="jobCount">0</span></p>
-      <div id="jobsContainer" class="row"></div>
-    </div>
-  </div>
+    <p class="text-muted">Total Jobs: <span id="jobCount">0</span></p>
+
+    <div id="jobsContainer" class="row"></div>
+
+    <!-- Contacts and About Us sections for sidebar links -->
+    <section id="contacts" class="mt-5">
+      <h3>Contacts</h3>
+      <p>Email: contact@jobportal.com</p>
+      <p>Phone: +1 234 567 890</p>
+    </section>
+
+    <section id="aboutus" class="mt-5">
+      <h3>About Us</h3>
+      <p>We connect job seekers with top employers worldwide.</p>
+    </section>
+
+  </main>
 
   <!-- Footer -->
   <footer class="text-center">
     <div class="container">
-      <p>&copy; 2025 SA Job Opportunities</p>
-      <p>
-        <a href="#">Contact</a> |
-        <a href="#">About Us</a> |
-        <a href="#">Terms & Conditions</a> |
-        <a href="#">Privacy Policy</a>
-      </p>
+      <a href="#contacts" class="mx-3">Contacts</a> |
+      <a href="#aboutus" class="mx-3">About Us</a> |
+      <a href="#" class="mx-3">Terms & Conditions</a> |
+      <a href="#" class="mx-3">Privacy Policy</a>
+      <p class="mt-2 mb-0">&copy; 2025 Job Portal</p>
     </div>
   </footer>
 
@@ -111,7 +122,11 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
-  <!-- Script -->
+  <!-- Bootstrap JS dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Firebase Config & Job Listing Script -->
   <script>
     // Firebase configuration
     const firebaseConfig = {
@@ -132,7 +147,7 @@
     const jobsContainer = document.getElementById("jobsContainer");
     const jobCount = document.getElementById("jobCount");
 
-    // Load filters
+    // Load unique job types and categories
     async function loadFilters() {
       const jobsSnapshot = await db.collection("jobs").get();
       const types = new Set();
@@ -161,9 +176,9 @@
       jobCount.textContent = jobsSnapshot.size;
     }
 
-    // Load jobs
+    // Load jobs with optional filters
     async function loadJobs(filter = {}) {
-      jobsContainer.innerHTML = "<p class='text-center'>Loading jobs...</p>";
+      jobsContainer.innerHTML = "<p class='text-center w-100'>Loading jobs...</p>";
       let query = db.collection("jobs");
 
       if (filter.type) query = query.where("type", "==", filter.type);
@@ -173,7 +188,7 @@
       jobsContainer.innerHTML = "";
 
       if (snapshot.empty) {
-        jobsContainer.innerHTML = "<p class='text-center'>No jobs found.</p>";
+        jobsContainer.innerHTML = "<p class='text-center w-100'>No jobs found.</p>";
         jobCount.textContent = 0;
         return;
       }
@@ -185,14 +200,21 @@
         const col = document.createElement("div");
         col.className = "col-md-6 col-lg-4 mb-4";
 
+        const vacancyDetails = job.vacancyDetails || 
+          "<p><strong>Responsibilities:</strong> Not specified.</p>" +
+          "<p><strong>Requirements:</strong> Not specified.</p>";
+
         col.innerHTML = `
           <div class="card h-100 shadow-sm">
-            <div class="card-body">
+            <div class="card-body d-flex flex-column">
               <h5 class="card-title">${job.title || "Untitled Job"}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">${job.location || "Location"} | ${job.updated || "Date"}</h6>
+              <h6 class="card-subtitle mb-2 text-muted">${job.location || "Location"} | Updated: ${job.updated || "N/A"}</h6>
               <p class="card-text short-text">${(job.description || "No description provided.").slice(0, 150)}...</p>
-              <p class="card-text full-text d-none">${job.description || "No description provided."}</p>
-              <button class="btn btn-link p-0 read-toggle">Read more</button>
+              <div class="full-text d-none">
+                <p>${job.description || "No description provided."}</p>
+                <div class="vacancy-details">${vacancyDetails}</div>
+              </div>
+              <button class="btn btn-link p-0 mt-auto read-toggle">Read more</button>
               <a href="#" class="btn btn-primary mt-3 d-none apply-button">Apply Now</a>
             </div>
           </div>
@@ -200,7 +222,7 @@
         jobsContainer.appendChild(col);
       });
 
-      // Read more/less toggle
+      // Add toggle functionality for read more / less
       jobsContainer.querySelectorAll(".read-toggle").forEach(button => {
         button.addEventListener("click", function () {
           const cardBody = this.closest(".card-body");
@@ -225,23 +247,22 @@
       });
     }
 
-    // Form filter
-    document.querySelector("form").addEventListener("submit", e => {
+    // Form submission handler
+    document.getElementById("filterForm").addEventListener("submit", e => {
       e.preventDefault();
+      const selectedType = typeSelect.value;
+      const selectedCategory = categorySelect.value;
+
       const filters = {};
-      if (typeSelect.value) filters.type = typeSelect.value;
-      if (categorySelect.value) filters.category = categorySelect.value;
+      if (selectedType) filters.type = selectedType;
+      if (selectedCategory) filters.category = selectedCategory;
+
       loadJobs(filters);
     });
 
-    // Sidebar toggle
-    document.getElementById("sidebarToggle").addEventListener("click", () => {
-      document.body.classList.toggle("sidebar-open");
-    });
-
-    // Initialize
-    loadFilters();
-    loadJobs();
+    // Initialize page
+    loadFilters().then(() => loadJobs());
   </script>
+
 </body>
 </html>
