@@ -13,14 +13,32 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 let allJobs = [];
+let expandedIndex = null; // To track which job is expanded
 
-// Load all jobs initially and populate filters
+// Load jobs
 db.collection("jobs").orderBy("createdAt", "desc").get().then(snapshot => {
-  allJobs = snapshot.docs.map(doc => doc.data());
+  allJobs = snapshot.docs.map((doc, index) => {
+    const data = doc.data();
+    data.id = doc.id;
+    data._index = index; // for UI tracking
+    return data;
+  });
+
   document.getElementById("jobCount").textContent = allJobs.length;
 
   populateFilterOptions(allJobs);
   renderJobs(allJobs);
+
+  // Check if link has ?jobId=
+  const urlParams = new URLSearchParams(window.location.search);
+  const jobIdParam = urlParams.get('jobId');
+  if (jobIdParam) {
+    const jobIndex = allJobs.findIndex(job => job.id === jobIdParam);
+    if (jobIndex !== -1) {
+      expandJob(jobIndex);
+    }
+  }
+
 }).catch(error => {
   console.error("Error fetching jobs:", error);
   document.getElementById("jobsContainer").innerHTML = `<p class="text-danger">Failed to load jobs. Please try again later.</p>`;
@@ -52,7 +70,12 @@ function renderJobs(jobs) {
 
   jobsContainer.innerHTML = jobs.map((job, index) => `
     <div class="col-md-6 col-lg-4">
-      <div class="card h-100 shadow-sm">
+      <div class="card h-100 shadow-sm position-relative">
+        <!-- Share button -->
+        <button class="btn btn-sm btn-light position-absolute top-0 end-0 m-2 share-btn" data-id="${job.id}" title="Share this job">
+          <i class="fas fa-share-alt"></i>
+        </button>
+
         <div class="card-body d-flex flex-column">
           <h5 class="card-title">${job.title || 'Untitled Job'}</h5>
           <p class="card-text text-muted">${job.company || 'Company not specified'}</p>
@@ -60,34 +83,79 @@ function renderJobs(jobs) {
             ${job.type ? `<span class="badge bg-secondary">${job.type}</span>` : ''}
             ${job.category ? `<span class="badge bg-info text-dark">${job.category}</span>` : ''}
           </p>
-          <div>
-            <span class="read-toggle" data-index="${index}">Read more</span>
-            <div id="readMore-${index}" class="read-more mt-2">
-              ${job.descriptionHTML || '<p>No additional details provided.</p>'}
-              <div class="mt-3">
-                <a href="${job.link || '#'}" target="_blank" class="btn btn-primary btn-sm">Apply Here</a>
-              </div>
+          <div id="readMore-${index}" class="read-more mt-2" style="display: none;">
+            ${job.descriptionHTML || '<p>No additional details provided.</p>'}
+            <div class="mt-3">
+              <a href="${job.link || '#'}" target="_blank" class="btn btn-primary btn-sm">Apply Here</a>
             </div>
+            <div class="mt-2">
+              <span class="read-toggle text-primary" data-index="${index}" style="cursor: pointer;">Read less</span>
+            </div>
+          </div>
+          <div class="mt-3">
+            <span class="read-toggle text-primary" data-index="${index}" style="cursor: pointer;">Read more</span>
           </div>
         </div>
       </div>
     </div>
   `).join('');
 
-  // Add toggle event listeners
+  // Add event listeners
   document.querySelectorAll('.read-toggle').forEach(toggle => {
     toggle.addEventListener('click', function() {
-      const index = this.getAttribute('data-index');
-      const content = document.getElementById(`readMore-${index}`);
-      if (content.style.display === "block") {
-        content.style.display = "none";
-        this.textContent = "Read more";
-      } else {
-        content.style.display = "block";
-        this.textContent = "Read less";
-      }
+      const index = parseInt(this.getAttribute('data-index'));
+      toggleExpandCollapse(index);
     });
   });
+
+  // Add share button event listeners
+  document.querySelectorAll('.share-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const jobId = this.getAttribute('data-id');
+      const shareLink = `${window.location.origin}${window.location.pathname}?jobId=${jobId}`;
+      navigator.clipboard.writeText(shareLink).then(() => {
+        alert('Share link copied to clipboard!');
+      });
+    });
+  });
+}
+
+// Expand/collapse logic
+function toggleExpandCollapse(index) {
+  if (expandedIndex !== null && expandedIndex !== index) {
+    // Collapse previously expanded
+    document.getElementById(`readMore-${expandedIndex}`).style.display = "none";
+    document.querySelectorAll(`.read-toggle[data-index="${expandedIndex}"]`).forEach(el => {
+      el.textContent = "Read more";
+    });
+  }
+
+  const content = document.getElementById(`readMore-${index}`);
+  const isVisible = content.style.display === "block";
+
+  if (isVisible) {
+    content.style.display = "none";
+    document.querySelectorAll(`.read-toggle[data-index="${index}"]`).forEach(el => {
+      el.textContent = "Read more";
+    });
+    expandedIndex = null;
+  } else {
+    content.style.display = "block";
+    document.querySelectorAll(`.read-toggle[data-index="${index}"]`).forEach(el => {
+      el.textContent = "Read less";
+    });
+    expandedIndex = index;
+  }
+}
+
+// For deep link expand (called once on page load if jobId present)
+function expandJob(index) {
+  toggleExpandCollapse(index);
+  // Scroll to job
+  const jobCard = document.getElementById(`readMore-${index}`);
+  if (jobCard) {
+    jobCard.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
 }
 
 // Filter form submit
@@ -113,5 +181,6 @@ document.getElementById("filterForm").addEventListener("submit", function(event)
     filteredJobs.sort((a, b) => b.createdAt?.seconds - a.createdAt?.seconds);
   }
 
+  expandedIndex = null; // Reset expanded state
   renderJobs(filteredJobs);
 });
