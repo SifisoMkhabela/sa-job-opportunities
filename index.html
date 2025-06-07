@@ -2,160 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SA Job Opportunities - Home</title>
-
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
-  <!-- Custom CSS -->
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f8f9fa;
-    }
-    .logo {
-      height: 50px;
-      width: auto;
-      object-fit: contain;
-      flex-shrink: 0;
-    }
-    .job-description {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      transition: all 0.3s ease;
-    }
-    .marquee {
-      overflow: hidden;
-      white-space: nowrap;
-      animation: marquee 20s linear infinite;
-    }
-    .marquee:hover {
-      animation-play-state: paused;
-    }
-    @keyframes marquee {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
-    .category img {
-      height: 32px;
-      width: 32px;
-    }
-    .apply-btn {
-      transition: opacity 0.3s ease;
-    }
-  </style>
-
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Job Listings</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
 </head>
 <body>
+  <div class="container my-5">
+    <h1 class="text-center mb-4">Job Listings</h1>
 
-  <!-- Header -->
-  <header class="top-bar bg-white py-3 border-bottom shadow-sm">
-    <div class="container d-flex align-items-center">
-      <a href="index.html" class="d-flex align-items-center text-decoration-none">
-        <img src="logo.png" alt="SA Job Opportunities" class="logo" />
-        <h1 class="ms-3 mb-0 text-dark" style="font-size: 1.25rem; font-weight: 700;">
-          SA Job Opportunities
-        </h1>
-      </a>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="hero bg-white py-5 shadow-sm mb-5">
-    <div class="container text-center">
-      <h1 class="mb-3">Find Your Dream Job in South Africa</h1>
-      <p class="fs-5 mb-4">
-        <strong id="jobCount">Loading jobs count...</strong> jobs available now
-      </p>
-
-      <!-- Navigation Tabs -->
-      <nav class="mb-4" aria-label="Main navigation tabs">
-        <a href="jobs.html" class="btn btn-outline-primary mx-1">Jobs</a>
-        <a href="companies.html" class="btn btn-outline-primary mx-1">Companies</a>
-        <a href="courses.html" class="btn btn-outline-primary mx-1">Courses</a>
-        <a href="career-advice.html" class="btn btn-outline-primary mx-1">Career Advice</a>
-      </nav>
-
-      <!-- Search Form -->
-      <form class="row justify-content-center g-3" role="search" action="jobs.html" method="get" aria-label="Job search form">
-        <div class="col-md-4">
-          <select name="type" id="typeSelect" class="form-select" aria-label="Select job type">
-            <option value="">All Job Types</option>
+    <form class="mb-4">
+      <div class="form-row">
+        <div class="col-md-5 mb-2">
+          <select class="form-control" id="typeSelect">
+            <option value="">-- Select Job Type --</option>
           </select>
         </div>
-        <div class="col-md-4">
-          <select name="category" id="categorySelect" class="form-select" aria-label="Select job category">
-            <option value="">All Categories</option>
+        <div class="col-md-5 mb-2">
+          <select class="form-control" id="categorySelect">
+            <option value="">-- Select Category --</option>
           </select>
         </div>
-        <div class="col-auto">
-          <button type="submit" class="btn btn-primary" aria-label="Search jobs">
-            <i class="fas fa-search"></i> Search
-          </button>
-        </div>
-      </form>
-    </div>
-  </section>
-
-  <!-- Jobs Listing Section -->
-  <section class="container mb-5" aria-label="Job Listings">
-    <div id="jobsContainer" class="row g-4 text-dark">
-      <p class="text-center">Loading jobs...</p>
-    </div>
-  </section>
-
-  <!-- Job Categories Marquee -->
-  <section class="job-categories-marquee bg-white py-3 mb-5 shadow-sm">
-    <div class="container">
-      <h4 class="mb-3">Explore Job Categories</h4>
-      <div class="marquee d-flex gap-5 align-items-center">
-        <div class="category d-flex align-items-center gap-2">
-          <img src="https://img.icons8.com/fluency/48/000000/computer.png" alt="IT Icon" />
-          <span>IT Jobs</span>
-        </div>
-        <div class="category d-flex align-items-center gap-2">
-          <img src="https://img.icons8.com/color/48/accounting.png" alt="Accounting Icon" />
-          <span>Accounting</span>
-        </div>
-        <div class="category d-flex align-items-center gap-2">
-          <img src="https://img.icons8.com/color/48/engineering.png" alt="Engineering Icon" />
-          <span>Engineering</span>
-        </div>
-        <div class="category d-flex align-items-center gap-2">
-          <img src="https://img.icons8.com/color/48/sales-performance.png" alt="Sales Icon" />
-          <span>Sales</span>
-        </div>
-        <div class="category d-flex align-items-center gap-2">
-          <img src="https://img.icons8.com/color/48/healthcare.png" alt="Healthcare Icon" />
-          <span>Healthcare</span>
-        </div>
-        <div class="category d-flex align-items-center gap-2">
-          <img src="https://img.icons8.com/color/48/education.png" alt="Education Icon" />
-          <span>Education</span>
+        <div class="col-md-2 mb-2">
+          <button type="submit" class="btn btn-primary btn-block">Search</button>
         </div>
       </div>
-    </div>
-  </section>
+    </form>
 
-  <!-- Footer -->
-  <footer class="bg-dark text-light py-4 mt-auto">
-    <div class="container text-center small">
-      <p class="mb-1">&copy; 2025 SA Job Opportunities. All rights reserved.</p>
-      <p class="mb-0">Built with ❤️ by Your Company</p>
-    </div>
-  </footer>
+    <p class="text-muted">Total Jobs: <span id="jobCount">0</span></p>
 
-  <!-- Bootstrap Bundle JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Custom JavaScript (optional) -->
+    <div id="jobsContainer" class="row"></div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+  <!-- Firebase Configuration & Script -->
   <script>
-    // Firebase config (your config here)
+    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyCexm1PTk0cst8i3NJxh8MJvqvgm0ys84A",
       authDomain: "sa-job-opportunities.firebaseapp.com",
@@ -169,7 +53,94 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Populate categories/types etc. here (logic not included)
+    const typeSelect = document.getElementById("typeSelect");
+    const categorySelect = document.getElementById("categorySelect");
+    const jobsContainer = document.getElementById("jobsContainer");
+    const jobCount = document.getElementById("jobCount");
+
+    // Load unique job types and categories
+    async function loadFilters() {
+      const jobsSnapshot = await db.collection("jobs").get();
+      const types = new Set();
+      const categories = new Set();
+
+      jobsSnapshot.forEach(doc => {
+        const job = doc.data();
+        if (job.type) types.add(job.type);
+        if (job.category) categories.add(job.category);
+      });
+
+      types.forEach(type => {
+        const option = document.createElement("option");
+        option.value = type;
+        option.textContent = type;
+        typeSelect.appendChild(option);
+      });
+
+      categories.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        categorySelect.appendChild(option);
+      });
+
+      jobCount.textContent = jobsSnapshot.size;
+    }
+
+    // Load jobs with optional filters
+    async function loadJobs(filter = {}) {
+      jobsContainer.innerHTML = "<p class='text-center'>Loading jobs...</p>";
+      let query = db.collection("jobs");
+
+      if (filter.type) query = query.where("type", "==", filter.type);
+      if (filter.category) query = query.where("category", "==", filter.category);
+
+      const snapshot = await query.get();
+      jobsContainer.innerHTML = "";
+
+      if (snapshot.empty) {
+        jobsContainer.innerHTML = "<p class='text-center'>No jobs found.</p>";
+        jobCount.textContent = 0;
+        return;
+      }
+
+      jobCount.textContent = snapshot.size;
+
+      snapshot.forEach(doc => {
+        const job = doc.data();
+        const col = document.createElement("div");
+        col.className = "col-md-6 col-lg-4 mb-4";
+
+        col.innerHTML = `
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">${job.title || "Untitled Job"}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">${job.type || "N/A"} | ${job.category || "N/A"}</h6>
+              <p class="card-text">${job.description || "No description provided."}</p>
+              <a href="#" class="btn btn-primary">Apply Now</a>
+            </div>
+          </div>
+        `;
+        jobsContainer.appendChild(col);
+      });
+    }
+
+    // Form submission handler
+    document.querySelector("form").addEventListener("submit", e => {
+      e.preventDefault();
+      const selectedType = typeSelect.value;
+      const selectedCategory = categorySelect.value;
+
+      const filters = {};
+      if (selectedType) filters.type = selectedType;
+      if (selectedCategory) filters.category = selectedCategory;
+
+      loadJobs(filters);
+    });
+
+    // Initialize page
+    loadFilters();
+    loadJobs();
   </script>
 </body>
 </html>
