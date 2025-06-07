@@ -78,9 +78,8 @@ function renderJobs(jobs) {
 
         <div class="card-body d-flex flex-column">
           <h5 class="card-title">${job.title || 'Untitled Job'}</h5>
-          <p class="mb-1 text-primary fw-semibold">${job.company || 'Company not specified'}</p>
-          <p class="mb-2 text-secondary"><i class="fas fa-map-marker-alt me-1"></i>${job.location || 'Location not specified'}</p>
-
+          <p class="text-primary mb-1">${job.company || 'Company not specified'}</p>
+          <p class="text-secondary mb-2"><i class="fas fa-map-marker-alt me-1"></i>${job.location || 'Location not specified'}</p>
           <p class="card-text mb-2">
             ${job.type ? `<span class="badge bg-secondary">${job.type}</span>` : ''}
             ${job.category ? `<span class="badge bg-info text-dark">${job.category}</span>` : ''}
@@ -88,21 +87,23 @@ function renderJobs(jobs) {
 
           <div id="readMore-${index}" class="read-more mt-2" style="display: none;">
             ${job.descriptionHTML || '<p>No additional details provided.</p>'}
-            <div class="mt-3 d-flex flex-column gap-2">
+            <div class="mt-3">
               <a href="${job.link || '#'}" target="_blank" class="btn btn-primary btn-sm">Apply Here</a>
-              <span class="read-toggle text-primary fw-semibold" data-index="${index}" style="cursor: pointer; text-align: center;">Read less</span>
+            </div>
+            <div class="mt-2 text-center">
+              <span class="read-toggle" data-index="${index}">Read less</span>
             </div>
           </div>
 
           <div class="mt-3 text-center">
-            <span class="read-toggle text-primary fw-semibold" data-index="${index}" style="cursor: pointer;">Read more</span>
+            <span class="read-toggle" data-index="${index}">Read more</span>
           </div>
         </div>
       </div>
     </div>
   `).join('');
 
-  // Add event listeners for read toggles
+  // Add event listeners
   document.querySelectorAll('.read-toggle').forEach(toggle => {
     toggle.addEventListener('click', function() {
       const index = parseInt(this.getAttribute('data-index'));
@@ -110,7 +111,7 @@ function renderJobs(jobs) {
     });
   });
 
-  // Add event listeners for share buttons
+  // Add share button event listeners
   document.querySelectorAll('.share-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       const jobId = this.getAttribute('data-id');
@@ -126,63 +127,68 @@ function renderJobs(jobs) {
 function toggleExpandCollapse(index) {
   if (expandedIndex !== null && expandedIndex !== index) {
     // Collapse previously expanded
-    document.getElementById(`readMore-${expandedIndex}`).style.display = "none";
-    document.querySelectorAll(`.read-toggle[data-index="${expandedIndex}"]`).forEach(el => {
-      el.textContent = "Read more";
-    });
+    document.getElementById(`readMore-${expandedIndex}`).style.display = 'none';
+    toggleText(expandedIndex, false);
   }
 
-  const content = document.getElementById(`readMore-${index}`);
-  const isVisible = content.style.display === "block";
+  const readMoreDiv = document.getElementById(`readMore-${index}`);
+  const isVisible = readMoreDiv.style.display === 'block';
 
   if (isVisible) {
-    content.style.display = "none";
-    document.querySelectorAll(`.read-toggle[data-index="${index}"]`).forEach(el => {
-      el.textContent = "Read more";
-    });
+    // Collapse
+    readMoreDiv.style.display = 'none';
+    toggleText(index, false);
     expandedIndex = null;
   } else {
-    content.style.display = "block";
-    document.querySelectorAll(`.read-toggle[data-index="${index}"]`).forEach(el => {
-      el.textContent = "Read less";
-    });
+    // Expand
+    readMoreDiv.style.display = 'block';
+    toggleText(index, true);
     expandedIndex = index;
   }
 }
 
-// For deep link expand (called once on page load if jobId present)
+// Toggle the read more / read less text for given index
+function toggleText(index, isExpanded) {
+  const toggles = document.querySelectorAll(`.read-toggle[data-index="${index}"]`);
+  toggles.forEach(toggle => {
+    toggle.textContent = isExpanded ? 'Read less' : 'Read more';
+  });
+}
+
+// Expand a specific job card by index (used if URL has ?jobId=)
 function expandJob(index) {
-  toggleExpandCollapse(index);
-  // Scroll to job
-  const jobCard = document.getElementById(`readMore-${index}`);
-  if (jobCard) {
-    jobCard.scrollIntoView({ behavior: "smooth", block: "center" });
+  const readMoreDiv = document.getElementById(`readMore-${index}`);
+  if (readMoreDiv) {
+    readMoreDiv.style.display = 'block';
+    toggleText(index, true);
+    expandedIndex = index;
+    // Scroll into view smoothly
+    readMoreDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 }
 
-// Filter form submit
-document.getElementById("filterForm").addEventListener("submit", function(event) {
-  event.preventDefault();
-  const selectedType = document.getElementById("typeSelect").value;
-  const selectedCategory = document.getElementById("categorySelect").value;
-  const selectedSort = document.getElementById("sortSelect").value;
+// Filter form submission
+document.getElementById('filterForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const type = document.getElementById('typeSelect').value;
+  const category = document.getElementById('categorySelect').value;
+  const sort = document.getElementById('sortSelect').value;
 
-  let filteredJobs = allJobs;
+  let filteredJobs = [...allJobs];
 
-  if (selectedType) {
-    filteredJobs = filteredJobs.filter(job => job.type === selectedType);
+  if (type) {
+    filteredJobs = filteredJobs.filter(job => job.type === type);
   }
-  if (selectedCategory) {
-    filteredJobs = filteredJobs.filter(job => job.category === selectedCategory);
+  if (category) {
+    filteredJobs = filteredJobs.filter(job => job.category === category);
   }
 
-  // Sort
-  if (selectedSort === "asc") {
-    filteredJobs.sort((a, b) => a.createdAt?.seconds - b.createdAt?.seconds);
+  if (sort === 'asc') {
+    filteredJobs.sort((a, b) => a.createdAt.seconds - b.createdAt.seconds);
   } else {
-    filteredJobs.sort((a, b) => b.createdAt?.seconds - a.createdAt?.seconds);
+    filteredJobs.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds);
   }
 
-  expandedIndex = null; // Reset expanded state
+  expandedIndex = null; // reset expand state
   renderJobs(filteredJobs);
 });
