@@ -1,4 +1,4 @@
-// Firebase config
+// Firebase config and initialization
 const firebaseConfig = {
   apiKey: "AIzaSyCexm1PTk0cst8i3NJxh8MJvqvgm0ys84A",
   authDomain: "sa-job-opportunities.firebaseapp.com",
@@ -12,184 +12,173 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
+// DOM Elements
+const jobsContainer = document.getElementById('jobsContainer');
+const jobCount = document.getElementById('jobCount');
+const filterForm = document.getElementById('filterForm');
+const typeSelect = document.getElementById('typeSelect');
+const categorySelect = document.getElementById('categorySelect');
+const sortSelect = document.getElementById('sortSelect');
+
+const sidebar = document.querySelector('.sidebar');
+const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+
 let allJobs = [];
-let expandedIndex = null; // To track which job is expanded
 
-// Load jobs
-db.collection("jobs").orderBy("createdAt", "desc").get().then(snapshot => {
-  allJobs = snapshot.docs.map((doc, index) => {
-    const data = doc.data();
-    data.id = doc.id;
-    data._index = index; // for UI tracking
-    return data;
-  });
-
-  document.getElementById("jobCount").textContent = allJobs.length;
-
-  populateFilterOptions(allJobs);
-  renderJobs(allJobs);
-
-  // Check if link has ?jobId=
-  const urlParams = new URLSearchParams(window.location.search);
-  const jobIdParam = urlParams.get('jobId');
-  if (jobIdParam) {
-    const jobIndex = allJobs.findIndex(job => job.id === jobIdParam);
-    if (jobIndex !== -1) {
-      expandJob(jobIndex);
-    }
+// Fetch jobs from Firestore
+async function fetchJobsFromFirestore() {
+  try {
+    const snapshot = await db.collection('jobs').get();
+    const jobs = [];
+    snapshot.forEach(doc => {
+      jobs.push(doc.data());
+    });
+    return jobs;
+  } catch (error) {
+    console.error('Error fetching jobs from Firestore:', error);
+    return [];
   }
-
-}).catch(error => {
-  console.error("Error fetching jobs:", error);
-  document.getElementById("jobsContainer").innerHTML = `<p class="text-danger">Failed to load jobs. Please try again later.</p>`;
-});
-
-// Populate dropdowns
-function populateFilterOptions(jobs) {
-  const typeSet = new Set(jobs.map(job => job.type).filter(Boolean));
-  const categorySet = new Set(jobs.map(job => job.category).filter(Boolean));
-
-  const typeSelect = document.getElementById("typeSelect");
-  const categorySelect = document.getElementById("categorySelect");
-
-  typeSet.forEach(type => {
-    typeSelect.innerHTML += `<option value="${type}">${type}</option>`;
-  });
-  categorySet.forEach(category => {
-    categorySelect.innerHTML += `<option value="${category}">${category}</option>`;
-  });
 }
 
-// Render jobs
-function renderJobs(jobs) {
-  const jobsContainer = document.getElementById("jobsContainer");
-  if (jobs.length === 0) {
-    jobsContainer.innerHTML = '<p>No jobs found for selected filters.</p>';
+// Render jobs to the DOM
+function renderJobs(jobsData) {
+  jobsContainer.innerHTML = '';
+
+  if (!jobsData.length) {
+    jobsContainer.innerHTML = '<p class="text-center">No job opportunities found.</p>';
+    jobCount.textContent = '0';
     return;
   }
 
-  jobsContainer.innerHTML = jobs.map((job, index) => `
-    <div class="col-md-6 col-lg-4">
-      <div class="card h-100 shadow-sm position-relative">
-        <!-- Share button -->
-        <button class="btn btn-sm btn-light position-absolute top-0 end-0 m-2 share-btn" data-id="${job.id}" title="Share this job">
-          <i class="fas fa-share-alt"></i>
-        </button>
+  jobCount.textContent = jobsData.length;
 
+  jobsData.forEach(job => {
+    const card = document.createElement('div');
+    card.classList.add('col-sm-6', 'col-md-4', 'col-lg-3');
+
+    const descriptionPreview = job.description.length > 150 ? job.description.substring(0, 150) + '...' : job.description;
+
+    card.innerHTML = `
+      <div class="card h-100 shadow-sm">
         <div class="card-body d-flex flex-column">
-          <h5 class="card-title">${job.title || 'Untitled Job'}</h5>
-          <p class="card-text text-muted">${job.company || 'Company not specified'}</p>
-          <p class="card-text text-muted"><i class="fas fa-map-marker-alt"></i> ${job.location || 'Location not specified'}</p>
-          <p class="card-text mb-2">
-            ${job.type ? `<span class="badge bg-secondary">${job.type}</span>` : ''}
-            ${job.category ? `<span class="badge bg-info text-dark">${job.category}</span>` : ''}
-          </p>
-          <div id="readMore-${index}" class="read-more mt-2" style="display: none;">
-            ${job.descriptionHTML || '<p>No additional details provided.</p>'}
-            <div class="mt-3">
-              <a href="${job.link || '#'}" target="_blank" class="btn btn-primary btn-sm">Apply Here</a>
-            </div>
-            <div class="mt-2 text-center">
-              <span class="read-toggle text-primary" data-index="${index}" style="cursor: pointer;">Read less</span>
-            </div>
-          </div>
-          <div class="mt-3 text-center">
-            <span class="read-toggle text-primary" data-index="${index}" style="cursor: pointer;">Read more</span>
-          </div>
+          <h5 class="card-title">${job.title}</h5>
+          <p class="card-text text-muted mb-1"><strong>Company:</strong> ${job.company || 'N/A'}</p>
+          <p class="card-text text-muted mb-2"><strong>Location:</strong> ${job.location || 'N/A'}</p>
+          <p class="card-text description mb-2">${descriptionPreview}</p>
+          ${job.description.length > 150 ? `<span class="read-toggle text-primary">Read more</span>` : ''}
+          <p class="card-text text-secondary mt-auto mb-2"><small>${new Date(job.date).toLocaleDateString()}</small></p>
+          <a href="#" class="btn btn-primary mt-auto">Apply</a>
         </div>
       </div>
-    </div>
-  `).join('');
+    `;
 
-  // Add event listeners
+    jobsContainer.appendChild(card);
+  });
+
+  // Attach event listeners for read more/less toggles
   document.querySelectorAll('.read-toggle').forEach(toggle => {
-    toggle.addEventListener('click', function() {
-      const index = parseInt(this.getAttribute('data-index'));
-      toggleExpandCollapse(index);
-    });
-  });
+    toggle.addEventListener('click', e => {
+      const descEl = e.target.previousElementSibling;
+      const fullText = allJobs.find(job => job.description.startsWith(descEl.textContent.replace('...', ''))).description;
 
-  // Add share button event listeners
-  document.querySelectorAll('.share-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const jobId = this.getAttribute('data-id');
-      const shareLink = `${window.location.origin}${window.location.pathname}?jobId=${jobId}`;
-      navigator.clipboard.writeText(shareLink).then(() => {
-        alert('Share link copied to clipboard!');
-      });
+      if (e.target.textContent === 'Read more') {
+        descEl.textContent = fullText + ' ';
+        e.target.textContent = 'Read less';
+      } else {
+        descEl.textContent = fullText.substring(0, 150) + '...';
+        e.target.textContent = 'Read more';
+      }
     });
   });
 }
 
-// Expand/collapse logic
-function toggleExpandCollapse(index) {
-  if (expandedIndex !== null && expandedIndex !== index) {
-    // Collapse previously expanded
-    document.getElementById(`readMore-${expandedIndex}`).style.display = "none";
-    document.querySelectorAll(`.read-toggle[data-index="${expandedIndex}"]`).forEach(el => {
-      el.textContent = "Read more";
-    });
-  }
+// Filter jobs based on form inputs
+function filterJobs(jobsData) {
+  let filtered = [...jobsData];
 
-  const content = document.getElementById(`readMore-${index}`);
-  const isVisible = content.style.display === "block";
-
-  if (isVisible) {
-    content.style.display = "none";
-    document.querySelectorAll(`.read-toggle[data-index="${index}"]`).forEach(el => {
-      el.textContent = "Read more";
-    });
-    expandedIndex = null;
-  } else {
-    content.style.display = "block";
-    document.querySelectorAll(`.read-toggle[data-index="${index}"]`).forEach(el => {
-      el.textContent = "Read less";
-    });
-    expandedIndex = index;
-  }
-}
-
-// For deep link expand (called once on page load if jobId present)
-function expandJob(index) {
-  toggleExpandCollapse(index);
-  // Scroll to job
-  const jobCard = document.getElementById(`readMore-${index}`);
-  if (jobCard) {
-    jobCard.scrollIntoView({ behavior: "smooth", block: "center" });
-  }
-}
-
-// Filter form submit
-document.getElementById("filterForm").addEventListener("submit", function(event) {
-  event.preventDefault();
-  const selectedType = document.getElementById("typeSelect").value;
-  const selectedCategory = document.getElementById("categorySelect").value;
-  const selectedSort = document.getElementById("sortSelect").value;
-
-  let filteredJobs = allJobs;
+  const selectedType = typeSelect.value;
+  const selectedCategory = categorySelect.value;
+  const sortOrder = sortSelect.value;
 
   if (selectedType) {
-    filteredJobs = filteredJobs.filter(job => job.type === selectedType);
+    filtered = filtered.filter(job => job.type === selectedType);
   }
   if (selectedCategory) {
-    filteredJobs = filteredJobs.filter(job => job.category === selectedCategory);
+    filtered = filtered.filter(job => job.category === selectedCategory);
   }
 
-  // Sort
-  if (selectedSort === "asc") {
-    filteredJobs.sort((a, b) => a.createdAt?.seconds - b.createdAt?.seconds);
-  } else {
-    filteredJobs.sort((a, b) => b.createdAt?.seconds - a.createdAt?.seconds);
-  }
+  filtered.sort((a, b) => {
+    if (sortOrder === 'asc') {
+      return new Date(a.date) - new Date(b.date);
+    } else {
+      return new Date(b.date) - new Date(a.date);
+    }
+  });
 
-  expandedIndex = null; // Reset expanded state
-  renderJobs(filteredJobs);
-});
+  return filtered;
+}
 
-// Section navigation
+// Populate filter dropdowns dynamically from jobs data
+function populateFilterOptions(jobsData) {
+  const types = new Set();
+  const categories = new Set();
+
+  jobsData.forEach(job => {
+    if (job.type) types.add(job.type);
+    if (job.category) categories.add(job.category);
+  });
+
+  // Clear existing options except the first 'All'
+  typeSelect.innerHTML = '<option value="">All Types</option>';
+  categorySelect.innerHTML = '<option value="">All Categories</option>';
+
+  types.forEach(type => {
+    const option = document.createElement('option');
+    option.value = type;
+    option.textContent = type;
+    typeSelect.appendChild(option);
+  });
+
+  categories.forEach(category => {
+    const option = document.createElement('option');
+    option.value = category;
+    option.textContent = category;
+    categorySelect.appendChild(option);
+  });
+}
+
+// Sidebar toggle handler
+if (sidebarToggleBtn) {
+  sidebarToggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('active');
+  });
+}
+
 function showSection(sectionId) {
   const sections = ['jobsSection', 'aboutSection', 'contactSection', 'termsSection', 'policySection'];
   sections.forEach(id => {
-    document.getElementById(id).style.display = (id === sectionId) ? 'block' : 'none';
+    document.getElementById(id).style.display = id === sectionId ? 'block' : 'none';
+  });
+
+  // Highlight active nav link
+  document.querySelectorAll('.sidebar nav a').forEach(link => {
+    link.classList.toggle('active', link.getAttribute('onclick').includes(sectionId));
   });
 }
+
+// Initial setup on page load
+document.addEventListener('DOMContentLoaded', async () => {
+  showSection('jobsSection');
+
+  allJobs = await fetchJobsFromFirestore();
+
+  populateFilterOptions(allJobs);
+
+  renderJobs(allJobs);
+
+  filterForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const filteredJobs = filterJobs(allJobs);
+    renderJobs(filteredJobs);
+  });
+});
