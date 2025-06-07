@@ -1,4 +1,4 @@
-// Firebase config here
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyCexm1PTk0cst8i3NJxh8MJvqvgm0ys84A",
   authDomain: "sa-job-opportunities.firebaseapp.com",
@@ -12,7 +12,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Global variables
 let allJobs = [];
 
 // Load all jobs initially and populate filters
@@ -27,7 +26,7 @@ db.collection("jobs").orderBy("createdAt", "desc").get().then(snapshot => {
   document.getElementById("jobsContainer").innerHTML = `<p class="text-danger">Failed to load jobs. Please try again later.</p>`;
 });
 
-// Populate Type and Category dropdowns
+// Populate dropdowns
 function populateFilterOptions(jobs) {
   const typeSet = new Set(jobs.map(job => job.type).filter(Boolean));
   const categorySet = new Set(jobs.map(job => job.category).filter(Boolean));
@@ -62,14 +61,11 @@ function renderJobs(jobs) {
             ${job.category ? `<span class="badge bg-info text-dark">${job.category}</span>` : ''}
           </p>
           <div>
-            <span class="read-toggle" onclick="toggleReadMore(${index})">Read more</span>
+            <span class="read-toggle" data-index="${index}">Read more</span>
             <div id="readMore-${index}" class="read-more mt-2">
               ${job.descriptionHTML || '<p>No additional details provided.</p>'}
               <div class="mt-3">
                 <a href="${job.link || '#'}" target="_blank" class="btn btn-primary btn-sm">Apply Here</a>
-              </div>
-              <div class="mt-2">
-                <span class="read-toggle" onclick="toggleReadMore(${index})">Read less</span>
               </div>
             </div>
           </div>
@@ -77,16 +73,21 @@ function renderJobs(jobs) {
       </div>
     </div>
   `).join('');
-}
 
-// Toggle read more / less
-function toggleReadMore(index) {
-  const content = document.getElementById(`readMore-${index}`);
-  if (content.style.display === "block") {
-    content.style.display = "none";
-  } else {
-    content.style.display = "block";
-  }
+  // Add toggle event listeners
+  document.querySelectorAll('.read-toggle').forEach(toggle => {
+    toggle.addEventListener('click', function() {
+      const index = this.getAttribute('data-index');
+      const content = document.getElementById(`readMore-${index}`);
+      if (content.style.display === "block") {
+        content.style.display = "none";
+        this.textContent = "Read more";
+      } else {
+        content.style.display = "block";
+        this.textContent = "Read less";
+      }
+    });
+  });
 }
 
 // Filter form submit
@@ -94,6 +95,7 @@ document.getElementById("filterForm").addEventListener("submit", function(event)
   event.preventDefault();
   const selectedType = document.getElementById("typeSelect").value;
   const selectedCategory = document.getElementById("categorySelect").value;
+  const selectedSort = document.getElementById("sortSelect").value;
 
   let filteredJobs = allJobs;
 
@@ -102,6 +104,13 @@ document.getElementById("filterForm").addEventListener("submit", function(event)
   }
   if (selectedCategory) {
     filteredJobs = filteredJobs.filter(job => job.category === selectedCategory);
+  }
+
+  // Sort
+  if (selectedSort === "asc") {
+    filteredJobs.sort((a, b) => a.createdAt?.seconds - b.createdAt?.seconds);
+  } else {
+    filteredJobs.sort((a, b) => b.createdAt?.seconds - a.createdAt?.seconds);
   }
 
   renderJobs(filteredJobs);
