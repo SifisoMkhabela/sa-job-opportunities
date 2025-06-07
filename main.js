@@ -90,9 +90,9 @@ function renderJobs(jobs) {
             <div class="mt-3">
               <a href="${job.link || '#'}" target="_blank" class="btn btn-primary btn-sm">Apply Here</a>
             </div>
-            <div class="mt-2 text-center">
-              <span class="read-toggle" data-index="${index}">Read less</span>
-            </div>
+            //<div class="mt-2 text-center">
+              //<span class="read-toggle" data-index="${index}">Read less</span>
+           // </div>
           </div>
 
           <div class="mt-3 text-center">
