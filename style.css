@@ -1,442 +1,132 @@
-/* Reset & base */
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #fff;
-  color: #333;
-  line-height: 1.5;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    line-height: 1.6;
+    color: #333;
 }
 
-a {
-  color: #2a8f28;
-  text-decoration: none;
-  transition: color 0.3s ease;
+header {
+    background-color: #46812a;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
 }
 
-a:hover {
-  color: #1b5e13;
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    background-color: #746f6f;
+    padding: 0.5rem 0;
 }
 
-/* Container */
-.container {
-  width: 90%;
-  max-width: 1200px;
-  margin: 0 auto;
+nav li {
+    margin-right: 20px;
 }
 
-/* Top Bar */
-.top-bar {
-  background-color: #222;
-  color: #eee;
-  padding: 10px 0;
-  font-size: 0.9rem;
+nav a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    transition: color 0.3s;
 }
 
-.top-bar .container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+nav a:hover {
+    color: #ff6600;
 }
 
-.top-bar .logo {
-  height: 24px;
-  filter: brightness(0) invert(1);
-  cursor: pointer;
+.search {
+    text-align: center;
+    margin-top: 2rem;
 }
 
-.top-bar .top-links a {
-  margin-left: 15px;
-  font-weight: 600;
-  color: #eee;
+.search h2 {
+    font-size: 24px;
+    margin-bottom: 1rem;
 }
 
-.top-bar .top-links i {
-  margin-left: 20px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  color: #eee;
-}
-/* Hero Section */
-.hero {
-  background: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1470&q=80') center/cover no-repeat;
-  color: white;
-  position: relative;
-  height: 390px;
-
-  /* Flexbox for vertical + horizontal centering */
-  display: flex;
-  justify-content: center;  /* center horizontally */
-  align-items: center;      /* center vertically */
-
-  /* Remove padding here, we’ll control spacing inside container */
-  padding: 0;
-  text-align: center;
+.search form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.hero::after {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 1;
+.search input[type="text"] {
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
-.hero .container {
-  position: relative;
-  z-index: 2;
-  max-width: 700px;
-
-  /* Add some vertical spacing inside container */
-  padding: 20px 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
+.search button {
+    background-color: #ff6600;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-.hero h1 {
-  font-size: 0.9rem;
-  font-weight: 800;
-  margin-bottom: 10px;
+.search button:hover {
+    background-color: #ff3300;
 }
 
-.hero p {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 25px;
+.job-listings {
+    margin: 2rem 0;
 }
 
-/* Updated Tabs (Buttons) */
-.hero .tabs {
-  display: flex;
-  justify-content: center;
-  gap: 25px;
-  margin-bottom: 35px;
-  font-weight: 600;
+.job-listings h2 {
+    font-size: 24px;
+    margin-bottom: 1rem;
+    text-align: center;
 }
 
-.hero .tabs a {
-  color: white !important;           /* White text */
-  font-weight: bold;                 /* Bold */
-  font-size: 1rem;
-  padding-bottom: 5px;
-  border-bottom: 2px solid transparent;
-  transition: color 0.3s ease, border-color 0.3s ease;
-  text-decoration: none;
+.job-listings ul {
+    list-style: none;
 }
 
-.hero .tabs a:hover,
-.hero .tabs a:focus {
-  color: #a9d18e !important;         /* Light green on hover */
-  border-color: #a9d18e !important;  /* Underline on hover */
+.job-listings li {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Search Bar styles */
-.hero .search-bar {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  align-items: center;
+.job-listings h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
 }
 
-.hero .search-bar input[type="text"] {
-  padding: 12px 15px;
-  border: none;
-  border-radius: 3px;
-  font-size: 1rem;
-  width: 250px;
-  max-width: 100%;
+.job-listings p {
+    font-size: 14px;
+    margin-bottom: 10px;
 }
 
-.hero .search-bar button {
-  background-color: #7aa439;
-  border: none;
-  color: white;
-  padding: 13px 22px;
-  border-radius: 3px;
-  cursor: pointer;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s ease;
+.job-listings a {
+    background-color: #333;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    display: inline-block;
+    transition: background-color 0.3s;
 }
 
-.hero .search-bar button:hover {
-  background-color: #65872d;
+.job-listings a:hover {
+    background-color: #ff6600;
 }
 
-.hero .search-bar label {
-  font-size: 0.85rem;
-  color: #d0f0a9;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-left: 10px;
-  white-space: nowrap;
-}
-
-.hero .search-bar input[type="checkbox"] {
-  width: 15px;
-  height: 15px;
-  cursor: pointer;
-}
-
-
-/* Browse Jobs Section */
-.browse {
-  padding: 40px 0;
-  text-align: center;
-}
-
-.browse h2 {
-  font-weight: 700;
-  margin-bottom: 30px;
-  font-size: 1.8rem;
-  color: #444;
-}
-
-.browse .columns {
-  display: flex;
-  justify-content: space-between;
-  gap: 40px;
-  flex-wrap: wrap;
-  text-align: left;
-}
-
-.browse .columns > div {
-  flex: 1 1 30%;
-  min-width: 220px;
-}
-
-.browse h3 {
-  margin-bottom: 15px;
-  font-weight: 700;
-  color: #2a8f28;
-  font-size: 1.1rem;
-}
-
-.browse ul {
-  list-style: none;
-}
-
-.browse ul li {
-  margin-bottom: 9px;
-  font-size: 0.95rem;
-}
-
-.browse ul li a {
-  color: #555;
-}
-
-.browse ul li a:hover {
-  color: #2a8f28;
-  text-decoration: underline;
-}
-
-/* Companies Section */
-.companies {
-  background: #f8f8f8;
-  padding: 40px 0;
-  text-align: center;
-}
-
-.companies h3 {
-  font-weight: 700;
-  margin-bottom: 25px;
-  font-size: 1.4rem;
-  color: #444;
-}
-
-.companies .logos {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 25px;
-  flex-wrap: wrap;
-}
-
-.companies .logos img {
-  max-height: 50px;
-  max-width: 140px;
-  object-fit: contain;
-  filter: grayscale(30%);
-  transition: filter 0.3s ease;
-  cursor: pointer;
-}
-
-.companies .logos img:hover {
-  filter: grayscale(0);
-}
-
-/* CTA Section */
-.cta {
-  padding: 40px 0;
-  max-width: 800px;
-  margin: 0 auto 60px;
-  text-align: center;
-}
-
-.cta h3 {
-  font-weight: 700;
-  font-size: 1.6rem;
-  margin-bottom: 10px;
-  color: #222;
-}
-
-.cta p strong {
-  color: #2a8f28;
-}
-
-.cta ul {
-  list-style: disc inside;
-  margin: 20px 0 30px;
-  color: #555;
-  font-size: 1rem;
-  line-height: 1.6;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.store-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.store-buttons img {
-  height: 45px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.store-buttons img:hover {
-  transform: scale(1.05);
-}
-
-/* Footer */
 footer {
-  background: #222;
-  color: #aaa;
-  padding: 30px 0 15px;
-  font-size: 0.9rem;
-}
-
-.footer-grid {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 30px;
-}
-
-footer h4 {
-  color: #eee;
-  margin-bottom: 12px;
-  font-weight: 700;
-}
-
-footer ul {
-  list-style: none;
-}
-
-footer ul li {
-  margin-bottom: 8px;
-}
-
-footer ul li a {
-  color: #bbb;
-}
-
-footer ul li a:hover {
-  color: #2a8f28;
-}
-
-footer .centered {
-  text-align: center;
-  margin-top: 15px;
-  color: #666;
-}
-
-footer a {
-  margin-right: 12px;
-  font-size: 1.2rem;
-  color: #bbb;
-  transition: color 0.3s ease;
-}
-
-footer a:hover {
-  color: #2a8f28;
-}
-
-/* Responsive */
-@media (max-width: 960px) {
-  .browse .columns {
-    flex-direction: column;
-  }
-  
-  .browse .columns > div {
-    width: 100%;
-    margin-bottom: 30px;
-  }
-
-  .hero .search-bar {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .hero .search-bar label {
-    margin-left: 0;
-  }
-}
-
-.marquee {
-  white-space: nowrap;
-  animation: scroll-left 25s linear infinite;
-  display: inline-flex;
-}
-
-@keyframes scroll-left {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-.job-categories-marquee img {
-  height: 40px;
-}
-.category span {
-  font-weight: 500;
-}
-
-
-@media (max-width: 480px) {
-  .top-bar .container {
-    flex-direction: column;
-    gap: 10px;
-  }
-  .top-bar .top-links {
-    font-size: 0.85rem;
-  }
-  .hero h1 {
-    font-size: 2rem;
-  }
-  .hero p {
-    font-size: 1rem;
-  }
-  .hero .tabs {
-    flex-wrap: wrap;
-    gap: 15px;
-  }
+    text-align: center;
+    background-color: #333;
+    color: #fff;
+    padding: 1rem 0;
 }
