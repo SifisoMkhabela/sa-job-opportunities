@@ -4,6 +4,11 @@ body {
 
 .top-bar {
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  background-color: #fff;
+  padding: 0.75rem 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
 }
 
 .hero h1 {
@@ -55,7 +60,7 @@ body {
 
 .read-toggle {
   cursor: pointer;
-  color: #0d6efd;             /* Bootstrap primary blue */
+  color: #0d6efd;
   font-size: 0.95rem;
   font-weight: 600;
   user-select: none;
@@ -64,7 +69,7 @@ body {
 }
 
 .read-toggle:hover {
-  color: #084ecb;             /* darker blue on hover */
+  color: #084ecb;
 }
 
 .card-body p.text-primary {
@@ -87,6 +92,11 @@ body {
 
 footer {
   font-size: 0.9rem;
+  padding: 1rem 0;
+  text-align: center;
+  color: #666;
+  border-top: 1px solid #e5e5e5;
+  margin-top: 3rem;
 }
 
 .share-btn {
