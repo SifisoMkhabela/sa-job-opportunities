@@ -1,11 +1,6 @@
-/* --- Base Styles --- */
-
 body {
   background-color: #f9fafc;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden; /* Prevent horizontal scroll when sidebar open */
+  transition: margin-left 0.3s ease;
 }
 
 .top-bar {
@@ -15,12 +10,76 @@ body {
   position: sticky;
   top: 0;
   z-index: 1030;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
-/* Sidebar toggle button */
+.hero h1 {
+  font-weight: 700;
+  color: #222;
+}
+
+.hero p.lead {
+  color: #555;
+}
+
+/* Sidebar base styles */
+.sidebar {
+  position: fixed;
+  top: 56px; /* height of top-bar */
+  left: -280px; /* hidden by default */
+  width: 280px;
+  height: calc(100vh - 56px);
+  background: #fff;
+  box-shadow: 2px 0 12px rgba(0,0,0,0.1);
+  padding: 1.5rem 1.2rem;
+  overflow-y: auto;
+  transition: left 0.3s ease;
+  border-radius: 0 0 10px 0;
+  z-index: 1050;
+}
+
+/* Sidebar open state */
+.sidebar.open {
+  left: 0;
+}
+
+/* Sidebar close button */
+#sidebarCloseBtn {
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  float: right;
+  margin-bottom: 1rem;
+  user-select: none;
+  line-height: 1;
+  padding: 0;
+}
+
+/* Sidebar nav links */
+.sidebar nav a.nav-link {
+  color: #0d6efd;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.4rem 0;
+  display: block;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar nav a.nav-link:hover,
+.sidebar nav a.nav-link.active {
+  background-color: #e7f1ff;
+  color: #084ecb;
+}
+
+/* Main content push when sidebar open */
+body.sidebar-open #mainContent {
+  margin-left: 280px;
+}
+
+/* Toggle button styles */
 #sidebarToggle {
   background-color: #0d6efd;
   border: none;
@@ -33,85 +92,20 @@ body {
   box-shadow: 0 2px 5px rgba(13,110,253,0.5);
   transition: background-color 0.3s ease;
   user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #sidebarToggle:hover {
   background-color: #084ecb;
 }
 
-/* --- Sidebar Styles --- */
-
-#sidebar {
-  position: fixed;
-  top: 0;
-  left: -280px; /* Hidden by default */
-  width: 280px;
-  height: 100vh;
-  background-color: #fff;
-  box-shadow: 2px 0 12px rgba(0,0,0,0.1);
-  padding: 1.5rem 1.2rem;
-  z-index: 1040;
-  transition: left 0.3s ease;
-  overflow-y: auto;
-  border-radius: 0 0 10px 0;
-}
-
-#sidebar.open {
-  left: 0;
-}
-
-/* Sidebar close button */
-#sidebarCloseBtn {
-  background: transparent;
-  border: none;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
-  cursor: pointer;
-  float: right;
-  margin-bottom: 1rem;
-  user-select: none;
-}
-
-/* Sidebar nav links */
-#sidebar nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-#sidebar nav ul li {
-  margin: 1rem 0;
-}
-
-#sidebar nav ul li a {
-  color: #0d6efd;
-  font-weight: 600;
-  text-decoration: none;
-  font-size: 1.1rem;
-  display: block;
-  padding: 0.4rem 0;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
-}
-
-#sidebar nav ul li a:hover {
-  background-color: #e7f1ff;
-}
-
-/* --- Main Content adjustment when sidebar open --- */
-body.sidebar-open #mainContent {
-  margin-left: 280px;
-  transition: margin-left 0.3s ease;
-}
-
-/* --- Card styles (your existing styles enhanced) --- */
-
+/* Card styling */
 .card.h-100.shadow-sm {
   border-radius: 16px;
   transition: transform 0.3s, box-shadow 0.3s;
   position: relative;
-  background-color: #fff;
 }
 
 .card.h-100.shadow-sm:hover {
@@ -137,45 +131,20 @@ body.sidebar-open #mainContent {
   padding: 0.4em 0.6em;
 }
 
-.read-more {
-  font-size: 0.9rem;
-  margin-top: 10px;
-}
-
-.read-more p {
-  margin-bottom: 0.5rem;
-}
-
+.read-more,
 .read-toggle {
   cursor: pointer;
   color: #0d6efd;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   user-select: none;
   display: inline-block;
   transition: color 0.2s ease;
 }
 
+.read-more:hover,
 .read-toggle:hover {
   color: #084ecb;
-}
-
-.card-body p.text-primary {
-  font-size: 1rem;
-}
-
-.card-body p.text-secondary {
-  font-size: 0.9rem;
-}
-
-.card-body a.btn-primary {
-  width: 100%;
-  font-weight: 600;
-  border-radius: 0.375rem;
-}
-
-.mt-3.text-center {
-  margin-top: 1rem !important;
 }
 
 footer {
@@ -204,10 +173,9 @@ footer {
   transform: scale(1.1);
 }
 
-/* --- Responsive tweaks --- */
-
+/* Responsive for smaller screens */
 @media (max-width: 768px) {
-  #sidebar {
+  .sidebar {
     width: 220px;
     left: -220px;
   }
