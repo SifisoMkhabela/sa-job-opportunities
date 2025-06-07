@@ -24,7 +24,7 @@ db.collection("jobs").orderBy("createdAt", "desc").get().then(snapshot => {
     return data;
   });
 
-  document.getElementById("jobCount").textContent = allJobs.length;
+document.getElementById("jobCountText").textContent = `${allJobs.length} Jobs available in SA`;
 
   populateFilterOptions(allJobs);
   renderJobs(allJobs);
