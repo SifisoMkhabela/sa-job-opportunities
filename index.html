@@ -3,174 +3,394 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SA Job Opportunities</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <title>SA Job Opportunities - Home</title>
 
+  <!-- Your Custom CSS -->
   <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #fff;
-      overflow-y: auto;
-    }
-
-    .container {
-      padding-top: 20px;
-      max-width: 900px;
-      margin: auto;
-    }
-
-    .job-card {
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 12px;
-      margin-bottom: 16px;
-      font-size: 14px;
-    }
-
-    .job-card h6 {
-      font-weight: 600;
-    }
-
-    .filter-bar {
-      display: flex;
-      flex-wrap: wrap;
+    /* Popup overlay styles */
+    #filterPopup {
+      display: none;
+      position: fixed;
+      z-index: 1050;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.5);
+      align-items: center;
       justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
+    }
+    #filterPopup .popup-content {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      max-width: 400px;
+      width: 90%;
+    }
+    /* Show popup when active */
+    #filterPopup.active {
+      display: flex;
     }
 
-    .link-style {
-      font-size: 13px;
-      color: #0d6efd;
-      text-decoration: underline;
+    /* Marquee styling */
+    .marquee {
+      white-space: nowrap;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
     }
-
-    .link-style:hover {
-      text-decoration: none;
+    .category {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-right: 3rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #333;
     }
   </style>
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <!-- Font Awesome -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/">SA Job Opportunities</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/about.html">About Us</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/contact.html">Contact Us</a>
-          </li>
-        </ul>
+  <!-- Header with logo and site name only -->
+  <header class="top-bar bg-light py-3 border-bottom">
+    <div class="container d-flex align-items-center">
+      <a href="index.html" class="d-flex align-items-center text-decoration-none">
+        <img src="logo.png" alt="SA Job Opportunities" class="logo" style="height:50px; width:auto; object-fit:contain; flex-shrink: 0;" />
+        <h1 class="ms-3 mb-0 text-dark" style="font-size:0.75rem; font-weight:300; letter-spacing:0.03em; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+          SA Job Opportunities
+        </h1>
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero bg-light py-5">
+    <div class="container text-center">
+      <h1>Find your dream job</h1>
+      <p><strong id="jobCount">Loading jobs count...</strong> Jobs in South Africa</p>
+      <nav class="tabs mb-4" aria-label="Main navigation tabs">
+        <a href="jobs.html" class="btn btn-outline-primary mx-1">Jobs</a>
+        <a href="companies.html" class="btn btn-outline-primary mx-1">Companies</a>
+        <a href="courses.html" class="btn btn-outline-primary mx-1">Courses</a>
+        <a href="career-advice.html" class="btn btn-outline-primary mx-1">Career Advice</a>
+      </nav>
+
+      <!-- Updated Search Form with Type and Category dropdowns -->
+      <form class="row justify-content-center g-2" role="search" action="jobs.html" method="get" aria-label="Job search form">
+        <div class="col-md-4">
+          <select name="type" id="typeSelect" class="form-select" aria-label="Select job type">
+            <option value="">All Types</option>
+            <!-- Options loaded dynamically from Firestore -->
+          </select>
+        </div>
+        <div class="col-md-4">
+          <select name="category" id="categorySelect" class="form-select" aria-label="Select job category">
+            <option value="">All Categories</option>
+            <!-- Options loaded dynamically from Firestore -->
+          </select>
+        </div>
+        <div class="col-auto d-flex gap-2">
+          <button type="submit" class="btn btn-primary" aria-label="Search jobs">
+            <i class="fas fa-search"></i> Search
+          </button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#filterModal" aria-label="Browse jobs filters">
+            <i class="fas fa-filter"></i> Filters
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Jobs Listing Section -->
+  <section class="container my-5" aria-label="Job Listings">
+    <div id="jobsContainer" class="row g-3">
+      <p>Loading jobs...</p>
+    </div>
+  </section>
+
+  <!-- Browse Filter Modal -->
+  <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="filterModalLabel">Browse Jobs Filters</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="accordion" id="browseAccordion">
+
+            <!-- Region -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingRegion">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRegion" aria-expanded="true" aria-controls="collapseRegion">
+                  Region
+                </button>
+              </h2>
+              <div id="collapseRegion" class="accordion-collapse collapse show" data-bs-parent="#browseAccordion">
+                <div class="accordion-body" id="regionFilterList">
+                  Loading Regions...
+                </div>
+              </div>
+            </div>
+
+            <!-- City -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingCity">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCity" aria-expanded="false" aria-controls="collapseCity">
+                  City
+                </button>
+              </h2>
+              <div id="collapseCity" class="accordion-collapse collapse" data-bs-parent="#browseAccordion">
+                <div class="accordion-body" id="cityFilterList">
+                  Loading Cities...
+                </div>
+              </div>
+            </div>
+
+            <!-- Sector -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingSector">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSector" aria-expanded="false" aria-controls="collapseSector">
+                  Sector
+                </button>
+              </h2>
+              <div id="collapseSector" class="accordion-collapse collapse" data-bs-parent="#browseAccordion">
+                <div class="accordion-body" id="sectorFilterList">
+                  Loading Sectors...
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close filters modal">Close</button>
+        </div>
       </div>
     </div>
-  </nav>
-
-  <div class="container">
-    <!-- Filters -->
-    <div class="filter-bar">
-      <select id="typeFilter" class="form-select form-select-sm w-auto">
-        <option value="">All Types</option>
-        <option value="Internship level">Internship</option>
-        <option value="Full time level">Full time</option>
-        <option value="Part time level/ Contract">Part time/ Contract</option>
-      </select>
-
-      <select id="categoryFilter" class="form-select form-select-sm w-auto">
-        <option value="">All Categories</option>
-        <option value="Administration">Administration</option>
-        <option value="Advertising">Advertising</option>
-        <option value="Art & Design">Art & Design</option>
-        <option value="Construction">Construction</option>
-        <option value="Customer Service">Customer Service</option>
-        <option value="Cybersecurity">Cybersecurity</option>
-        <!-- Add more categories as needed -->
-      </select>
-
-      <button class="btn btn-sm btn-dark" id="applyButton">Apply</button>
-    </div>
-
-    <!-- Job Listings -->
-    <div id="jobsList"></div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  <!-- Animated Job Categories Marquee -->
+  <section class="job-categories-marquee bg-light py-3 mb-5" aria-label="Job Categories">
+    <div class="container overflow-hidden">
+      <h4 class="mb-3">Explore Job Categories</h4>
+      <div class="marquee d-flex gap-5" aria-hidden="true">
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/fluency/48/000000/computer.png" alt="IT Icon" />
+          <span>IT Jobs</span>
+        </div>
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/color/48/accounting.png" alt="Accounting Icon" />
+          <span>Accounting</span>
+        </div>
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/color/48/engineering.png" alt="Engineering Icon" />
+          <span>Engineering</span>
+        </div>
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/color/48/sales-performance.png" alt="Sales Icon" />
+          <span>Sales</span>
+        </div>
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/color/48/medical-doctor.png" alt="Health Icon" />
+          <span>Health</span>
+        </div>
+        <div class="category d-flex align-items-center gap-2">
+          <img src="https://img.icons8.com/color/48/education.png" alt="Education Icon" />
+          <span>Education</span>
+        </div>
+        <!-- Repeat or add more categories if needed -->
+      </div>
+    </div>
+  </section>
 
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Your Firebase config here:
     const firebaseConfig = {
-      apiKey: "AIzaSyDTfLfb9gnn4zBGju8XoqAe-i7g9ahJyJk",
+      apiKey: "AIzaSyCxGV8xE4nyUKa6jlDQzQhX6ulORqPqXr8",
       authDomain: "sa-job-opportunities.firebaseapp.com",
       projectId: "sa-job-opportunities",
       storageBucket: "sa-job-opportunities.appspot.com",
-      messagingSenderId: "370537417491",
-      appId: "1:370537417491:web:520e9dc1efb1d8cf38a8e6",
-      measurementId: "G-ZTK2KXSLXD"
+      messagingSenderId: "347943883187",
+      appId: "1:347943883187:web:2d27f6c9f3e8587b87f6b1",
+      measurementId: "G-JY6TR0LYDN"
     };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    // Helper: Render job cards
+    function renderJobCard(doc) {
+      const data = doc.data();
+      return `
+        <article class="col-md-6 col-lg-4" role="listitem">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">${data.title}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">${data.company}</h6>
+              <p class="card-text flex-grow-1">
+                <strong>Type:</strong> ${data.type || 'N/A'}<br/>
+                <strong>Category:</strong> ${data.category || 'N/A'}<br/>
+                <strong>Experience:</strong> ${data.experience || 'N/A'}<br/>
+                <strong>Deadline:</strong> ${data.deadline || 'N/A'}
+              </p>
+              <a href="${data.link}" target="_blank" rel="noopener" class="btn btn-primary mt-auto" aria-label="Apply for ${data.title} at ${data.company}">Apply Now</a>
+            </div>
+          </div>
+        </article>
+      `;
+    }
 
-    document.getElementById("applyButton").addEventListener("click", async () => {
-      const type = document.getElementById("typeFilter").value;
-      const category = document.getElementById("categoryFilter").value;
-
-      const querySnapshot = await getDocs(collection(db, "jobs"));
-      const allJobs = querySnapshot.docs.map(doc => doc.data());
-
-      const filteredJobs = allJobs.filter(job => {
-        const matchType = type ? job.type === type : true;
-        const matchCategory = category ? job.category === category : true;
-
-        const jobDeadline = new Date(job.deadline);
-        const today = new Date();
-        if (jobDeadline < today) {
-          return false;
+    // Load all jobs on page load
+    function loadJobs() {
+      const container = document.getElementById('jobsContainer');
+      db.collection('jobs').get().then(snapshot => {
+        if (snapshot.empty) {
+          container.innerHTML = '<p>No jobs found.</p>';
+          document.getElementById('jobCount').textContent = '0';
+          return;
         }
-
-        return matchType && matchCategory;
-      });
-
-      const sortedJobs = filteredJobs.sort((a, b) => {
-        return new Date(b.deadline) - new Date(a.deadline);
-      });
-
-      displayJobs(sortedJobs);
-    });
-
-    function displayJobs(jobs) {
-      const jobsList = document.getElementById("jobsList");
-      jobsList.innerHTML = "";
-
-      if (jobs.length === 0) {
-        jobsList.innerHTML = '<p class="text-center">No jobs currently for selected filter.</p>';
-        return;
-      }
-
-      jobs.forEach(job => {
-        const card = document.createElement("div");
-        card.className = "job-card";
-        card.innerHTML = `
-          <h6>${job.title}</h6>
-          <p><strong>Company:</strong> ${job.company}</p>
-          <p><strong>Type:</strong> ${job.type}</p>
-          <p><strong>Category:</strong> ${job.category}</p>
-          <p><strong>Deadline:</strong> ${job.deadline}</p>
-          <a href="${job.link}" target="_blank" class="link-style">Find Out More</a>
-        `;
-        jobsList.appendChild(card);
+        let html = '';
+        snapshot.forEach(doc => {
+          html += renderJobCard(doc);
+        });
+        container.innerHTML = html;
+        document.getElementById('jobCount').textContent = snapshot.size.toLocaleString();
+      }).catch(err => {
+        container.innerHTML = '<p>Error loading jobs. Please try again later.</p>';
+        console.error('Error fetching jobs:', err);
       });
     }
 
-    // Initial load
-    document.getElementById("applyButton").click();
+    // Populate dropdown filters from jobs data for Type and Category
+    function populateDropdowns() {
+      const typeSet = new Set();
+      const categorySet = new Set();
+
+      db.collection('jobs').get().then(snapshot => {
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          if (data.type) typeSet.add(data.type);
+          if (data.category) categorySet.add(data.category);
+        });
+
+        const typeSelect = document.getElementById('typeSelect');
+        typeSet.forEach(type => {
+          const option = document.createElement('option');
+          option.value = type;
+          option.textContent = type;
+          typeSelect.appendChild(option);
+        });
+
+        const categorySelect = document.getElementById('categorySelect');
+        categorySet.forEach(category => {
+          const option = document.createElement('option');
+          option.value = category;
+          option.textContent = category;
+          categorySelect.appendChild(option);
+        });
+      });
+    }
+
+    // Populate Browse filters modal with Regions, Cities, and Sectors from jobs collection
+    function populateBrowseFilters() {
+      const regions = new Set();
+      const cities = new Set();
+      const sectors = new Set();
+
+      db.collection('jobs').get().then(snapshot => {
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          if (data.region) regions.add(data.region);
+          if (data.city) cities.add(data.city);
+          if (data.sector) sectors.add(data.sector);
+        });
+
+        const regionList = document.getElementById('regionFilterList');
+        regionList.innerHTML = '';
+        if (regions.size === 0) regionList.textContent = 'No regions available.';
+        else {
+          regions.forEach(region => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn btn-outline-primary m-1';
+            btn.textContent = region;
+            btn.setAttribute('aria-label', `Filter jobs by region ${region}`);
+            btn.addEventListener('click', () => {
+              // Redirect to jobs.html with region filter applied
+              window.location.href = `jobs.html?region=${encodeURIComponent(region)}`;
+            });
+            regionList.appendChild(btn);
+          });
+        }
+
+        const cityList = document.getElementById('cityFilterList');
+        cityList.innerHTML = '';
+        if (cities.size === 0) cityList.textContent = 'No cities available.';
+        else {
+          cities.forEach(city => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn btn-outline-secondary m-1';
+            btn.textContent = city;
+            btn.setAttribute('aria-label', `Filter jobs by city ${city}`);
+            btn.addEventListener('click', () => {
+              window.location.href = `jobs.html?city=${encodeURIComponent(city)}`;
+            });
+            cityList.appendChild(btn);
+          });
+        }
+
+        const sectorList = document.getElementById('sectorFilterList');
+        sectorList.innerHTML = '';
+        if (sectors.size === 0) sectorList.textContent = 'No sectors available.';
+        else {
+          sectors.forEach(sector => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn btn-outline-success m-1';
+            btn.textContent = sector;
+            btn.setAttribute('aria-label', `Filter jobs by sector ${sector}`);
+            btn.addEventListener('click', () => {
+              window.location.href = `jobs.html?sector=${encodeURIComponent(sector)}`;
+            });
+            sectorList.appendChild(btn);
+          });
+        }
+      }).catch(err => {
+        console.error('Error loading browse filters:', err);
+        document.getElementById('regionFilterList').textContent = 'Failed to load regions.';
+        document.getElementById('cityFilterList').textContent = 'Failed to load cities.';
+        document.getElementById('sectorFilterList').textContent = 'Failed to load sectors.';
+      });
+    }
+
+    // Animate the marquee with CSS animation (optional)
+    // Here you can implement marquee effect if needed, but keeping simple for now.
+
+    // Run on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadJobs();
+      populateDropdowns();
+      populateBrowseFilters();
+    });
   </script>
 </body>
 </html>
