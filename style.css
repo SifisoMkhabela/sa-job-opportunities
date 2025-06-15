@@ -1,186 +1,162 @@
-body {
-  background-color: #f9fafc;
-}
 
-.top-bar {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  background-color: #fff;
-  padding: 0.75rem 1.5rem;
-  position: sticky;
-  top: 0;
-  z-index: 1030;
-}
+    body {
+      background-color: #f9fafc;
+    }
 
-.hero h1 {
-  font-weight: 700;
-  color: #222;
-}
+    .top-bar {
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      background-color: #fff;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 1030;
+    }
 
-.hero p.lead {
-  color: #555;
-}
+    .hero h1 {
+      font-weight: 700;
+      color: #222;
+    }
 
-/* Smaller, compact filter bar style */
-#filterForm select,
-#filterForm button {
-  min-width: 150px;
-}
+    .hero p.lead {
+      color: #555;
+    }
 
-.card.h-100.shadow-sm {
-  border-radius: 16px;
-  transition: transform 0.3s, box-shadow 0.3s;
-  position: relative;
-}
+    #filterForm select,
+    #filterForm button {
+      min-width: 150px;
+    }
 
-.card.h-100.shadow-sm:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
+    .card.h-100.shadow-sm {
+      border-radius: 16px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+    }
 
-.card-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #333;
-}
+    .card.h-100.shadow-sm:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
 
-.card-text.text-muted {
-  font-size: 0.9rem;
-  margin-bottom: 0.75rem;
-}
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #333;
+    }
 
-.card-text .badge {
-  margin-right: 0.4rem;
-  margin-bottom: 0.3rem;
-  font-size: 0.75rem;
-  padding: 0.4em 0.6em;
-}
+    .card-text.text-muted {
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
 
-.read-more {
-  font-size: 0.9rem;
-  margin-top: 10px;
-}
+    .card-text .badge {
+      margin-right: 0.4rem;
+      margin-bottom: 0.3rem;
+      font-size: 0.75rem;
+      padding: 0.4em 0.6em;
+    }
 
-.read-more p {
-  margin-bottom: 0.5rem;
-}
+    .read-more {
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
 
-.read-toggle {
-  cursor: pointer;
-  color: #0d6efd;
-  font-size: 0.95rem;
-  font-weight: 600;
-  user-select: none;
-  display: inline-block;
-  transition: color 0.2s ease;
-}
+    .read-more p {
+      margin-bottom: 0.5rem;
+    }
 
-.read-toggle:hover {
-  color: #084ecb;
-}
+    .read-toggle {
+      cursor: pointer;
+      color: #0d6efd;
+      font-size: 0.95rem;
+      font-weight: 600;
+      user-select: none;
+      display: inline-block;
+      transition: color 0.2s ease;
+    }
 
-.card-body p.text-primary {
-  font-size: 1rem;
-}
+    .read-toggle:hover {
+      color: #084ecb;
+    }
 
-.card-body p.text-secondary {
-  font-size: 0.9rem;
-}
+    .card-body p.text-primary {
+      font-size: 1rem;
+    }
 
-.card-body a.btn-primary {
-  width: 100%;
-  font-weight: 600;
-  border-radius: 0.375rem;
-}
+    .card-body p.text-secondary {
+      font-size: 0.9rem;
+    }
 
-.mt-3.text-center {
-  margin-top: 1rem !important;
-}
+    .card-body a.btn-primary {
+      width: 100%;
+      font-weight: 600;
+      border-radius: 0.375rem;
+    }
 
-footer {
-  font-size: 0.9rem;
-  padding: 1rem 0;
-  text-align: center;
-  color: #666;
-  border-top: 1px solid #e5e5e5;
-  margin-top: 3rem;
-}
+    .mt-3.text-center {
+      margin-top: 1rem !important;
+    }
 
-.share-btn {
-  z-index: 10;
-  border: none;
-  background-color: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  border-radius: 50%;
-  padding: 6px 8px;
-  font-size: 1rem;
-  color: #333;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-}
+    footer {
+      font-size: 0.9rem;
+      padding: 1rem 0;
+      text-align: center;
+      color: #666;
+      border-top: 1px solid #e5e5e5;
+      margin-top: 3rem;
+    }
 
-.share-btn:hover {
-  background-color: #f1f1f1;
-  transform: scale(1.1);
-}
+    .share-btn {
+      z-index: 10;
+      border: none;
+      background-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border-radius: 50%;
+      padding: 6px 8px;
+      font-size: 1rem;
+      color: #333;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+    }
 
-/* Modern Offcanvas Sidebar */
-.offcanvas-start {
-  width: 250px !important;
-  border-right: 1px solid #dee2e6;
-  background-color: #fff;
-  padding: 1rem;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
-}
+    .share-btn:hover {
+      background-color: #f1f1f1;
+      transform: scale(1.1);
+    }
 
-/* Nav Links in Sidebar */
-.offcanvas-start {
-  width: 260px !important;
-  border-right: 1px solid #eee;
-  background-color: #fff;
-  padding: 1rem;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
-}
+    .offcanvas-start {
+      width: 250px !important;
+      border-right: 1px solid #dee2e6;
+      background-color: #fff;
+      padding: 1rem;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+    }
 
-@media (max-width: 767.98px) {
-  .offcanvas-start {
-    height: auto !important;
-    max-height: 90vh;
-    border-top-right-radius: 12px;
-    border-bottom-right-radius: 12px;
-    overflow-y: auto;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
-}
+    .offcanvas-body .nav-link {
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      color: #333;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
 
+    .offcanvas-body .nav-link:hover {
+      background-color: #f1f3f5;
+      color: #0d6efd;
+    }
 
-.offcanvas-title {
-  font-size: 1.25rem;
-  color: #222;
-}
+    /* Mobile: improve offcanvas UX */
+    @media (max-width: 767.98px) {
+      .offcanvas-start {
+        height: auto !important;
+        max-height: 90vh;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border-top-right-radius: 12px;
+        border-bottom-right-radius: 12px;
+        overflow-y: auto;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      }
+    }
 
-.offcanvas-body {
-  padding-top: 0;
-}
-
-.offcanvas-body .nav-link {
-  padding: 0.6rem 0.75rem;
-  border-radius: 8px;
-  color: #333;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.offcanvas-body .nav-link i {
-  font-size: 1rem;
-}
-
-.offcanvas-body .nav-link:hover {
-  background-color: #f1f3f5;
-  color: #0d6efd;
-}
-.offcanvas-backdrop.show {
-  opacity: 0.3;
-}
-
+    .offcanvas-backdrop.show {
+      opacity: 0.3;
+    }
