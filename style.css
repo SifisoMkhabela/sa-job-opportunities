@@ -121,3 +121,27 @@ footer {
   background-color: #f1f1f1;
   transform: scale(1.1);
 }
+
+/* Limit the sidebar (offcanvas) width for modern look */
+.offcanvas-start {
+  width: 250px !important;
+  border-right: 1px solid #dee2e6;
+  background-color: #fff;
+  padding: 1rem;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Optional: make nav links more interactive */
+.offcanvas-body .nav-link {
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  color: #333;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.offcanvas-body .nav-link:hover {
+  background-color: #f1f3f5;
+  color: #0d6efd;
+}
+
