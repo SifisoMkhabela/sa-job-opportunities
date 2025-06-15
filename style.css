@@ -140,6 +140,19 @@ footer {
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
 }
 
+@media (max-width: 767.98px) {
+  .offcanvas-start {
+    height: auto !important;
+    max-height: 90vh;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    overflow-y: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+
 .offcanvas-title {
   font-size: 1.25rem;
   color: #222;
@@ -167,3 +180,7 @@ footer {
   background-color: #f1f3f5;
   color: #0d6efd;
 }
+.offcanvas-backdrop.show {
+  opacity: 0.3;
+}
+
